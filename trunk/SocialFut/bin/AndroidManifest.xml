@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.futcefet"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:persistent="false"
+        android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+        <activity
+            android:name="activities.HomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="activities.ChronometerActivity"
+            android:parentActivityName="HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- <activity android:name="activities.HomeActivity" ></activity> -->
+        <activity
+            android:name="activities.PlayerListForSort"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="activities.AddNewPlayerActivity"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="activities.InsertOrEdit"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="activities.PlayerListActivity"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme" >
+        </activity>
+        <activity
+            android:name="activities.LegendaActivity"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="activities.ResultActivity"
+            android:parentActivityName="activities.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/addNewPlayer"
+        android:icon="@drawable/add_user"
+        android:showAsAction="always"/>
+    <item
+        android:id="@+id/dice"
+        android:icon="@drawable/dice"
+        android:showAsAction="ifRoom"
+        android:title="@string/sortear"/>
+    <item
+        android:id="@+id/cronometro"
+        android:icon="@drawable/stopwatch"
+        android:showAsAction="ifRoom"
+        android:title="@string/chonometer"/>
+    <item
+        android:id="@+id/subtitle"
+        android:showAsAction="never"
+        android:title="@string/subtitle"/>
+    <item
+        android:id="@+id/exit"
+        android:showAsAction="never"
+        android:title="@string/exit"/>
+
+</menu>
