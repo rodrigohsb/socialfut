@@ -15,7 +15,7 @@ public class Jogador implements Serializable
     private static final long serialVersionUID = 1L;
 
     public static String[] colunas = new String[] { Jogadores._ID, Jogadores.NOME, Jogadores.SOBRENOME,
-            Jogadores.POSICAO, Jogadores.RATING, Jogadores.TELEFONE };
+            Jogadores.POSICAO, Jogadores.RATING, Jogadores.TELEFONE, Jogadores.PICTURE };
 
     public static final String AUTHORITY = "br.com.socialfut.android.provider.carro";
 
@@ -30,6 +30,8 @@ public class Jogador implements Serializable
     private float rating;
 
     private String tel;
+
+    private String picture;
 
     public Jogador()
     {
@@ -104,6 +106,16 @@ public class Jogador implements Serializable
         this.sobreNome = sobreNome;
     }
 
+    public String getPicture()
+    {
+        return picture;
+    }
+
+    public void setPicture(String picture)
+    {
+        this.picture = picture;
+    }
+
     @Override
     public String toString()
     {
@@ -112,8 +124,6 @@ public class Jogador implements Serializable
 
     public static final class Jogadores implements BaseColumns
     {
-
-        // content://br.livro.android.provider.carros/jogadores
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/jogadores");
 
@@ -132,6 +142,8 @@ public class Jogador implements Serializable
         public static final String RATING = "rating";
 
         public static final String TELEFONE = "telefone";
+        
+        public static final String PICTURE = "picture";
 
         public static Uri getUri(long id)
         {

@@ -37,28 +37,32 @@ public class PlayerListActivity extends SherlockListActivity
         super.onCreate(savedInstanceState);
         context = this;
 
+        this.createActionBar();
+        this.atualizarLista();
+    }
+
+    private void createActionBar()
+    {
         getSupportActionBar().setIcon(R.drawable.icone);
         getSupportActionBar().setTitle("SocialFut");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
-
-        atualizarLista();
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
         super.onListItemClick(l, v, position, id);
-        editarJogador(position);
+        showJogadorDetails(position);
     }
 
     /**
      * 
-     * Chama a Activity para editar o jogador passando o id
+     * TODO Transformar em visuzalizar detalhes.
      * 
      * @param posicao
      */
-    protected void editarJogador(int posicao)
+    protected void showJogadorDetails(int posicao)
     {
 
         Jogador jogador = jogadores.get(posicao);

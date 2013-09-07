@@ -14,11 +14,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import br.com.futcefet.R;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class HomeActivity extends SherlockActivity implements OnClickListener
+public class HomeActivity extends SherlockFragmentActivity implements OnClickListener
 {
 
     private AlertDialog dialog;
@@ -53,8 +53,12 @@ public class HomeActivity extends SherlockActivity implements OnClickListener
         switch (item.getItemId())
         {
 
-        case R.id.addNewPlayer:
-            startActivity(new Intent(this, AddNewPlayerActivity.class));
+        case R.id.dice:
+            startActivity(new Intent(this, PlayerListForSort.class));
+            break;
+
+        case R.id.cronometro:
+            startActivity(new Intent(this, ChronometerActivity.class));
             break;
 
         case R.id.subtitle:
@@ -63,18 +67,6 @@ public class HomeActivity extends SherlockActivity implements OnClickListener
 
         case R.id.exit:
             close();
-            break;
-
-        case R.id.compose:
-            startActivity(new Intent(this, InsertOrEdit.class));
-            break;
-
-        case R.id.dice:
-            startActivity(new Intent(this, PlayerListForSort.class));
-            break;
-
-        case R.id.cronometro:
-            startActivity(new Intent(this, ChronometerActivity.class));
             break;
 
         default:

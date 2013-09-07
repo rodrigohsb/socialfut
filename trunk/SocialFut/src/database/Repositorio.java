@@ -26,21 +26,21 @@ public class Repositorio
     private static final String[] SCRIPT_DATABASE_CREATE = new String[] {
             "create table player(_id integer primary key autoincrement,"
                     + "nome text not null, sobrenome text not null, posicao text not null,"
-                    + "rating float not null, telefone text not null );",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Rodrigo','Bacellar','Meio-Campo','5.0','9625-6313');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('João','da Silva','Goleiro','3.5','9999-6666');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Rafael','Santos','Meio-Campo','3.0','9845-5155');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Tiago','Santos','Zagueiro','1.0','7485-9300');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Juvenal','dos Santos','Meio-Campo','1.5','8908-7666');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Fernando','Santana','Lateral','0.5','4567-0987');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Antonio','Silva','Zagueiro','1.5','9980-2434');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Francisco','Ferreira','Meio-Campo','1.5','8892-0998');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Marco','Fernandes','Goleiro','2.0','3526-0980');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Fulano','Macedo','Atacante','1.5','9475-3566');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Beltrano','Souza','Atacante','5.0','8697-0099');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Ciclano','de Souza','Atacante','4.5','8585-9907');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('Felipe','Silva','Meio-Campo','3.0','6758-0471');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone) values('José','Maria','Zagueiro','4.0','8695-6324');" };
+                    + "rating float not null, telefone text not null, picture text not null );",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Rodrigo','Bacellar','Meio-Campo','5.0','9625-6313','https://graph.facebook.com/rodrigo.haus/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Marcio','Telles','Goleiro','3.5','9999-6666','https://graph.facebook.com/marcio.telles.10/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Rafael','Cardoso','Meio-Campo','3.0','9845-5155','https://graph.facebook.com/rafael.cardosotelles/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Tiago','Santos','Zagueiro','1.0','7485-9300','https://graph.facebook.com/leandro.carvalho.77398/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Juvenal','dos Santos','Meio-Campo','1.5','8908-7666','https://graph.facebook.com/rockinveia/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Fernando','Santana','Lateral','0.5','4567-0987','https://graph.facebook.com/guilherme.almeidarj/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Antonio','Silva','Zagueiro','1.5','9980-2434','https://graph.facebook.com/weslley.santos.52/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Francisco','Ferreira','Meio-Campo','1.5','8892-0998','https://graph.facebook.com/carlos.sa.378/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Marco','Fernandes','Goleiro','2.0','3526-0980','https://graph.facebook.com/GuilhermeHaus/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Fulano','Macedo','Atacante','1.5','9475-3566','https://graph.facebook.com/vitor.mendes.334/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Beltrano','Souza','Atacante','5.0','8697-0099','https://graph.facebook.com/luizfelipetx/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Ciclano','de Souza','Atacante','4.5','8585-9907','https://graph.facebook.com/filipe.monteiro.773/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Felipe','Silva','Meio-Campo','3.0','6758-0471','https://graph.facebook.com/schustter.haus/picture');",
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Jose','Maria','Zagueiro','4.0','8695-6324','https://graph.facebook.com/FontesJuan/picture');" };
 
     private static final String NOME_BANCO = "social_fut";
 
@@ -82,6 +82,7 @@ public class Repositorio
         values.put(Jogadores.POSICAO, Jogador.getPosition());
         values.put(Jogadores.RATING, Jogador.getRating());
         values.put(Jogadores.TELEFONE, Jogador.getTel());
+        values.put(Jogadores.PICTURE, Jogador.getPicture());
 
         long id = inserir(values);
 
@@ -103,6 +104,7 @@ public class Repositorio
         values.put(Jogadores.POSICAO, Jogador.getPosition());
         values.put(Jogadores.RATING, Jogador.getRating());
         values.put(Jogadores.TELEFONE, Jogador.getTel());
+        values.put(Jogadores.PICTURE, Jogador.getPicture());
 
         String id = String.valueOf(Jogador.getId());
 
@@ -161,6 +163,7 @@ public class Repositorio
             jogador.setPosition(c.getString(3));
             jogador.setRating(c.getFloat(4));
             jogador.setTel(c.getString(5));
+            jogador.setPicture(c.getString(6));
             return jogador;
         }
         return null;
@@ -194,6 +197,7 @@ public class Repositorio
             int idxPos = c.getColumnIndex(Jogadores.POSICAO);
             int idxRat = c.getColumnIndex(Jogadores.RATING);
             int idxTel = c.getColumnIndex(Jogadores.TELEFONE);
+            int idxPic = c.getColumnIndex(Jogadores.PICTURE);
 
             do
             {
@@ -204,6 +208,7 @@ public class Repositorio
                 jogador.setPosition(c.getString(idxPos));
                 jogador.setRating(c.getFloat(idxRat));
                 jogador.setTel(c.getString(idxTel));
+                jogador.setPicture(c.getString(idxPic));
 
                 jogadores.add(jogador);
             }
@@ -231,6 +236,7 @@ public class Repositorio
                 jogador.setPosition(c.getString(4));
                 jogador.setRating(c.getFloat(4));
                 jogador.setTel(c.getString(5));
+                jogador.setPicture(c.getString(6));
             }
 
         }
