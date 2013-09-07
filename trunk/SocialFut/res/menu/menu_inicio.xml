@@ -2,13 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/addNewPlayer"
-        android:icon="@drawable/add_user"
-        android:showAsAction="always"/>
-    <item
         android:id="@+id/dice"
         android:icon="@drawable/dice"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/sortear"/>
     <item
         android:id="@+id/cronometro"

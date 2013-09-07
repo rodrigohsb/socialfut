@@ -52,11 +52,14 @@
     <color name="colorInicio">#33A1C9</color>
     <color name="dividor">#ECECEC</color>
     <color name="color_actionBar">#008000</color>
+    <color name="color_white">#ffffff</color>
     <!-- Fim das cores -->
 
     <string name="inicia_cronometro">Iniciar</string>
     <string name="limpa_cronometro">Limpar</string>
     <string name="pausa_cronometro">Pausar</string>
     <string name="continua_cronometro">Continuar</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
 </resources>
