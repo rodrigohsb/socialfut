@@ -17,7 +17,7 @@
 
             <Button
                 android:id="@+id/playerList"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/players"
@@ -30,7 +30,7 @@
         android:layout_width="190dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="#008000" >
+        android:background="#039103" >
 
         <LinearLayout
             android:id="@+id/drawer_linearLayout_layout"
@@ -40,12 +40,15 @@
 
             <ImageView
                 android:id="@+id/icon_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:layout_marginTop="10sp"
                 android:text="Nome"
                 android:textColor="@color/color_white"
@@ -60,14 +63,16 @@
                 android:id="@+id/name_drawer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:textColor="@color/color_white"
-                android:textSize="25sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:layout_marginTop="10sp"
-                android:text="Sobrenome"
+                android:text=" Sobrenome"
                 android:textColor="@color/color_white"
                 android:textSize="16sp" />
 
@@ -80,14 +85,16 @@
                 android:id="@+id/sureName_drawer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:textColor="@color/color_white"
-                android:textSize="25sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:layout_marginTop="10sp"
-                android:text="Qualifição"
+                android:text=" Qualifição"
                 android:textColor="@color/color_white"
                 android:textSize="16sp" />
 
@@ -107,8 +114,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
                 android:layout_marginTop="10sp"
-                android:text="Posição"
+                android:text=" Posição"
                 android:textColor="@color/color_white"
                 android:textSize="16sp" />
 
@@ -121,9 +129,18 @@
                 android:id="@+id/position_drawer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meio-Campo"
+                android:layout_marginLeft="5sp"
+                android:text=" Meio-Campo"
                 android:textColor="@color/color_white"
-                android:textSize="25sp" />
+                android:textSize="22sp" />
+
+            <com.facebook.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp" />
         </LinearLayout>
     </ScrollView>
 
