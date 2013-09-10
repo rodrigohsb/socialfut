@@ -132,6 +132,10 @@ public class MainFragment extends SherlockFragment
             startActivity(new Intent(getSherlockActivity(), LegendaActivity.class));
             break;
 
+        case R.id.exit:
+            getSherlockActivity().finish();
+            break;
+            
         default:
             break;
         }
