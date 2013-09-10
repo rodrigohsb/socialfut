@@ -2,6 +2,7 @@ package activities;
 
 import helper.ImageHelper;
 import teste.SherlockActionBarDrawerToggle;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -48,8 +50,7 @@ public class MainFragment extends SherlockFragment
 
     public static Fragment newInstance()
     {
-        Fragment f = new MainFragment();
-        return f;
+        return new MainFragment();
     }
 
     @Override
@@ -74,11 +75,20 @@ public class MainFragment extends SherlockFragment
         TextView name = (TextView) scrollView.findViewById(R.id.name_drawer);
         TextView sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.rodrigo);
-        bitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 200);
-        img.setImageBitmap(bitmap);
+        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (v.getId() == R.id.playerList)
+                {
+                    startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+                }
+            }
+        });
 
-        img.setImageResource(R.drawable.rodrigo);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.rodrigo);
+        img.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp));
 
         name.setText("Rodrigo");
         sureName.setText("Bacellar");
@@ -106,6 +116,24 @@ public class MainFragment extends SherlockFragment
         if (mDrawerToggle.onOptionsItemSelected(item))
         {
             return true;
+        }
+        switch (item.getItemId())
+        {
+
+        case R.id.dice:
+            startActivity(new Intent(getSherlockActivity(), PlayerListForSort.class));
+            break;
+
+        case R.id.cronometro:
+            startActivity(new Intent(getSherlockActivity(), ChronometerActivity.class));
+            break;
+
+        case R.id.subtitle:
+            startActivity(new Intent(getSherlockActivity(), LegendaActivity.class));
+            break;
+
+        default:
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,10 +174,6 @@ public class MainFragment extends SherlockFragment
         }
     }
 
-    /**
-     * Create a compatible helper that will manipulate the action bar if
-     * available.
-     */
     private ActionBarHelper createActionBarHelper()
     {
         return new ActionBarHelper();
@@ -171,6 +195,7 @@ public class MainFragment extends SherlockFragment
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeButtonEnabled(true);
             mTitle = getActivity().getTitle();
+            mActionBar.setIcon(R.drawable.icone);
             mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
         }
 
@@ -194,4 +219,5 @@ public class MainFragment extends SherlockFragment
             mActionBar.setTitle("Perfil");
         }
     }
+
 }
