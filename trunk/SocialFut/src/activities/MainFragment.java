@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import teste.SherlockActionBarDrawerToggle;
 import util.FacebookUtils;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,8 +45,6 @@ import com.facebook.widget.LoginButton;
 public class MainFragment extends SherlockFragment
 {
 
-    private static final String TAG = "MainFragment";
-
     private DrawerLayout mDrawerLayout;
 
     private ScrollView scrollView;
@@ -58,6 +56,16 @@ public class MainFragment extends SherlockFragment
     private UiLifecycleHelper uiHelper;
 
     private Session session;
+
+    private ImageView img;
+
+    private TextView name;
+
+    private TextView sureName;
+
+    private LoginButton loginButton;
+
+    private Context ctx;
 
     public static Fragment newInstance()
     {
@@ -73,6 +81,7 @@ public class MainFragment extends SherlockFragment
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
 
+        ctx = getActivity();
     }
 
     @Override
@@ -85,10 +94,11 @@ public class MainFragment extends SherlockFragment
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         scrollView = (ScrollView) view.findViewById(R.id.left_drawer);
-        ImageView img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
-        TextView name = (TextView) scrollView.findViewById(R.id.name_drawer);
-        TextView sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
-        LoginButton loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
+        img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
+        name = (TextView) scrollView.findViewById(R.id.name_drawer);
+        sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
+        loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
+        loginButton.setFragment(this);
         loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
         view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
@@ -102,16 +112,6 @@ public class MainFragment extends SherlockFragment
                 }
             }
         });
-
-        // Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-        // R.drawable.rodrigo);
-        // img.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp));
-        // name.setText("Rodrigo");
-
-        FacebookUtils.getPicture(session, img);
-        FacebookUtils.getName(session, name);
-
-        sureName.setText("Bacellar");
 
         mActionBar = createActionBarHelper();
         mActionBar.init();
@@ -155,7 +155,7 @@ public class MainFragment extends SherlockFragment
         case R.id.exit:
             getSherlockActivity().finish();
             break;
-            
+
         default:
             break;
         }
@@ -172,19 +172,13 @@ public class MainFragment extends SherlockFragment
     @Override
     public void onResume()
     {
-        Session session = Session.getActiveSession();
+        session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed()))
         {
-            if (session.isOpened())
-            {
-                Log.i(TAG, "Logged in...");
-            }
-            else if (session.isClosed())
-            {
-                Log.i(TAG, "Logged out...");
-            }
+            onSessionStateChange(session, session.getState(), null);
         }
 
+        uiHelper.onResume();
         super.onResume();
         uiHelper.onResume();
     }
@@ -217,19 +211,28 @@ public class MainFragment extends SherlockFragment
         uiHelper.onSaveInstanceState(outState);
     }
 
+    private void onSessionStateChange(Session session, SessionState state, Exception exception)
+    {
+        if (state.isOpened())
+        {
+            this.session = session;
+
+            FacebookUtils.getPicture(session, img);
+            FacebookUtils.getName(session, name, ctx);
+            FacebookUtils.getSureName(session, sureName, ctx);
+        }
+        else if (state.isClosed())
+        {
+            this.session = session;
+        }
+    }
+
     private Session.StatusCallback callback = new Session.StatusCallback()
     {
         @Override
         public void call(Session session, SessionState state, Exception exception)
         {
-            if (state.isOpened())
-            {
-                Log.i(TAG, "Logged in...");
-            }
-            else if (state.isClosed())
-            {
-                Log.i(TAG, "Logged out...");
-            }
+            onSessionStateChange(session, state, exception);
         }
     };
 
