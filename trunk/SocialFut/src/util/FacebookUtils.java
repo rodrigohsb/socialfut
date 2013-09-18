@@ -1,5 +1,6 @@
 package util;
 
+import android.content.Context;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,11 +16,20 @@ public class FacebookUtils
 
     private static FacebookPost facebookPost;
 
-    public static void getName(Session sessao, TextView txtName)
+    public static void getName(Session sessao, TextView txtName, Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
-            facebookName = new FacebookName(sessao, txtName);
+            facebookName = new FacebookName(sessao, txtName, ctx);
+            facebookName.execute();
+        }
+    }
+
+    public static void getSureName(Session sessao, TextView txtName, Context ctx)
+    {
+        if (sessao != null && (sessao.getState().isOpened()))
+        {
+            facebookName = new FacebookName(sessao, txtName, ctx);
             facebookName.execute();
         }
     }
