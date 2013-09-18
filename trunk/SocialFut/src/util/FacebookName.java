@@ -1,50 +1,80 @@
 package util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.TextView;
+
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.widget.TextView;
-
-public class FacebookName extends AsyncTask<Void, String, Response>
+public class FacebookName extends AsyncTask<Void, String, Boolean>
 {
+    private static final String TAG = "FacebookName";
+
     private Session session;
 
     private TextView mTextName;
 
-    public FacebookName(Session sessao, TextView txt)
+    private Context ctx;
+
+    private String name;
+
+    private Response resp;
+
+    public FacebookName(Session sessao, TextView txt, Context ctx)
     {
         super();
         this.session = sessao;
         this.mTextName = txt;
+        this.ctx = ctx;
     }
 
     @Override
-    protected Response doInBackground(Void... v)
+    protected Boolean doInBackground(Void... v)
     {
-        Bundle params = new Bundle();
-        params.putString("fields", "name,picture");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        /** Verifica se o nome consta nas preferencias */
+        String name = sharedPrefs.getString("name", null);
 
-        Request request = new Request(session, "me", params, HttpMethod.GET);
+        if (name != null)
+        {
+            Log.i(TAG, "Buscando nome nas preferencias...");
+            this.name = name;
+            return true;
+        }
+        else
+        {
+            Log.i(TAG, "Buscando nome...");
 
-        return request.executeAndWait();
+            Bundle params = new Bundle();
+            params.putString("fields", "name");
+
+            Request request = new Request(session, "me", params, HttpMethod.GET);
+            resp = request.executeAndWait();
+
+            /** Salva o nome nas preferencias */
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            GraphObject graph = resp.getGraphObject();
+            name = graph.getProperty("name").toString();
+            editor.putString("name", name).commit();
+
+            Log.i(TAG, "Nome retornado.");
+
+            return false;
+        }
     }
 
     @Override
-    protected void onPostExecute(Response response)
+    protected void onPostExecute(Boolean response)
     {
         super.onPostExecute(response);
-
-        GraphObject graph = response.getGraphObject();
-        String name = graph.getProperty("name").toString();
-
-        if (mTextName != null)
-        {
-            mTextName.setText(name);
-        }
+        mTextName.setText(name);
     }
 }
