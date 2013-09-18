@@ -1,17 +1,18 @@
 package activities;
 
-import helper.ImageHelper;
+import java.util.Arrays;
+
 import teste.SherlockActionBarDrawerToggle;
+import util.FacebookUtils;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 
 /**
  * 
@@ -40,6 +45,8 @@ import com.actionbarsherlock.view.MenuItem;
 public class MainFragment extends SherlockFragment
 {
 
+    private static final String TAG = "MainFragment";
+
     private DrawerLayout mDrawerLayout;
 
     private ScrollView scrollView;
@@ -47,6 +54,10 @@ public class MainFragment extends SherlockFragment
     private ActionBarHelper mActionBar;
 
     private SherlockActionBarDrawerToggle mDrawerToggle;
+
+    private UiLifecycleHelper uiHelper;
+
+    private Session session;
 
     public static Fragment newInstance()
     {
@@ -59,6 +70,9 @@ public class MainFragment extends SherlockFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -74,6 +88,8 @@ public class MainFragment extends SherlockFragment
         ImageView img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
         TextView name = (TextView) scrollView.findViewById(R.id.name_drawer);
         TextView sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
+        LoginButton loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
         view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
         {
@@ -87,10 +103,14 @@ public class MainFragment extends SherlockFragment
             }
         });
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.rodrigo);
-        img.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp));
+        // Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+        // R.drawable.rodrigo);
+        // img.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp));
+        // name.setText("Rodrigo");
 
-        name.setText("Rodrigo");
+        FacebookUtils.getPicture(session, img);
+        FacebookUtils.getName(session, name);
+
         sureName.setText("Bacellar");
 
         mActionBar = createActionBarHelper();
@@ -148,6 +168,70 @@ public class MainFragment extends SherlockFragment
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+    @Override
+    public void onResume()
+    {
+        Session session = Session.getActiveSession();
+        if (session != null && (session.isOpened() || session.isClosed()))
+        {
+            if (session.isOpened())
+            {
+                Log.i(TAG, "Logged in...");
+            }
+            else if (session.isClosed())
+            {
+                Log.i(TAG, "Logged out...");
+            }
+        }
+
+        super.onResume();
+        uiHelper.onResume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    private Session.StatusCallback callback = new Session.StatusCallback()
+    {
+        @Override
+        public void call(Session session, SessionState state, Exception exception)
+        {
+            if (state.isOpened())
+            {
+                Log.i(TAG, "Logged in...");
+            }
+            else if (state.isClosed())
+            {
+                Log.i(TAG, "Logged out...");
+            }
+        }
+    };
 
     private class DemoDrawerListener implements DrawerLayout.DrawerListener
     {
