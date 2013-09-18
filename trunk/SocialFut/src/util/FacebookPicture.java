@@ -6,17 +6,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.model.GraphObject;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphObject;
 
 public class FacebookPicture extends AsyncTask<Void, String, Bitmap>
 {
@@ -37,7 +37,7 @@ public class FacebookPicture extends AsyncTask<Void, String, Bitmap>
     protected Bitmap doInBackground(Void... v)
     {
         Bundle params = new Bundle();
-        params.putString("fields", "name,picture");
+        params.putString("fields", "picture");
 
         Request request = new Request(session, "me", params, HttpMethod.GET);
         Response response = request.executeAndWait();
