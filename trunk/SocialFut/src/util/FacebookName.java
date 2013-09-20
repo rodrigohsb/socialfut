@@ -57,6 +57,9 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
             SharedPreferences.Editor editor = sharedPrefs.edit();
             GraphObject graph = resp.getGraphObject();
             name = graph.getProperty("name").toString();
+            this.name = name;
+            
+            int id = Integer.valueOf(graph.getProperty("id").toString());
             editor.putString("name", name).commit();
 
             return false;

@@ -45,11 +45,11 @@ public class FacebookUtils
         }
     }
 
-    public static void getFrieds(Session sessao, TextView txtName, Context ctx)
+    public static void getFrieds(Session sessao, Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
-            facebookFriends = new FacebookFriends(sessao, txtName, ctx);
+            facebookFriends = new FacebookFriends(sessao, ctx);
             facebookFriends.execute();
         }
     }

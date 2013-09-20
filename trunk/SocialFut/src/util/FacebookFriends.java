@@ -1,14 +1,16 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import persistence.Jogador;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -24,7 +26,9 @@ public class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
 
     private Response resp;
 
-    public FacebookFriends(Session sessao, TextView txt, Context ctx)
+    private static int MAX = 100;
+
+    public FacebookFriends(Session sessao, Context ctx)
     {
         super();
         this.session = sessao;
@@ -34,8 +38,11 @@ public class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
     @Override
     protected List<Jogador> doInBackground(Void... v)
     {
+
+        List<Jogador> players = new ArrayList<Jogador>();
+
         Bundle params = new Bundle();
-        params.putString("fields", "friends");
+        params.putString("fields", "friends.limit(" + MAX + ")");
 
         Request request = new Request(session, "me", params, HttpMethod.GET);
         resp = request.executeAndWait();
@@ -44,14 +51,42 @@ public class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
 
         try
         {
-            String url = graph.getInnerJSONObject().getJSONObject("data").getJSONObject("data").getString("url");
+            JSONArray friendsFromFacebook = graph.getInnerJSONObject().getJSONObject("friends").getJSONArray("data");
+
+            if (friendsFromFacebook.length() > 0)
+            {
+                for (int i = 0; i < friendsFromFacebook.length(); i++)
+                {
+                    JSONObject player = friendsFromFacebook.getJSONObject(i);
+                    Long id = Long.valueOf(player.getString("id"));
+
+                    String nomeCompleto = player.getString("name");
+                    String[] nomes = nomeCompleto.split(" ");
+
+                    String primeiroNome;
+                    String sobreNome;
+
+                    if (nomes.length == 2)
+                    {
+                        primeiroNome = nomes[0];
+                        sobreNome = nomes[1];
+                    }
+                    else
+                    {
+                        primeiroNome = nomes[0] + " " + nomes[1];
+                        sobreNome = nomes[nomes.length - 1];
+                    }
+
+                    Jogador j = new Jogador(id, primeiroNome, sobreNome, "");
+                    players.add(j);
+                }
+            }
         }
         catch (JSONException e)
         {
             e.printStackTrace();
         }
-
-        return null;
+        return !players.isEmpty() ? players : null;
     }
 
     @Override
