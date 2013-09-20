@@ -6,13 +6,19 @@ import teste.SherlockActionBarDrawerToggle;
 import util.FacebookUtils;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,8 +61,6 @@ public class MainFragment extends SherlockFragment
 
     private UiLifecycleHelper uiHelper;
 
-    private Session session;
-
     private ImageView img;
 
     private TextView name;
@@ -97,6 +101,9 @@ public class MainFragment extends SherlockFragment
         img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
         name = (TextView) scrollView.findViewById(R.id.name_drawer);
         sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
+
+        // TODO Somente mostrar o botao do Facebook se o usuario nao esta logado.
+
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
         loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
@@ -172,7 +179,7 @@ public class MainFragment extends SherlockFragment
     @Override
     public void onResume()
     {
-        session = Session.getActiveSession();
+        Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed()))
         {
             onSessionStateChange(session, session.getState(), null);
@@ -215,15 +222,40 @@ public class MainFragment extends SherlockFragment
     {
         if (state.isOpened())
         {
-            this.session = session;
-
-            FacebookUtils.getPicture(session, img);
+            FacebookUtils.getPicture(session, img, ctx);
             FacebookUtils.getName(session, name, ctx);
             FacebookUtils.getSureName(session, sureName, ctx);
+            FacebookUtils.getFrieds(session, sureName, ctx);
         }
         else if (state.isClosed())
         {
-            this.session = session;
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            String nome = sharedPrefs.getString("name", null);
+            String previouslyEncodedImage = sharedPrefs.getString("image", null);
+
+            if (previouslyEncodedImage != null)
+            {
+                byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                img.setImageBitmap(bitmap);
+            }
+            else
+            {
+                Drawable d = getResources().getDrawable(R.drawable.ic_stub);
+                img.setImageDrawable(d);
+            }
+
+            if (null != nome)
+            {
+                name.setText(nome);
+                sureName.setText(nome);
+            }
+            else
+            {
+                name.setText("");
+                sureName.setText("");
+            }
+
         }
     }
 
