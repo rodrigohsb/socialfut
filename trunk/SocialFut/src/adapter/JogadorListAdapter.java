@@ -32,7 +32,7 @@ public class JogadorListAdapter extends BaseAdapter
 
     private List<Jogador> lista;
 
-    DisplayImageOptions options;
+    private DisplayImageOptions options;
 
     private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
