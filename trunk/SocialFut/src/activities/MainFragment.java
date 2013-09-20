@@ -10,8 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -102,7 +100,8 @@ public class MainFragment extends SherlockFragment
         name = (TextView) scrollView.findViewById(R.id.name_drawer);
         sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
 
-        // TODO Somente mostrar o botao do Facebook se o usuario nao esta logado.
+        // TODO Somente mostrar o botao do Facebook se o usuario nao esta
+        // logado.
 
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
@@ -225,7 +224,6 @@ public class MainFragment extends SherlockFragment
             FacebookUtils.getPicture(session, img, ctx);
             FacebookUtils.getName(session, name, ctx);
             FacebookUtils.getSureName(session, sureName, ctx);
-            FacebookUtils.getFrieds(session, sureName, ctx);
         }
         else if (state.isClosed())
         {
@@ -315,11 +313,8 @@ public class MainFragment extends SherlockFragment
 
         public void init()
         {
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setHomeButtonEnabled(true);
+            util.ActionBar.updateActionBar(mActionBar);
             mTitle = getActivity().getTitle();
-            mActionBar.setIcon(R.drawable.icone);
-            mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
         }
 
         /**
