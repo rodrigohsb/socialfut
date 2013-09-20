@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.facebook.HttpMethod;
@@ -16,8 +15,6 @@ import com.facebook.model.GraphObject;
 
 public class FacebookName extends AsyncTask<Void, String, Boolean>
 {
-    private static final String TAG = "FacebookName";
-
     private Session session;
 
     private TextView mTextName;
@@ -45,14 +42,11 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
 
         if (name != null)
         {
-            Log.i(TAG, "Buscando nome nas preferencias...");
             this.name = name;
             return true;
         }
         else
         {
-            Log.i(TAG, "Buscando nome...");
-
             Bundle params = new Bundle();
             params.putString("fields", "name");
 
@@ -64,8 +58,6 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
             GraphObject graph = resp.getGraphObject();
             name = graph.getProperty("name").toString();
             editor.putString("name", name).commit();
-
-            Log.i(TAG, "Nome retornado.");
 
             return false;
         }

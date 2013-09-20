@@ -14,6 +14,8 @@ public class FacebookUtils
 
     private static FacebookPicture facebookPicture;
 
+    private static FacebookFriends facebookFriends;
+
     private static FacebookPost facebookPost;
 
     public static void getName(Session sessao, TextView txtName, Context ctx)
@@ -34,12 +36,21 @@ public class FacebookUtils
         }
     }
 
-    public static void getPicture(Session sessao, ImageView imgAvatar)
+    public static void getPicture(Session sessao, ImageView imgAvatar, Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
-            facebookPicture = new FacebookPicture(sessao, imgAvatar);
+            facebookPicture = new FacebookPicture(sessao, imgAvatar, ctx);
             facebookPicture.execute();
+        }
+    }
+
+    public static void getFrieds(Session sessao, TextView txtName, Context ctx)
+    {
+        if (sessao != null && (sessao.getState().isOpened()))
+        {
+            facebookFriends = new FacebookFriends(sessao, txtName, ctx);
+            facebookFriends.execute();
         }
     }
 
