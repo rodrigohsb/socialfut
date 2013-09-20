@@ -107,29 +107,6 @@ public class JogadorListAdapter extends BaseAdapter
         imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
 
         return view;
-
-        // Jogador jogador = (Jogador) lista.get(position);
-        //
-        // if (convertView == null)
-        // {
-        // LayoutInflater inflater = (LayoutInflater)
-        // context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // convertView = inflater.inflate(R.layout.list_item_message, null);
-        // }
-        // ImageView image = (ImageView) convertView.findViewById(R.id.icon);
-        // image.setImageResource(R.drawable.user_photo);
-        //
-        // TextView name = (TextView) convertView.findViewById(R.id.name);
-        // name.setText(jogador.getNome());
-        //
-        // TextView sureName = (TextView)
-        // convertView.findViewById(R.id.sureName);
-        // sureName.setText(jogador.getSobreNome());
-        //
-        // RatingBar rating = (RatingBar) convertView.findViewById(R.id.rating);
-        // rating.setRating(jogador.getRating());
-        //
-        // return convertView;
     }
 
     public void addItems(List<Jogador> newItems)
