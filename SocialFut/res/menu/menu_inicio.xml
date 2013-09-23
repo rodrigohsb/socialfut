@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:showAsAction="always"
+        android:title="@string/chat"/>
+    <item
+        android:id="@+id/dice"
+        android:icon="@drawable/dice"
+        android:showAsAction="always"
+        android:title="@string/sortear"/>
+    <item
+        android:id="@+id/cronometro"
+        android:icon="@drawable/stopwatch"
+        android:showAsAction="ifRoom"
+        android:title="@string/chonometer"/>
+    <item
+        android:id="@+id/subtitle"
+        android:showAsAction="never"
+        android:title="@string/subtitle"/>
+    <item
+        android:id="@+id/exit"
+        android:showAsAction="never"
+        android:title="@string/exit"/>
+
+</menu>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Social Fut</string>
+    <string name="players">Listar Jogadores</string>
+    <string name="resortear">Resortear</string>
+    <string name="sortear">Sortear</string>
+    <string name="nomeJogador">Jogador</string>
+    <string name="nomeJogadores">Jogadores</string>
+    <string name="time1">Time 1</string>
+    <string name="time2">Time 2</string>
+    <string name="title">Futebol de Quinta</string>
+    <string name="newPlayer">Cadastrar Jogador</string>
+    <string name="namePlayer">Nome</string>
+    <string name="surenamePlayer">Sobrenome</string>
+    <string name="position">Posição</string>
+    <string name="score">Qualificação</string>
+    <string name="tel">Telefone</string>
+    <string name="save">Salvar</string>
+    <string name="credits">Créditos</string>
+    <string name="subtitle">Legenda</string>
+    <string name="clear">Desmarcar todos</string>
+    <string name="exit">Sair</string>
+    <string name="chat">Chat</string>
+    <string name="desc">descricao</string>
+    <string name="chonometer">Cronômetro</string>
+    <string name="details_player">Detalhes do Jogador</string>
+    <string name="ask_for_friend">Solicitar amizade</string>
+    <string name="add_more_player">Deseja cadastrar mais jogadores?</string>
+
+    <!-- Inicio da Legenda de pontuacao -->
+
+    <string name="so_serve_para_completar_o_time">Só serve para completar o time</string>
+    <string name="perna_de_pau">Perna de Pau</string>
+    <string name="da_pro_gasto">Dá pro gasto</string>
+    <string name="tem_nocao_de_bola">Tem Noção de bola</string>
+    <string name="esforcado">Esforçado</string>
+    <string name="mediano">Mediano</string>
+    <string name="joga_bem">Joga bem</string>
+    <string name="bom_de_bola">Bom de bola</string>
+    <string name="camisa_10">Camisa 10</string>
+    <string name="artilheiro_nato">Artilheiro Nato</string>
+
+    <!-- Fim da Legenda de pontuacao -->
+
+
+    <!-- Inicio das cores -->
+
+    <color name="colorTela1">#C6E2FF</color>
+    <color name="colorTitle">#104E8B</color>
+    <color name="colorFont">#FFFFFF</color>
+    <color name="colorTelaResultado">#C6E2FF</color>
+    <color name="colorInicio">#33A1C9</color>
+    <color name="dividor">#ECECEC</color>
+    <color name="color_actionBar">#008000</color>
+    <color name="color_white">#ffffff</color>
+    <!-- Fim das cores -->
+
+    <string name="inicia_cronometro">Iniciar</string>
+    <string name="limpa_cronometro">Limpar</string>
+    <string name="pausa_cronometro">Pausar</string>
+    <string name="continua_cronometro">Continuar</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
+    <string name="app_id">503867289633260</string>
+
+</resources>
