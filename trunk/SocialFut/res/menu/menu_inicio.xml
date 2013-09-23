@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:showAsAction="always"
+        android:title="@string/chat"/>
+    <item
         android:id="@+id/dice"
         android:icon="@drawable/dice"
         android:showAsAction="always"
