@@ -45,7 +45,7 @@ public class FacebookUtils
         }
     }
 
-    public static void getFrieds(Session sessao, Context ctx)
+    public static void getFriends(Session sessao, Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
