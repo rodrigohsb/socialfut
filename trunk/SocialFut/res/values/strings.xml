@@ -21,6 +21,7 @@
     <string name="subtitle">Legenda</string>
     <string name="clear">Desmarcar todos</string>
     <string name="exit">Sair</string>
+    <string name="chat">Chat</string>
     <string name="desc">descricao</string>
     <string name="chonometer">Cronômetro</string>
     <string name="details_player">Detalhes do Jogador</string>
