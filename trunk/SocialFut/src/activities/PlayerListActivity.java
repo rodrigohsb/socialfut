@@ -105,7 +105,7 @@ public class PlayerListActivity extends SherlockListActivity
 
         private Response resp;
 
-        private int MAX = 50;
+        private int MAX = 20;
 
         private final ProgressDialog dialog = new ProgressDialog(PlayerListActivity.this);
 
@@ -130,7 +130,7 @@ public class PlayerListActivity extends SherlockListActivity
             List<Jogador> players = new ArrayList<Jogador>();
 
             Bundle params = new Bundle();
-            params.putString("fields", "picture,name");
+            params.putString("fields", "installed,first_name,last_name,picture");
 
             Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
             resp = request.executeAndWait();
@@ -145,28 +145,28 @@ public class PlayerListActivity extends SherlockListActivity
                 {
                     for (int i = 0; i < friendsFromFacebook.length(); i++)
                     {
+
                         JSONObject player = friendsFromFacebook.getJSONObject(i);
+
+                        try
+                        {
+                            player.getJSONObject("picture").getJSONObject("data").getString("installed");
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
+
                         Long id = Long.valueOf(player.getString("id"));
 
-                        String nomeCompleto = player.getString("name");
-                        String[] nomes = nomeCompleto.split(" ");
+                        String firstName = player.getString("first_name");
 
-                        String primeiroNome;
-                        String sobreNome;
-
-                        if (nomes.length == 2)
-                        {
-                            primeiroNome = nomes[0];
-                            sobreNome = nomes[1];
-                        }
-                        else
-                        {
-                            primeiroNome = nomes[0] + " " + nomes[1];
-                            sobreNome = nomes[nomes.length - 1];
-                        }
+                        String lastName = player.getString("last_name");
 
                         String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
-                        Jogador j = new Jogador(id, primeiroNome, sobreNome, url);
+
+                        Jogador j = new Jogador(id, firstName, lastName, url);
+
                         players.add(j);
                     }
                 }
@@ -175,7 +175,7 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 e.printStackTrace();
             }
-            return !players.isEmpty() ? players : null;
+            return !players.isEmpty() ? players : new ArrayList<Jogador>();
         }
 
         @Override
@@ -185,7 +185,10 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 dialog.dismiss();
             }
-            setListAdapter(new JogadorListAdapter(context, jogadores));
+            if(!jogadores.isEmpty())
+            {
+                setListAdapter(new JogadorListAdapter(context, jogadores));
+            }
             super.onPostExecute(jogadores);
         }
     }
