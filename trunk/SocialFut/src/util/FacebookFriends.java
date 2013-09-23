@@ -42,9 +42,9 @@ public class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
         List<Jogador> players = new ArrayList<Jogador>();
 
         Bundle params = new Bundle();
-        params.putString("fields", "friends.limit(" + MAX + ")");
+        params.putString("fields", "installed,first_name,last_name");
 
-        Request request = new Request(session, "me", params, HttpMethod.GET);
+        Request request = new Request(session, "me/friends", params, HttpMethod.GET);
         resp = request.executeAndWait();
 
         GraphObject graph = resp.getGraphObject();
