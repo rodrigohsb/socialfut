@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.futcefet"
+    package="br.com.socialfut"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -8,7 +8,33 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
+    <!-- Para verificar se alguma activity está executando -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- O GCM precisa de internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- O GCM precisa se conectar a uma conta do Google. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Permissão utilizada para travar a tela, e evitar o modo de espera. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Permissão utilizada para vibrar o aparelho. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!--
+		Permissão customizada necessária para receber as mensagens. 
+		Ela precisa ser chamada PACOTE.permission.C2D_MESSAGE,
+    -->
+    <permission
+        android:name="br.com.socialfut.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="br.com.socialfut.permission.C2D_MESSAGE" />
+
+    <!-- Declara a permissão para se registrar no GCM e receber mensagens -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +43,7 @@
         android:persistent="false"
         android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
         <activity
-            android:name="activities.DrawerLayoutActivity"
+            android:name=".activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -27,45 +53,58 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="activities.PlayerListEndlessActivity"
-            android:parentActivityName="HomeActivity"
+            android:name=".activities.PlayerListEndlessActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="activities.ChronometerActivity"
-            android:parentActivityName="HomeActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <!-- <activity android:name="activities.HomeActivity" ></activity> -->
-        <activity
-            android:name="activities.PlayerListForSort"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="activities.AddNewPlayerActivity"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.ChatActivity2"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="activities.InsertOrEdit"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.ChronometerActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="activities.PlayerListActivity"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.PlayerListForSort"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activities.AddNewPlayerActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activities.InsertOrEdit"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activities.ChatActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activities.PlayerListActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
         </activity>
         <activity
-            android:name="activities.LegendaActivity"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.LegendaActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="activities.ResultActivity"
-            android:parentActivityName="activities.HomeActivity"
+            android:name=".activities.ResultActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
         </activity>
 
@@ -74,6 +113,27 @@
             android:value="@string/app_id" />
 
         <activity android:name="com.facebook.LoginActivity" />
+
+        <!-- BroadcastReceiver para receber as mensagens do GCM, por meio de Intents. -->
+        <receiver
+            android:name="br.com.socialfut.gcm.GCMMyBoadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+
+                <!-- Filtrar as ações para receber mensagens. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Filtrar a ação para receber o registration id do aparelho. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="br.com.socialfut.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+		  Service chamado automaticamente pelo receiver acima.
+		  Deve conter o código para ler as mensagens.
+        -->
+        <service android:name="br.com.socialfut.gcm.GCMIntentService" />
     </application>
 
 </manifest>
