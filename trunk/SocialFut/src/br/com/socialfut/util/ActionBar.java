@@ -24,4 +24,12 @@ public class ActionBar
         actionBar.setHomeButtonEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
     }
+
+    public static void updateCustomActionBar(com.actionbarsherlock.app.ActionBar actionBar, String subTitle)
+    {
+        actionBar.setSubtitle(subTitle);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
+    }
 }
