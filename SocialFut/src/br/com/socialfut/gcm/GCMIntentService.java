@@ -63,7 +63,7 @@ public class GCMIntentService extends GCMBaseIntentService
     protected void onMessage(Context context, Intent intent)
     {
         String fullMsg = intent.getStringExtra("msg");
-        String[] text = fullMsg.split(";");
+        String[] text = fullMsg.split(Constants.SPLASH);
 
         /** Id do Usuario que enviou a mensagem */
         String facebookId = text[0];
@@ -75,7 +75,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
         Bitmap bitmap = getBitmap(j.getPicture());
 
-        enviarMensagemParaApp(msgContent, j.getNome() + " " + j.getSobreNome(), bitmap);
+        enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap);
     }
 
     /**
@@ -146,14 +146,15 @@ public class GCMIntentService extends GCMBaseIntentService
         return BitmapFactory.decodeStream(is);
     }
 
-    private void enviarMensagemParaApp(String msg, String from, Bitmap bitmap)
+    private void enviarMensagemParaApp(String msg, String facebookId, String from, Bitmap bitmap)
     {
         Log.i(TAG, msg);
 
-        // Cria a notificação, e informa para abrir a activity de entrada
+        // Cria a notificaï¿½ï¿½o, e informa para abrir a activity de entrada
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("msg", msg);
-        intent.putExtra("from", bitmap);
+        intent.putExtra("from", from);
+        intent.putExtra("userId", facebookId);
         NotificationUtil.generateNotification(this, msg, intent, from, bitmap);
     }
 
@@ -161,15 +162,15 @@ public class GCMIntentService extends GCMBaseIntentService
     {
         Log.i(TAG, msg);
 
-        // Cria a notificação, e informa para abrir a activity de entrada
-        Intent intent2 = new Intent(this, ChatActivity.class);
-        intent2.putExtra("msg", msg);
-        NotificationUtil.generateNotification(this, msg, intent2);
+        // Cria a notificaï¿½ï¿½o, e informa para abrir a activity de entrada
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("msg", msg);
+        NotificationUtil.generateNotification(this, msg, intent);
     }
 
     private void reconfiguraActivity()
     {
-        // Se a aplicação está aberta
+        // Se a aplicaï¿½ï¿½o estï¿½ aberta
         if (ActivityStackUtils.isMyApplicationTaskOnTop(this))
         {
             // Dispara uma Intent para o receiver configurado na Activity
