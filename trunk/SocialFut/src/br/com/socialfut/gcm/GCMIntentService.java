@@ -71,7 +71,6 @@ public class GCMIntentService extends GCMBaseIntentService
         /** Conteudo da mensagem */
         String msgContent = text[1];
 
-        /** Obtem a foto do usuario */
         Jogador j = getFacebookData(facebookId);
 
         Bitmap bitmap = getBitmap(j.getPicture());
@@ -81,7 +80,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
     /**
      * 
-     * Obtem a imagem do usuario para mostrar na Notificacao
+     * Obtem os dados do usuario para mostrar na Notificacao.
      * 
      * @param msg
      * @return

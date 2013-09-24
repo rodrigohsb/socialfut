@@ -1,12 +1,10 @@
 package br.com.socialfut.database;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.persistence.Jogador.Jogadores;
-
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,34 +17,21 @@ import android.util.Log;
 public class Repositorio
 {
 
-    private static final String CATEGORIA = "Social_Fut";
+    private static final String CATEGORIA = "SocialFut";
 
-    private static final String SCRIPT_DATABASE_DELETE = "DROP TABLE IF EXISTS player";
+    private static final String SCRIPT_DATABASE_DELETE = "DROP TABLE IF EXISTS chat";
 
     private static final String[] SCRIPT_DATABASE_CREATE = new String[] {
-            "create table player(_id integer primary key autoincrement,"
-                    + "nome text not null, sobrenome text not null, posicao text not null,"
-                    + "rating float not null, telefone text not null, picture text not null );",
+            "create table chat(_facebook_id integer primary key," + "content text not null" + "date timestamp not null default current_timestamp);",
             "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Rodrigo','Bacellar','Meio-Campo','5.0','9625-6313','https://graph.facebook.com/rodrigo.haus/picture');",
             "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Marcio','Telles','Goleiro','3.5','9999-6666','https://graph.facebook.com/marcio.telles.10/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Rafael','Cardoso','Meio-Campo','3.0','9845-5155','https://graph.facebook.com/rafael.cardosotelles/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Tiago','Santos','Zagueiro','1.0','7485-9300','https://graph.facebook.com/leandro.carvalho.77398/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Juvenal','dos Santos','Meio-Campo','1.5','8908-7666','https://graph.facebook.com/rockinveia/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Fernando','Santana','Lateral','0.5','4567-0987','https://graph.facebook.com/guilherme.almeidarj/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Antonio','Silva','Zagueiro','1.5','9980-2434','https://graph.facebook.com/weslley.santos.52/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Francisco','Ferreira','Meio-Campo','1.5','8892-0998','https://graph.facebook.com/carlos.sa.378/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Marco','Fernandes','Goleiro','2.0','3526-0980','https://graph.facebook.com/GuilhermeHaus/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Fulano','Macedo','Atacante','1.5','9475-3566','https://graph.facebook.com/vitor.mendes.334/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Beltrano','Souza','Atacante','5.0','8697-0099','https://graph.facebook.com/luizfelipetx/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Ciclano','de Souza','Atacante','4.5','8585-9907','https://graph.facebook.com/filipe.monteiro.773/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Felipe','Silva','Meio-Campo','3.0','6758-0471','https://graph.facebook.com/schustter.haus/picture');",
-            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Jose','Maria','Zagueiro','4.0','8695-6324','https://graph.facebook.com/FontesJuan/picture');" };
+            "insert into player(nome, sobrenome, posicao,rating,telefone,picture) values('Rafael','Cardoso','Meio-Campo','3.0','9845-5155','https://graph.facebook.com/rafael.cardosotelles/picture');" };
 
-    private static final String NOME_BANCO = "social_fut";
+    private static final String NOME_BANCO = "socialFut";
 
     private static final int VERSAO_BANCO = 1;
 
-    private static final String NOME_TABELA = "player";
+    private static final String NOME_TABELA = "chat";
 
     private SQLiteHelper dbhelper;
 
