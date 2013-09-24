@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseBooleanArray;
@@ -24,26 +28,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import br.com.socialfut.R;
-import br.com.socialfut.database.Repositorio;
+import br.com.socialfut.adapter.JogadorListAdapter;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.sort.Sort;
+import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.ConstantsEnum;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphObject;
 
 public class PlayerListForSort extends SherlockListActivity implements OnClickListener
 {
     public static final int INSERIR_EDITAR = 1;
 
-    public static final int BUSCAR = 2;
-
     Context context;
-
-    private static Repositorio repositorio;
-
-    List<Jogador> jogadores;
 
     List<String> nomeJogadores = new ArrayList<String>();
 
@@ -67,17 +71,17 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
 
         context = this;
 
-        getSupportActionBar().setIcon(R.drawable.icone);
-        getSupportActionBar().setTitle("SocialFut");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
-
         listView = (ListView) findViewById(android.R.id.list);
         Button button = (Button) findViewById(R.id.testbutton);
 
-        repositorio = new Repositorio(context);
+        ActionBar.updateActionBar(getSupportActionBar());
 
-        atualizarLista();
+        Session session = Session.getActiveSession();
+        if (session != null && (session.getState().isOpened()))
+        {
+            FacebookFriends faceFriends = new FacebookFriends(session);
+            faceFriends.execute();
+        }
 
         /** Cria o handler e mostra o dialog depois 700ms */
         mHandler = new Handler();
@@ -166,42 +170,11 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
         return Integer.valueOf(timepicker.getText().toString());
     }
 
-    protected void editarJogador(int posicao)
-    {
-
-        Jogador jogador = jogadores.get(posicao);
-
-        Intent it = new Intent(context, InsertOrEdit.class);
-
-        it.putExtra(br.com.socialfut.persistence.Jogador.Jogadores._ID, jogador.getId());
-        startActivityForResult(it, INSERIR_EDITAR);
-    }
-
-    protected void atualizarLista()
-    {
-        jogadores = repositorio.listarJogadores();
-
-        for (Jogador j : jogadores)
-        {
-            nomeJogadores.add(j.getNome() + " " + j.getSobreNome());
-        }
-
-        adapter = new ArrayAdapter<Jogador>(context, android.R.layout.simple_list_item_multiple_choice, jogadores);
-
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        listView.setAdapter(adapter);
-    }
-
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
         switch (item.getItemId())
         {
-        case INSERIR_EDITAR:
-
-            startActivityForResult(new Intent(this, InsertOrEdit.class), INSERIR_EDITAR);
-            break;
-
         case android.R.id.home:
             Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -219,7 +192,12 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
 
         if (resultCode == RESULT_OK)
         {
-            atualizarLista();
+            Session session = Session.getActiveSession();
+            if (session != null && (session.getState().isOpened()))
+            {
+                FacebookFriends faceFriends = new FacebookFriends(session);
+                faceFriends.execute();
+            }
         }
     }
 
@@ -227,7 +205,6 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
     protected void onDestroy()
     {
         super.onDestroy();
-        repositorio.fechar();
     }
 
     @Override
@@ -259,5 +236,88 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
         intent.putExtras(b);
         startActivity(intent);
 
+    }
+
+    private class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
+    {
+        private Session session;
+
+        private Response resp;
+
+        private int MAX = 10;
+
+        private final ProgressDialog dialog = new ProgressDialog(PlayerListForSort.this);
+
+        public FacebookFriends(Session sessao)
+        {
+            super();
+            this.session = sessao;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            dialog.setMessage("Buscando amigos no Facebook...");
+            dialog.show();
+        }
+
+        @Override
+        protected List<Jogador> doInBackground(Void... v)
+        {
+
+            List<Jogador> players = new ArrayList<Jogador>();
+
+            Bundle params = new Bundle();
+            params.putString("fields", "picture,first_name,last_name,installed");
+
+            Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
+            resp = request.executeAndWait();
+
+            GraphObject graph = resp.getGraphObject();
+
+            try
+            {
+                JSONArray friendsFromFacebook = graph.getInnerJSONObject().getJSONArray("data");
+
+                if (friendsFromFacebook.length() > 0)
+                {
+                    for (int i = 0; i < friendsFromFacebook.length(); i++)
+                    {
+                        JSONObject player = friendsFromFacebook.getJSONObject(i);
+
+                        /** ID */
+                        Long id = Long.valueOf(player.getString("id"));
+
+                        /** Primeiro Nome */
+                        String firstName = player.getString("first_name");
+
+                        /** Primeiro Nome */
+                        String lastName = player.getString("last_name");
+
+                        /** Foto */
+                        String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+
+                        Jogador j = new Jogador(id, firstName, lastName, url);
+                        players.add(j);
+                    }
+                }
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            return !players.isEmpty() ? players : null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Jogador> jogadores)
+        {
+            if (dialog.isShowing())
+            {
+                dialog.dismiss();
+            }
+            setListAdapter(new JogadorListAdapter(PlayerListForSort.this, jogadores));
+            super.onPostExecute(jogadores);
+        }
     }
 }
