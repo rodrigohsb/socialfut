@@ -147,11 +147,11 @@ public class MainFragment extends SherlockFragment
         {
 
         case R.id.chat:
-            startActivity(new Intent(getSherlockActivity(), ChatActivity2.class));
+            startActivity(new Intent(getSherlockActivity(), ChatActivity.class));
             break;
 
         case R.id.dice:
-            startActivity(new Intent(getSherlockActivity(), PlayerListForSort.class));
+            startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
             break;
 
         case R.id.cronometro:

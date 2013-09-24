@@ -1,54 +1,66 @@
 package br.com.socialfut.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import br.com.socialfut.R;
+import br.com.socialfut.adapter.ChatAdapter;
+import br.com.socialfut.helper.MessageData;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.util.Sender;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.google.android.gcm.GCMRegistrar;
 
-/**
- * 
- * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propÃ³sito da classe.
- * 
- * @author rodrigo.bacellar
- * @since 09/09/2013
- * 
- */
-public class ChatActivity extends SherlockActivity
+public class ChatActivity extends SherlockListActivity
 {
-    Context context;
+
+    private Context ctx;
+
+    ChatAdapter adapter;
+
+    List<MessageData> msgs = new ArrayList<MessageData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_chat);
+        setContentView(R.layout.activity_main);
 
         ActionBar.updateActionBar(getSupportActionBar());
 
-        context = this;
+        adapter = new ChatAdapter(this, msgs);
+        setListAdapter(adapter);
 
-        TextView text = (TextView) findViewById(R.id.tMsgRecebida);
-        text.setText("Oi!");
+        Button send = (Button) findViewById(R.id.send_button);
+        send.setOnClickListener(new OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                exibirMensagem();
+            }
+        });
 
         // Configura o BroadcastReceiver para receber mensagens
         registerReceiver(mensagemReceiver, new IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
 
         // Se existe alguma mensagem enviada pela Notification, recebe aqui
         String msg = getIntent().getStringExtra("msg");
-        Bitmap from = (Bitmap) getIntent().getParcelableExtra("from");
 
         if (msg != null)
         {
-            exibirMensagem(msg, from);
+            exibirMensagem(msg, Sender.OTHER);
         }
 
     }
@@ -60,11 +72,10 @@ public class ChatActivity extends SherlockActivity
         public void onReceive(Context context, Intent intent)
         {
             String msg = intent.getExtras().getString("msg");
-            Bitmap from = (Bitmap) intent.getParcelableExtra("from");
 
-            if (msg != null && from != null)
+            if (msg != null)
             {
-                exibirMensagem(msg, from);
+                exibirMensagem(msg, Sender.OTHER);
             }
         }
     };
@@ -74,24 +85,32 @@ public class ChatActivity extends SherlockActivity
     {
         // Cancela o receiver e encerra o serviço do GCM
         unregisterReceiver(mensagemReceiver);
-        GCMRegistrar.onDestroy(context);
+        GCMRegistrar.onDestroy(ctx);
         super.onDestroy();
     }
 
-    private void exibirMensagem(String msg, Bitmap bitmap)
+    /**
+     * 
+     * Mensagem enviada pelo usuario
+     * 
+     * @param msg
+     */
+    private void exibirMensagem(String msg, Sender sender)
     {
-        if (bitmap == null)
-        {
-            TextView text = (TextView) findViewById(R.id.tMsgRecebida);
-            text.append(msg + "\n------------------------\n");
-        }
-        else
-        {
-            // TODO Colocar a foto do participante
-            TextView text = (TextView) findViewById(R.id.tMsgRecebida);
-            text.setTextSize(20);
-            text.append(msg + "\n------------------------\n");
-        }
+        msgs.add(new MessageData(msg, sender));
+        adapter.notifyDataSetChanged();
+    }
 
+    /** Mensagem enviada pelo usuario */
+    private void exibirMensagem()
+    {
+        EditText message = (EditText) findViewById(R.id.enter_message);
+        String mText = message.getText().toString();
+
+        if (!mText.trim().equals(""))
+        {
+            exibirMensagem(mText, Sender.ME);
+            message.setText("");
+        }
     }
 }
