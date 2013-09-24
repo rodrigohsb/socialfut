@@ -43,7 +43,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         Log.w(CATEGORIA, "Atualizando a versao" + oldVersion + "para" + newVersion
-                + ". Todos os registros serão deletados.");
+                + ". Todos os registros serï¿½o deletados.");
         Log.i(CATEGORIA, scriptSQLDelete);
         db.execSQL(scriptSQLDelete);
         onCreate(db);
