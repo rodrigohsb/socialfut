@@ -1,23 +1,7 @@
 package br.com.socialfut.persistence;
 
-import java.io.Serializable;
-
-import android.content.ContentUris;
-import android.net.Uri;
-import android.provider.BaseColumns;
-
-public class Jogador implements Serializable
+public class Jogador
 {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-
-    public static String[] colunas = new String[] { Jogadores._ID, Jogadores.NOME, Jogadores.SOBRENOME,
-            Jogadores.POSICAO, Jogadores.RATING, Jogadores.TELEFONE, Jogadores.PICTURE };
-
-    public static final String AUTHORITY = "br.com.socialfut.android.provider.carro";
 
     private long id;
 
@@ -130,36 +114,4 @@ public class Jogador implements Serializable
     {
         return nome + " " + sobreNome;
     }
-
-    public static final class Jogadores implements BaseColumns
-    {
-
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/jogadores");
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.jogadores";
-
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.jogadores";
-
-        public static final String DEFAULT_SORT_ORDER = "id ACS";
-
-        public static final String NOME = "nome";
-
-        public static final String SOBRENOME = "sobrenome";
-
-        public static final String POSICAO = "posicao";
-
-        public static final String RATING = "rating";
-
-        public static final String TELEFONE = "telefone";
-
-        public static final String PICTURE = "picture";
-
-        public static Uri getUri(long id)
-        {
-            Uri uriCarro = ContentUris.withAppendedId(Jogadores.CONTENT_URI, id);
-            return uriCarro;
-        }
-
-    }
-
 }
