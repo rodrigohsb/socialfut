@@ -94,10 +94,6 @@ public class ResultActivity extends SherlockActivity
 
         switch (item.getItemId())
         {
-        case R.id.addPlayer:
-            startActivity(new Intent(this, InsertOrEdit.class));
-            break;
-
         case android.R.id.home:
             Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

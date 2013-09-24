@@ -1,5 +1,6 @@
 package br.com.socialfut.activities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatAdapter;
+import br.com.socialfut.database.Repositorio;
 import br.com.socialfut.helper.MessageData;
+import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Sender;
 
@@ -24,11 +27,11 @@ import com.google.android.gcm.GCMRegistrar;
 public class ChatActivity extends SherlockListActivity
 {
 
-    private Context ctx;
+    private Repositorio repo;
 
-    ChatAdapter adapter;
+    private ChatAdapter adapter;
 
-    List<MessageData> msgs = new ArrayList<MessageData>();
+    private List<MessageData> msgs = new ArrayList<MessageData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,81 +39,132 @@ public class ChatActivity extends SherlockListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar.updateActionBar(getSupportActionBar());
+        // String from = getIntent().getExtras().getString("from");
+
+        String from = "TaÃ­se Lyra";
+
+        // Monta a actionBar com o nome do usuario
+        ActionBar.updateCustomActionBar(getSupportActionBar(), from);
 
         adapter = new ChatAdapter(this, msgs);
         setListAdapter(adapter);
 
         Button send = (Button) findViewById(R.id.send_button);
+
+        repo = new Repositorio(this);
+
+        // Pegar o id do usuario via bundle.
+        long facebookId = 100000422142423l;
+        updateHistory(facebookId);
+
         send.setOnClickListener(new OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
-                exibirMensagem();
+                EditText message = (EditText) findViewById(R.id.enter_message);
+                String mText = message.getText().toString();
+
+                if (!mText.trim().equals(""))
+                {
+                    save(123l, mText);
+                    exibirMensagem(mText, Sender.ME);
+                    message.setText("");
+                }
             }
         });
 
         // Configura o BroadcastReceiver para receber mensagens
-        registerReceiver(mensagemReceiver, new IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
+        registerReceiver(receiver, new IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
 
-        // Se existe alguma mensagem enviada pela Notification, recebe aqui
-        String msg = getIntent().getStringExtra("msg");
-
-        if (msg != null)
-        {
-            exibirMensagem(msg, Sender.OTHER);
-        }
+        // // Se existe alguma mensagem enviada pela Notification, recebe aqui
+        // String msg = getIntent().getStringExtra("msg");
+        // // Long from = Long.valueOf(getIntent().getStringExtra("from"));
+        //
+        // // if (msg != null && from != 0)
+        // if (msg != null)
+        // {
+        //
+        // save(100000422142423l, msg);
+        // updateHistory(100000422142423l);
+        // exibirMensagem(msg, Sender.OTHER);
+        // }
 
     }
 
     // Receiver para receber a mensagem do Service por Intent
-    private final BroadcastReceiver mensagemReceiver = new BroadcastReceiver()
+    private final BroadcastReceiver receiver = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)
         {
             String msg = intent.getExtras().getString("msg");
+            String from = intent.getExtras().getString("from");
+            Long userId = Long.valueOf(intent.getExtras().getString("userId"));
 
-            if (msg != null)
-            {
-                exibirMensagem(msg, Sender.OTHER);
-            }
+            save(userId, msg);
+            updateHistory(userId);
+
+            // Monta a actionBar com o nome do usuario
+            ActionBar.updateCustomActionBar(getSupportActionBar(), from);
+
+            exibirMensagem(msg, Sender.OTHER);
         }
     };
 
     @Override
     protected void onDestroy()
     {
-        // Cancela o receiver e encerra o serviço do GCM
-        unregisterReceiver(mensagemReceiver);
-        GCMRegistrar.onDestroy(ctx);
+        // Cancela o receiver e encerra o serviï¿½o do GCM
+        unregisterReceiver(receiver);
+        GCMRegistrar.onDestroy(this);
         super.onDestroy();
     }
 
     /**
      * 
-     * Mensagem enviada pelo usuario
+     * Mensagem recebida ou enviada pelo usuario
      * 
      * @param msg
      */
     private void exibirMensagem(String msg, Sender sender)
     {
-        msgs.add(new MessageData(msg, sender));
+        this.msgs.add(new MessageData(msg, sender));
         adapter.notifyDataSetChanged();
     }
 
-    /** Mensagem enviada pelo usuario */
-    private void exibirMensagem()
+    /**
+     * 
+     * Mostra o historico
+     * 
+     * @param facebookId
+     */
+    private void updateHistory(long userId)
     {
-        EditText message = (EditText) findViewById(R.id.enter_message);
-        String mText = message.getText().toString();
+        List<Chat> chatList = repo.searchHistory(userId);
 
-        if (!mText.trim().equals(""))
+        int i = 0;
+
+        for (Chat c : chatList)
         {
-            exibirMensagem(mText, Sender.ME);
-            message.setText("");
+            if (i % 2 == 0)
+            {
+                this.msgs.add(new MessageData(c.getContent(), Sender.ME));
+            }
+            else
+            {
+                this.msgs.add(new MessageData(c.getContent(), Sender.OTHER));
+            }
+            i++;
         }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void save(Long from, String msg)
+    {
+        java.util.Date date = new java.util.Date();
+        Chat chat = new Chat(from, 583633830l, msg, new Timestamp(date.getTime()));
+        repo.save(chat);
+
     }
 }
