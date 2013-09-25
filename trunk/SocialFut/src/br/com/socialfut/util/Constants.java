@@ -25,6 +25,6 @@ public class Constants
 
     public static final String GCM_INTENT_SERVICE = "br.com.socialfut.gcm.GCMIntentService";
 
-    public static final String SPLASH = "/";
+    public static final String SEMICOLON = ";";
 
 }
