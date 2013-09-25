@@ -77,6 +77,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".activities.ChatListActivity"
+            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
             android:name=".activities.AddNewPlayerActivity"
             android:parentActivityName=".activities.DrawerLayoutActivity"
             android:screenOrientation="portrait" >
