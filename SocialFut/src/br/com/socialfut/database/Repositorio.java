@@ -47,10 +47,9 @@ public class Repositorio extends SQLiteOpenHelper
             int idxId = c.getColumnIndex(Chats._ID);
             int idxSender = c.getColumnIndex(Chats.SENDER);
             int idxCont = c.getColumnIndex(Chats.CONTENT);
-            int idxTime = c.getColumnIndex(Chats.DATE);
+            // int idxTime = c.getColumnIndex(Chats.DATE);
             do
             {
-
                 Chat chat = new Chat();
                 chat.setId(c.getLong(idxId));
                 chat.setSender(c.getLong(idxSender));
@@ -73,6 +72,7 @@ public class Repositorio extends SQLiteOpenHelper
         values.put(Chats.SENDER, chat.getSender());
         values.put(Chats.DATE, chat.getTime().toString());
         values.put(Chats.CONTENT, chat.getContent());
+        System.out.println("[save] Salvando Sender [" + chat.getSender() + "], content[" + chat.getContent() + "].");
         db.insert(NOME_TABELA, null, values);
     }
 
