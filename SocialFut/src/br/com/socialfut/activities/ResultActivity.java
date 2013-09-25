@@ -95,7 +95,7 @@ public class ResultActivity extends SherlockActivity
         switch (item.getItemId())
         {
         case android.R.id.home:
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, DrawerLayoutActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             break;
