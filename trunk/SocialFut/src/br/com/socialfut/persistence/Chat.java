@@ -21,15 +21,13 @@ public class Chat implements Serializable
 
     private static final long serialVersionUID = 1L;
 
-    public static String[] colunas = new String[] { Chats._ID, Chats.SENDER, Chats.RECEIVER, Chats.CONTENT };
+    public static String[] colunas = new String[] { Chats._ID, Chats.SENDER, Chats.CONTENT };
 
     public static final String AUTHORITY = "br.com.socialfut.android.provider.chat";
 
     private long id;
 
     private long sender;
-
-    private long receiver;
 
     private String content;
 
@@ -40,21 +38,10 @@ public class Chat implements Serializable
         super();
     }
 
-    public Chat(long id, long sender, long receiver, String content, Timestamp time)
-    {
-        super();
-        this.id = id;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.content = content;
-        this.time = time;
-    }
-
-    public Chat(long sender, long receiver, String content, Timestamp time)
+    public Chat(long sender, String content, Timestamp time)
     {
         super();
         this.sender = sender;
-        this.receiver = receiver;
         this.content = content;
         this.time = time;
     }
@@ -77,16 +64,6 @@ public class Chat implements Serializable
     public void setSender(long sender)
     {
         this.sender = sender;
-    }
-
-    public long getReceiver()
-    {
-        return receiver;
-    }
-
-    public void setReceiver(long receiver)
-    {
-        this.receiver = receiver;
     }
 
     public String getContent()
@@ -127,8 +104,6 @@ public class Chat implements Serializable
         public static final String DEFAULT_SORT_ORDER = "id ACS";
 
         public static final String SENDER = "sender";
-
-        public static final String RECEIVER = "receiver";
 
         public static final String CONTENT = "content";
 
