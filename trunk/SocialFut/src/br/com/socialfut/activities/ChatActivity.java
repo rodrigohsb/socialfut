@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatAdapter;
@@ -25,12 +24,13 @@ import com.google.android.gcm.GCMRegistrar;
 
 public class ChatActivity extends SherlockListActivity
 {
-
     private Repositorio repo;
 
     private ChatAdapter adapter;
 
     private List<MessageData> msgs = new ArrayList<MessageData>();
+
+    private Long facebookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,29 +38,31 @@ public class ChatActivity extends SherlockListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        repo = new Repositorio(this);
+
         Bundle bundle = getIntent().getExtras();
 
         String from = bundle.getString("from");
-        String msg = bundle.getString("msg");
-        Long facebookId = Long.valueOf(bundle.getString("userId"));
+        facebookId = Long.valueOf(bundle.getString("userId"));
 
+        /** Customiza ActionBar */
         ActionBar.updateCustomActionBar(getSupportActionBar(), from);
 
-        adapter = new ChatAdapter(this, msgs);
-        setListAdapter(adapter);
-
-        Button send = (Button) findViewById(R.id.send_button);
-
-        repo = new Repositorio(this);
+        String msg = bundle.getString("msg");
 
         if (msg != null)
         {
             save(facebookId, msg);
-            updateHistory(facebookId);
-            exibirMensagem(msg, Sender.OTHER);
         }
 
-        send.setOnClickListener(new OnClickListener()
+        adapter = new ChatAdapter(this, msgs);
+        setListAdapter(adapter);
+
+        /** Busca o historico para mostrar na tela */
+        updateHistory(facebookId);
+
+        /** Botao de enviar */
+        findViewById(R.id.send_button).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -119,7 +121,7 @@ public class ChatActivity extends SherlockListActivity
     @Override
     protected void onDestroy()
     {
-        // Cancela o receiver e encerra o servi�o do GCM
+        // Cancela o receiver e encerra o servico do GCM
         unregisterReceiver(receiver);
         GCMRegistrar.onDestroy(this);
         super.onDestroy();
@@ -149,26 +151,37 @@ public class ChatActivity extends SherlockListActivity
 
         int i = 0;
 
+        System.out.println("[updateHistory] Listando o historico...");
+
         for (Chat c : chatList)
         {
             if (i % 2 == 0)
             {
                 msgs.add(new MessageData(c.getContent(), Sender.ME));
+                adapter.notifyDataSetChanged();
             }
             else
             {
                 msgs.add(new MessageData(c.getContent(), Sender.OTHER));
+                adapter.notifyDataSetChanged();
             }
             i++;
+            System.out.println("[updateHistory] Sender [" + c.getSender() + "], content[" + c.getContent() + "].");
         }
-        adapter.notifyDataSetChanged();
     }
 
     private void save(Long from, String msg)
     {
+
         java.util.Date date = new java.util.Date();
         Chat chat = new Chat(from, msg, new Timestamp(date.getTime()));
         repo.save(chat);
+    }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, ChatListActivity.class));
     }
 }

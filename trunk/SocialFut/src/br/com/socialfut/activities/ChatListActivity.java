@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import br.com.socialfut.R;
-import br.com.socialfut.adapter.JogadorListAdapter;
+import br.com.socialfut.adapter.ChatListAdapter;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
 
@@ -27,7 +27,16 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 
-public class PlayerListActivity extends SherlockListActivity
+/**
+ * 
+ * <b>Descricao da Classe:</b><br>
+ * TODO Explicar detalhadamente propósito da classe.
+ * 
+ * @author rodrigo.bacellar
+ * @since 25/09/2013
+ * 
+ */
+public class ChatListActivity extends SherlockListActivity
 {
 
     @Override
@@ -49,6 +58,14 @@ public class PlayerListActivity extends SherlockListActivity
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
         super.onListItemClick(l, v, position, id);
+
+        Jogador Jogador = (Jogador) getListAdapter().getItem(position);
+
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("from", Jogador.getNome() + Jogador.getSobreNome());
+        intent.putExtra("userId", String.valueOf(Jogador.getId()));
+
+        startActivity(intent);
     }
 
     @Override
@@ -102,7 +119,7 @@ public class PlayerListActivity extends SherlockListActivity
 
         private int MAX = 10;
 
-        private final ProgressDialog dialog = new ProgressDialog(PlayerListActivity.this);
+        private final ProgressDialog dialog = new ProgressDialog(ChatListActivity.this);
 
         public FacebookFriends(Session sessao)
         {
@@ -172,7 +189,7 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 dialog.dismiss();
             }
-            setListAdapter(new JogadorListAdapter(PlayerListActivity.this, jogadores));
+            setListAdapter(new ChatListAdapter(ChatListActivity.this, jogadores));
             super.onPostExecute(jogadores);
         }
     }
