@@ -40,30 +40,25 @@ public class GCMIntentService extends GCMBaseIntentService
     @Override
     protected void onRegistered(Context context, String registrationId)
     {
-        enviarMensagemParaApp("Device registrado: registrationId = " + registrationId);
-
         reconfiguraActivity();
     }
 
     @Override
     protected void onUnregistered(Context context, String registrationId)
     {
-        enviarMensagemParaApp("Device removido do registro.");
-
         reconfiguraActivity();
     }
 
     @Override
     public void onError(Context context, String errorId)
     {
-        enviarMensagemParaApp("Erro: " + errorId);
     }
 
     @Override
     protected void onMessage(Context context, Intent intent)
     {
         String fullMsg = intent.getStringExtra("msg");
-        String[] text = fullMsg.split(Constants.SPLASH);
+        String[] text = fullMsg.split(Constants.SEMICOLON);
 
         /** Id do Usuario que enviou a mensagem */
         String facebookId = text[0];
@@ -148,9 +143,9 @@ public class GCMIntentService extends GCMBaseIntentService
 
     private void enviarMensagemParaApp(String msg, String facebookId, String from, Bitmap bitmap)
     {
-        Log.i(TAG, msg);
+        Log.i(TAG, "Mensagem recebida " + msg);
 
-        // Cria a notifica��o, e informa para abrir a activity de entrada
+        // Cria a notificacao e informa para abrir a activity de entrada
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("msg", msg);
         intent.putExtra("from", from);
@@ -162,7 +157,7 @@ public class GCMIntentService extends GCMBaseIntentService
     {
         Log.i(TAG, msg);
 
-        // Cria a notifica��o, e informa para abrir a activity de entrada
+        // Cria a notificacao e informa para abrir a activity de entrada
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("msg", msg);
         NotificationUtil.generateNotification(this, msg, intent);
@@ -170,7 +165,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
     private void reconfiguraActivity()
     {
-        // Se a aplica��o est� aberta
+        // Se a notificacao esta aberta
         if (ActivityStackUtils.isMyApplicationTaskOnTop(this))
         {
             // Dispara uma Intent para o receiver configurado na Activity
