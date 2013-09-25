@@ -7,7 +7,6 @@ import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,11 +38,12 @@ public class ChatActivity extends SherlockListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // String from = getIntent().getExtras().getString("from");
+        Bundle bundle = getIntent().getExtras();
 
-        String from = "Taíse Lyra";
+        String from = bundle.getString("from");
+        String msg = bundle.getString("msg");
+        Long facebookId = Long.valueOf(bundle.getString("userId"));
 
-        // Monta a actionBar com o nome do usuario
         ActionBar.updateCustomActionBar(getSupportActionBar(), from);
 
         adapter = new ChatAdapter(this, msgs);
@@ -53,9 +53,12 @@ public class ChatActivity extends SherlockListActivity
 
         repo = new Repositorio(this);
 
-        // Pegar o id do usuario via bundle.
-        long facebookId = 100000422142423l;
-        updateHistory(facebookId);
+        if (msg != null)
+        {
+            save(facebookId, msg);
+            updateHistory(facebookId);
+            exibirMensagem(msg, Sender.OTHER);
+        }
 
         send.setOnClickListener(new OnClickListener()
         {
@@ -75,8 +78,9 @@ public class ChatActivity extends SherlockListActivity
         });
 
         // Configura o BroadcastReceiver para receber mensagens
-        registerReceiver(receiver, new IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
-
+        // registerReceiver(receiver, new
+        // IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
+        //
         // // Se existe alguma mensagem enviada pela Notification, recebe aqui
         // String msg = getIntent().getStringExtra("msg");
         // // Long from = Long.valueOf(getIntent().getStringExtra("from"));
@@ -149,11 +153,11 @@ public class ChatActivity extends SherlockListActivity
         {
             if (i % 2 == 0)
             {
-                this.msgs.add(new MessageData(c.getContent(), Sender.ME));
+                msgs.add(new MessageData(c.getContent(), Sender.ME));
             }
             else
             {
-                this.msgs.add(new MessageData(c.getContent(), Sender.OTHER));
+                msgs.add(new MessageData(c.getContent(), Sender.OTHER));
             }
             i++;
         }
@@ -163,7 +167,7 @@ public class ChatActivity extends SherlockListActivity
     private void save(Long from, String msg)
     {
         java.util.Date date = new java.util.Date();
-        Chat chat = new Chat(from, 583633830l, msg, new Timestamp(date.getTime()));
+        Chat chat = new Chat(from, msg, new Timestamp(date.getTime()));
         repo.save(chat);
 
     }
