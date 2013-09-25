@@ -20,7 +20,7 @@ public class Repositorio extends SQLiteOpenHelper
 
     private static final String SCRIPT_DATABASE_CREATE = "create table "
             + TABLE
-            + " (_id integer primary key autoincrement, sender long not null, receiver long not null, content text not null, date timestamp default current_timestamp)";
+            + " (_id integer primary key autoincrement, sender long not null, content text not null, date timestamp default current_timestamp)";
 
     private static final String DATABASE_NAME = "socialFut";
 
@@ -46,7 +46,6 @@ public class Repositorio extends SQLiteOpenHelper
         {
             int idxId = c.getColumnIndex(Chats._ID);
             int idxSender = c.getColumnIndex(Chats.SENDER);
-            int idxReceive = c.getColumnIndex(Chats.RECEIVER);
             int idxCont = c.getColumnIndex(Chats.CONTENT);
             int idxTime = c.getColumnIndex(Chats.DATE);
             do
@@ -55,7 +54,6 @@ public class Repositorio extends SQLiteOpenHelper
                 Chat chat = new Chat();
                 chat.setId(c.getLong(idxId));
                 chat.setSender(c.getLong(idxSender));
-                chat.setReceiver(c.getLong(idxReceive));
                 chat.setContent(c.getString(idxCont));
                 // chat.setTime("");
 
@@ -73,10 +71,8 @@ public class Repositorio extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
 
         values.put(Chats.SENDER, chat.getSender());
-        values.put(Chats.RECEIVER, chat.getReceiver());
         values.put(Chats.DATE, chat.getTime().toString());
         values.put(Chats.CONTENT, chat.getContent());
-
         db.insert(NOME_TABELA, null, values);
     }
 
