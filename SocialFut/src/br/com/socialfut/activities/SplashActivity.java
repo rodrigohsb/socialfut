@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import br.com.socialfut.R;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.PlayerREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
@@ -55,7 +56,7 @@ public class SplashActivity extends SherlockActivity implements Runnable
     @Override
     protected void onDestroy()
     {
-        GCMRegistrar.onDestroy(ctx);
+        GCMRegistrar.onDestroy(getApplicationContext());
         super.onDestroy();
     }
 
@@ -93,25 +94,35 @@ public class SplashActivity extends SherlockActivity implements Runnable
                 else
                 {
                     Log.d(TAG, "GCM já está registrado! ID: " + regId);
+                    sendRegistrationToServer(regId);
                 }
             }
             else
             {
                 String regId = GCMRegistrar.getRegistrationId(ctx);
                 Log.d(TAG, "GCM já está registrado! ID: " + regId);
+                sendRegistrationToServer(regId);
             }
             return null;
         }
 
         /**
          * 
-         * Faz o envio do id do Device pro Servidor
+         * Faz o envio do Registro do device pro servidor
          * 
          * @param regId
          */
         private void sendRegistrationToServer(String regId)
         {
-            // TODO Enviar o registro do device para o servidor.
+            PlayerREST client = new PlayerREST();
+            try
+            {
+                String resposta = client.insertPlayer(regId);
+                System.out.println("Resposta:" + resposta);
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }

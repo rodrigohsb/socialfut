@@ -17,6 +17,7 @@ import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatListAdapter;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
@@ -62,10 +63,11 @@ public class ChatListActivity extends SherlockListActivity
         Jogador Jogador = (Jogador) getListAdapter().getItem(position);
 
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("from", Jogador.getNome() + Jogador.getSobreNome());
+        intent.putExtra("from", Jogador.getNome() + " " + Jogador.getSobreNome());
         intent.putExtra("userId", String.valueOf(Jogador.getId()));
 
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -131,6 +133,7 @@ public class ChatListActivity extends SherlockListActivity
         protected void onPreExecute()
         {
             dialog.setMessage("Buscando amigos no Facebook...");
+            dialog.setCancelable(false);
             dialog.show();
         }
 
@@ -140,9 +143,16 @@ public class ChatListActivity extends SherlockListActivity
 
             List<Jogador> players = new ArrayList<Jogador>();
 
+            // Somente usa o "Cache" se tiver houve algum registro.
+            if (Constants.jogadores != null || !Constants.jogadores.isEmpty())
+            {
+                return Constants.jogadores;
+            }
+
             Bundle params = new Bundle();
             params.putString("fields", "picture,first_name,last_name,installed");
 
+            // Request request = new Request(session, "me/friends, params,HttpMethod.GET);
             Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
             resp = request.executeAndWait();
 
@@ -156,30 +166,43 @@ public class ChatListActivity extends SherlockListActivity
                 {
                     for (int i = 0; i < friendsFromFacebook.length(); i++)
                     {
-                        JSONObject player = friendsFromFacebook.getJSONObject(i);
+                        try
+                        {
+                            JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                        /** ID */
-                        Long id = Long.valueOf(player.getString("id"));
+                            // Amigos que tem o aplicativo.
+                            // player.getString("installed");
 
-                        /** Primeiro Nome */
-                        String firstName = player.getString("first_name");
+                            /** ID */
+                            Long id = Long.valueOf(player.getString("id"));
 
-                        /** Primeiro Nome */
-                        String lastName = player.getString("last_name");
+                            /** Primeiro Nome */
+                            String firstName = player.getString("first_name");
 
-                        /** Foto */
-                        String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+                            /** Primeiro Nome */
+                            String lastName = player.getString("last_name");
 
-                        Jogador j = new Jogador(id, firstName, lastName, url);
-                        players.add(j);
+                            /** Foto */
+                            String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+
+                            Jogador j = new Jogador(id, firstName, lastName, url);
+                            players.add(j);
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
                     }
                 }
             }
             catch (JSONException e)
             {
-                e.printStackTrace();
+                return null;
             }
-            return !players.isEmpty() ? players : null;
+
+            Constants.jogadores = players;
+
+            return players;
         }
 
         @Override
