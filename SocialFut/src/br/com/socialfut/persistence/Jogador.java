@@ -1,7 +1,11 @@
 package br.com.socialfut.persistence;
 
-public class Jogador
+import java.io.Serializable;
+
+public class Jogador implements Serializable
 {
+
+    private static final long serialVersionUID = 1L;
 
     private long id;
 
@@ -12,8 +16,6 @@ public class Jogador
     private String position;
 
     private float rating;
-
-    private String tel;
 
     private String picture;
 
@@ -30,13 +32,12 @@ public class Jogador
         this.picture = picture;
     }
 
-    public Jogador(String nome, String sobreNome, String posicao, float rating, String tel)
+    public Jogador(String nome, String sobreNome, String posicao, float rating)
     {
         this.nome = nome;
         this.sobreNome = sobreNome;
         this.position = posicao;
         this.rating = rating;
-        this.tel = tel;
     }
 
     public long getId()
@@ -77,16 +78,6 @@ public class Jogador
     public void setNome(String nome)
     {
         this.nome = nome;
-    }
-
-    public String getTel()
-    {
-        return tel;
-    }
-
-    public void setTel(String tel)
-    {
-        this.tel = tel;
     }
 
     public String getSobreNome()

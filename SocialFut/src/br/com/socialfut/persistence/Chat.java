@@ -1,7 +1,7 @@
 package br.com.socialfut.persistence;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import android.content.ContentUris;
 import android.net.Uri;
@@ -21,7 +21,7 @@ public class Chat implements Serializable
 
     private static final long serialVersionUID = 1L;
 
-    public static String[] colunas = new String[] { Chats._ID, Chats.SENDER, Chats.CONTENT };
+    public static String[] colunas = new String[] { Chats._ID, Chats.SENDER, Chats.RECEIVER, Chats.CONTENT, Chats.DATE };
 
     public static final String AUTHORITY = "br.com.socialfut.android.provider.chat";
 
@@ -29,21 +29,24 @@ public class Chat implements Serializable
 
     private long sender;
 
+    private long receiver;
+
     private String content;
 
-    private Timestamp time;
+    private Date date;
 
     public Chat()
     {
         super();
     }
 
-    public Chat(long sender, String content, Timestamp time)
+    public Chat(long sender, long receiver, String content)
     {
         super();
         this.sender = sender;
+        this.receiver = receiver;
         this.content = content;
-        this.time = time;
+        this.date = new Date();
     }
 
     public long getId()
@@ -66,6 +69,16 @@ public class Chat implements Serializable
         this.sender = sender;
     }
 
+    public long getReceiver()
+    {
+        return receiver;
+    }
+
+    public void setReceiver(long receiver)
+    {
+        this.receiver = receiver;
+    }
+
     public String getContent()
     {
         return content;
@@ -76,14 +89,14 @@ public class Chat implements Serializable
         this.content = content;
     }
 
-    public Timestamp getTime()
+    public Date getDate()
     {
-        return time;
+        return date;
     }
 
-    public void setTime(Timestamp time)
+    public void setDate(Date date)
     {
-        this.time = time;
+        this.date = date;
     }
 
     @Override
@@ -105,9 +118,11 @@ public class Chat implements Serializable
 
         public static final String SENDER = "sender";
 
+        public static final String RECEIVER = "receiver";
+
         public static final String CONTENT = "content";
 
-        public static final String DATE = "date";
+        public static final String DATE = "created_date";
 
         public static Uri getUri(long id)
         {
