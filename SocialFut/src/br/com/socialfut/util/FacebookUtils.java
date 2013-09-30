@@ -16,22 +16,26 @@ public class FacebookUtils
 
     private static FacebookPost facebookPost;
 
-    public static void getName(Session sessao, TextView txtName, TextView txtSureName, Context ctx)
+    public static void getProfile(Session sessao, TextView txtName, TextView txtSureName, ImageView imgAvatar,
+            Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
-            facebookName = new FacebookName(sessao, txtName, txtSureName, ctx);
-            facebookName.execute();
+            getName(sessao, txtName, txtSureName, ctx);
+            getPicture(sessao, imgAvatar, ctx);
         }
+    }
+
+    public static void getName(Session sessao, TextView txtName, TextView txtSureName, Context ctx)
+    {
+        facebookName = new FacebookName(sessao, txtName, txtSureName, ctx);
+        facebookName.execute();
     }
 
     public static void getPicture(Session sessao, ImageView imgAvatar, Context ctx)
     {
-        if (sessao != null && (sessao.getState().isOpened()))
-        {
-            facebookPicture = new FacebookPicture(sessao, imgAvatar, ctx);
-            facebookPicture.execute();
-        }
+        facebookPicture = new FacebookPicture(sessao, imgAvatar, ctx);
+        facebookPicture.execute();
     }
 
     public static void setPostMsg(Session sessao, EditText edtPostMsg)
