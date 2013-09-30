@@ -225,8 +225,7 @@ public class MainFragment extends SherlockFragment
     {
         if (state.isOpened())
         {
-            FacebookUtils.getPicture(session, img, ctx);
-            FacebookUtils.getName(session, name, sureName, ctx);
+            FacebookUtils.getProfile(session, name, sureName, img, ctx);
         }
         else if (state.isClosed())
         {

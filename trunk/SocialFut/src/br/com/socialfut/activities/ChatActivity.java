@@ -1,42 +1,44 @@
 package br.com.socialfut.activities;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.adapter.ChatAdapter;
 import br.com.socialfut.database.Repositorio;
-import br.com.socialfut.helper.MessageData;
 import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.ActionBar;
-import br.com.socialfut.util.Sender;
+import br.com.socialfut.util.Constants;
 
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.google.android.gcm.GCMRegistrar;
+import com.actionbarsherlock.app.SherlockActivity;
 
-public class ChatActivity extends SherlockListActivity
+public class ChatActivity extends SherlockActivity
 {
-    private Repositorio repo;
 
-    private ChatAdapter adapter;
+    private EditText messageText;
 
-    private List<MessageData> msgs = new ArrayList<MessageData>();
+    private ViewGroup messagesContainer;
+
+    private ScrollView scrollContainer;
 
     private Long facebookId;
+
+    private Repositorio repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.chat);
 
         repo = new Repositorio(this);
 
@@ -52,91 +54,75 @@ public class ChatActivity extends SherlockListActivity
 
         if (msg != null)
         {
-            save(facebookId, msg);
+            // Passar o id do usuario
+            save(facebookId, Constants.USER_ID, msg);
         }
 
-        adapter = new ChatAdapter(this, msgs);
-        setListAdapter(adapter);
+        messagesContainer = (ViewGroup) findViewById(R.id.messagesContainer);
+        scrollContainer = (ScrollView) findViewById(R.id.scrollContainer);
+        messageText = (EditText) findViewById(R.id.messageEdit);
 
-        /** Busca o historico para mostrar na tela */
-        updateHistory(facebookId);
-
-        /** Botao de enviar */
-        findViewById(R.id.send_button).setOnClickListener(new OnClickListener()
+        findViewById(R.id.sendButton).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                EditText message = (EditText) findViewById(R.id.enter_message);
-                String mText = message.getText().toString();
-
-                if (!mText.trim().equals(""))
+                if (!messageText.getText().toString().trim().equals(""))
                 {
-                    save(123l, mText);
-                    exibirMensagem(mText, Sender.ME);
-                    message.setText("");
+                    sendMessage(messageText.getText().toString());
+                    // TODO Chamar o servidor via WebServices
                 }
             }
         });
 
-        // Configura o BroadcastReceiver para receber mensagens
-        // registerReceiver(receiver, new
-        // IntentFilter("RECEIVER_QUE_VAI_RECEBER_ESTA_MSG"));
-        //
-        // // Se existe alguma mensagem enviada pela Notification, recebe aqui
-        // String msg = getIntent().getStringExtra("msg");
-        // // Long from = Long.valueOf(getIntent().getStringExtra("from"));
-        //
-        // // if (msg != null && from != 0)
-        // if (msg != null)
-        // {
-        //
-        // save(100000422142423l, msg);
-        // updateHistory(100000422142423l);
-        // exibirMensagem(msg, Sender.OTHER);
-        // }
+        /** Busca o historico para mostrar na tela */
+        updateHistory(facebookId);
 
     }
 
-    // Receiver para receber a mensagem do Service por Intent
-    private final BroadcastReceiver receiver = new BroadcastReceiver()
+    private void sendMessage(String message)
     {
-        @Override
-        public void onReceive(Context context, Intent intent)
+        messageText.setText("");
+        save(Constants.USER_ID, facebookId, message);
+        showMessage(message, false);
+    }
+
+    private void showMessage(String message, boolean leftSide)
+    {
+        final TextView textView = new TextView(ChatActivity.this);
+        textView.setTextColor(Color.BLACK);
+        textView.setText(message);
+
+        int bgRes = R.drawable.left_message_bg;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if (!leftSide)
         {
-            String msg = intent.getExtras().getString("msg");
-            String from = intent.getExtras().getString("from");
-            Long userId = Long.valueOf(intent.getExtras().getString("userId"));
-
-            save(userId, msg);
-            updateHistory(userId);
-
-            // Monta a actionBar com o nome do usuario
-            ActionBar.updateCustomActionBar(getSupportActionBar(), from);
-
-            exibirMensagem(msg, Sender.OTHER);
+            bgRes = R.drawable.right_message_bg;
+            params.gravity = Gravity.RIGHT;
         }
-    };
 
-    @Override
-    protected void onDestroy()
-    {
-        // Cancela o receiver e encerra o servico do GCM
-        unregisterReceiver(receiver);
-        GCMRegistrar.onDestroy(this);
-        super.onDestroy();
-    }
+        textView.setLayoutParams(params);
 
-    /**
-     * 
-     * Mensagem recebida ou enviada pelo usuario
-     * 
-     * @param msg
-     */
-    private void exibirMensagem(String msg, Sender sender)
-    {
-        this.msgs.add(new MessageData(msg, sender));
-        adapter.notifyDataSetChanged();
+        textView.setBackgroundResource(bgRes);
+
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                messagesContainer.addView(textView);
+
+                // Scroll to bottom
+                if (scrollContainer.getChildAt(0) != null)
+                {
+                    scrollContainer.scrollTo(scrollContainer.getScrollX(), scrollContainer.getChildAt(0).getHeight());
+                }
+                scrollContainer.fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 
     /**
@@ -149,32 +135,30 @@ public class ChatActivity extends SherlockListActivity
     {
         List<Chat> chatList = repo.searchHistory(userId);
 
-        int i = 0;
-
-        System.out.println("[updateHistory] Listando o historico...");
-
         for (Chat c : chatList)
         {
-            if (i % 2 == 0)
+            if (c.getSender() == Constants.USER_ID)
             {
-                msgs.add(new MessageData(c.getContent(), Sender.ME));
-                adapter.notifyDataSetChanged();
+                showMessage(c.getContent(), false);
             }
             else
             {
-                msgs.add(new MessageData(c.getContent(), Sender.OTHER));
-                adapter.notifyDataSetChanged();
+                showMessage(c.getContent(), true);
             }
-            i++;
-            System.out.println("[updateHistory] Sender [" + c.getSender() + "], content[" + c.getContent() + "].");
         }
     }
 
-    private void save(Long from, String msg)
+    /**
+     * 
+     * Salva no banco a msg reccebida ou enviada
+     * 
+     * @param from
+     * @param to
+     * @param msg
+     */
+    private void save(long from, long to, String msg)
     {
-
-        java.util.Date date = new java.util.Date();
-        Chat chat = new Chat(from, msg, new Timestamp(date.getTime()));
+        Chat chat = new Chat(from, to, msg);
         repo.save(chat);
     }
 
@@ -183,5 +167,6 @@ public class ChatActivity extends SherlockListActivity
     {
         super.onBackPressed();
         startActivity(new Intent(this, ChatListActivity.class));
+        finish();
     }
 }

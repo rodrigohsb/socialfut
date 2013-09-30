@@ -7,7 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import br.com.socialfut.R;
 import br.com.socialfut.adapter.JogadorListAdapter;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.util.AlertUtils;
+import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
@@ -104,6 +108,8 @@ public class PlayerListActivity extends SherlockListActivity
 
         private final ProgressDialog dialog = new ProgressDialog(PlayerListActivity.this);
 
+        private AlertDialog alertDialog;
+
         public FacebookFriends(Session sessao)
         {
             super();
@@ -114,6 +120,7 @@ public class PlayerListActivity extends SherlockListActivity
         protected void onPreExecute()
         {
             dialog.setMessage("Buscando amigos no Facebook...");
+            dialog.setCancelable(false);
             dialog.show();
         }
 
@@ -123,9 +130,16 @@ public class PlayerListActivity extends SherlockListActivity
 
             List<Jogador> players = new ArrayList<Jogador>();
 
+            // Somente usa o "Cache" se tiver houve algum registro.
+            if (Constants.jogadores != null || !Constants.jogadores.isEmpty())
+            {
+                return Constants.jogadores;
+            }
+
             Bundle params = new Bundle();
             params.putString("fields", "picture,first_name,last_name,installed");
 
+            // Request request = new Request(session, "me/friends, params,HttpMethod.GET);
             Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
             resp = request.executeAndWait();
 
@@ -139,30 +153,43 @@ public class PlayerListActivity extends SherlockListActivity
                 {
                     for (int i = 0; i < friendsFromFacebook.length(); i++)
                     {
-                        JSONObject player = friendsFromFacebook.getJSONObject(i);
+                        try
+                        {
+                            JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                        /** ID */
-                        Long id = Long.valueOf(player.getString("id"));
+                            // Amigos que tem o aplicativo.
+                            // player.getString("installed");
 
-                        /** Primeiro Nome */
-                        String firstName = player.getString("first_name");
+                            /** ID */
+                            Long id = Long.valueOf(player.getString("id"));
 
-                        /** Primeiro Nome */
-                        String lastName = player.getString("last_name");
+                            /** Primeiro Nome */
+                            String firstName = player.getString("first_name");
 
-                        /** Foto */
-                        String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+                            /** Primeiro Nome */
+                            String lastName = player.getString("last_name");
 
-                        Jogador j = new Jogador(id, firstName, lastName, url);
-                        players.add(j);
+                            /** Foto */
+                            String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+
+                            Jogador j = new Jogador(id, firstName, lastName, url);
+                            players.add(j);
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
                     }
                 }
             }
             catch (JSONException e)
             {
-                e.printStackTrace();
+                return null;
             }
-            return !players.isEmpty() ? players : null;
+
+            Constants.jogadores = players;
+
+            return players;
         }
 
         @Override
@@ -172,7 +199,28 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 dialog.dismiss();
             }
-            setListAdapter(new JogadorListAdapter(PlayerListActivity.this, jogadores));
+            if (null != jogadores && !jogadores.isEmpty())
+            {
+                setListAdapter(new JogadorListAdapter(PlayerListActivity.this, jogadores));
+            }
+            else
+            {
+                android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        alertDialog.dismiss();
+                        startActivity(new Intent(PlayerListActivity.this, DrawerLayoutActivity.class));
+                        finish();
+                    }
+                };
+
+                alertDialog = new AlertUtils(PlayerListActivity.this).getAlertDialog(Constants.WARNING,
+                        Constants.NO_FRIEND, positiveButton, null);
+
+                alertDialog.show();
+
+            }
             super.onPostExecute(jogadores);
         }
     }
