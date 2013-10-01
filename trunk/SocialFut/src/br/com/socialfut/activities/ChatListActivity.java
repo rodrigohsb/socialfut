@@ -144,7 +144,7 @@ public class ChatListActivity extends SherlockListActivity
             List<Jogador> players = new ArrayList<Jogador>();
 
             // Somente usa o "Cache" se tiver houve algum registro.
-            if (Constants.jogadores != null || !Constants.jogadores.isEmpty())
+            if (Constants.jogadores != null)
             {
                 return Constants.jogadores;
             }
