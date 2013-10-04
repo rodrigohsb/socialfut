@@ -5,21 +5,27 @@
     android:layout_height="match_parent" >
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/fundo_teste"
             android:gravity="center"
             android:orientation="vertical" >
 
             <Button
+                android:id="@+id/myHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meu Histórico"
+                android:textColor="@color/colorFont" />
+
+            <Button
                 android:id="@+id/playerList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="@string/players"
                 android:textColor="@color/colorFont" />
         </LinearLayout>
