@@ -16,7 +16,9 @@ public class History
 {
     private String title;
 
-    private String Adress;
+    private String picture;
+
+    private String address;
 
     private Date startDate;
 
@@ -24,11 +26,12 @@ public class History
 
     private List<Jogador> players;
 
-    public History(String title, String adress, Date startDate, Date finishDate, List<Jogador> players)
+    public History(String title, String picture, String address, Date startDate, Date finishDate, List<Jogador> players)
     {
         super();
         this.title = title;
-        Adress = adress;
+        this.picture = picture;
+        this.address = address;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.players = players;
@@ -44,14 +47,24 @@ public class History
         this.title = title;
     }
 
-    public String getAdress()
+    public String getPicture()
     {
-        return Adress;
+        return picture;
     }
 
-    public void setAdress(String adress)
+    public void setPicture(String picture)
     {
-        Adress = adress;
+        this.picture = picture;
+    }
+
+    public String getAddress()
+    {
+        return address;
+    }
+
+    public void setAddress(String address)
+    {
+        this.address = address;
     }
 
     public Date getStartDate()
