@@ -93,14 +93,14 @@ public class SplashActivity extends SherlockActivity implements Runnable
                 }
                 else
                 {
-                    Log.d(TAG, "GCM já está registrado! ID: " + regId);
+                    Log.d(TAG, "GCM jï¿½ estï¿½ registrado! ID: " + regId);
                     sendRegistrationToServer(regId);
                 }
             }
             else
             {
                 String regId = GCMRegistrar.getRegistrationId(ctx);
-                Log.d(TAG, "GCM já está registrado! ID: " + regId);
+                Log.d(TAG, "GCM jï¿½ estï¿½ registrado! ID: " + regId);
                 sendRegistrationToServer(regId);
             }
             return null;
@@ -114,15 +114,15 @@ public class SplashActivity extends SherlockActivity implements Runnable
          */
         private void sendRegistrationToServer(String regId)
         {
-            PlayerREST client = new PlayerREST();
-            try
-            {
-                String resposta = client.insertPlayer(regId);
-                System.out.println("Resposta:" + resposta);
-            }
-            catch (Exception e)
-            {
-            }
+//            PlayerREST client = new PlayerREST();
+//            try
+//            {
+//                String resposta = client.insertPlayer(regId);
+//                System.out.println("Resposta:" + resposta);
+//            }
+//            catch (Exception e)
+//            {
+//            }
         }
     }
 }
