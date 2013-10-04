@@ -100,9 +100,6 @@ public class MainFragment extends SherlockFragment
         name = (TextView) scrollView.findViewById(R.id.name_drawer);
         sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
 
-        // TODO Somente mostrar o botao do Facebook se o usuario nao esta
-        // logado.
-
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
         loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
@@ -226,6 +223,7 @@ public class MainFragment extends SherlockFragment
         if (state.isOpened())
         {
             FacebookUtils.getProfile(session, name, sureName, img, ctx);
+            loginButton.setVisibility(View.GONE);
         }
         else if (state.isClosed())
         {
