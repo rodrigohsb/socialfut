@@ -33,15 +33,35 @@ public class Constants
 
     public static final String SEMICOLON = ";";
 
+    public static final String SLASH = "/";
+
     public static long USER_ID = 583633830;
 
     public static List<Jogador> jogadores;
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-//    public static final String URL_WS = "http://10.0.2.2:8080/WebServiceREST/cliente/";
-    
+    /** WEB SERVICES [INICIO] */
+
     public static final String URL_WS = "http://192.168.0.11:8080/SocialFutServer/player/";
 
     public static final String WS_STATUS = "200";
+
+    /** WEB SERVICES [FIM] */
+
+    /** FQL [INICIO] */
+    public static final String FRIENDS_USES_APP = "select uid,first_name,last_name,pic_square,is_app_user from user where uid in (select uid2 from friend where uid1 = me())";
+
+    public static final String FQL = "fql";
+    
+    public static final String UID = "uid";
+    
+    public static final String FIRST_NAME = "first_name";
+    
+    public static final String LAST_NAME = "last_name";
+    
+    public static final String PIC_SQUARE = "pic_square";
+    
+    public static final String IS_APP_USER = "is_app_user";
+    /** FQL [FIM] */
 }
