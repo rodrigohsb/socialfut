@@ -268,7 +268,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
             List<Jogador> players = new ArrayList<Jogador>();
 
             Bundle params = new Bundle();
-            params.putString("fields", "picture,first_name,last_name,installed");
+            params.putString("fields", "picture,first_name,last_name");
 
             Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
             resp = request.executeAndWait();
