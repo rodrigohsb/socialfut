@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name=".activities.PlayerListEndlessActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -63,49 +63,49 @@
         </activity>
         <activity
             android:name=".activities.ChatActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ChronometerActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.PlayerListForSort"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ChatListActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         
         <activity
             android:name=".activities.AddNewPlayerActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.InsertOrEdit"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.PlayerListActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
         </activity>
         <activity
             android:name=".activities.LegendaActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ResultActivity"
-            android:parentActivityName=".activities.DrawerLayoutActivity"
+            android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
 
