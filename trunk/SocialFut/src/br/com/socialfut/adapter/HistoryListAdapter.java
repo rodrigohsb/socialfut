@@ -1,20 +1,8 @@
 package br.com.socialfut.adapter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import br.com.socialfut.R;
-import br.com.socialfut.persistence.Jogador;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,6 +12,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import br.com.socialfut.R;
+import br.com.socialfut.persistence.History;
+import br.com.socialfut.util.SquareImageView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * 
@@ -36,10 +35,7 @@ import android.widget.TextView;
  */
 public class HistoryListAdapter extends BaseAdapter
 {
-
-    private Context context;
-
-    private List<Jogador> lista;
+    private List<History> histories;
 
     private DisplayImageOptions options;
 
@@ -47,10 +43,12 @@ public class HistoryListAdapter extends BaseAdapter
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public HistoryListAdapter(Context context, List<Jogador> lista)
+    private Context context;
+
+    public HistoryListAdapter(Context context, List<History> histories)
     {
         this.context = context;
-        this.lista = lista;
+        this.histories = histories;
 
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
@@ -59,46 +57,38 @@ public class HistoryListAdapter extends BaseAdapter
                 .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
     }
 
-    private class ViewHolder
-    {
-        public ImageView image;
-
-        public TextView sureName;
-
-        public TextView name;
-    }
-
+    @Override
     public int getCount()
     {
-        return lista.size();
+        return histories.size();
     }
 
+    @Override
     public Object getItem(int position)
     {
-        return lista.get(position);
+        return histories.get(position);
     }
 
+    @Override
     public long getItemId(int position)
     {
         return position;
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-
-        Jogador jogador = (Jogador) lista.get(position);
-
+        History history = (History) histories.get(position);
         View view = convertView;
         final ViewHolder holder;
-        if (convertView == null)
-        {
 
+        if (view == null)
+        {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.layout_list_chat, parent, false);
+            view = inflater.inflate(R.layout.grid2, parent, false);
             holder = new ViewHolder();
-            holder.image = (ImageView) view.findViewById(R.id.iconChat);
-            holder.name = (TextView) view.findViewById(R.id.nameChat);
-            holder.sureName = (TextView) view.findViewById(R.id.sureNameChat);
+            holder.name = (TextView) view.findViewById(R.id.text);
+            holder.image = (SquareImageView) view.findViewById(R.id.picture);
             view.setTag(holder);
         }
         else
@@ -106,28 +96,16 @@ public class HistoryListAdapter extends BaseAdapter
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.name.setText(jogador.getNome());
-        holder.sureName.setText(jogador.getSobreNome());
-
-        imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
-
+        imageLoader.displayImage(history.getPicture(), holder.image, options, animateFirstListener);
+        holder.name.setText(history.getTitle());
         return view;
     }
 
-    public void addItems(List<Jogador> newItems)
+    private class ViewHolder
     {
-        if (null == newItems || newItems.size() <= 0)
-        {
-            return;
-        }
+        public ImageView image;
 
-        if (null == lista)
-        {
-            lista = new ArrayList<Jogador>();
-        }
-
-        lista.addAll(newItems);
-        notifyDataSetChanged();
+        public TextView name;
     }
 
     private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener
@@ -149,5 +127,4 @@ public class HistoryListAdapter extends BaseAdapter
             }
         }
     }
-
 }
