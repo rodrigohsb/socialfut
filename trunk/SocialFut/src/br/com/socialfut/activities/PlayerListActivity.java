@@ -104,8 +104,6 @@ public class PlayerListActivity extends SherlockListActivity
 
         private Response resp;
 
-        private int MAX = 10;
-
         private final ProgressDialog dialog = new ProgressDialog(PlayerListActivity.this);
 
         private AlertDialog alertDialog;
@@ -127,19 +125,17 @@ public class PlayerListActivity extends SherlockListActivity
         @Override
         protected List<Jogador> doInBackground(Void... v)
         {
-
             List<Jogador> players = new ArrayList<Jogador>();
 
-            // Somente usa o "Cache" se tiver houve algum registro.
             if (Constants.jogadores != null)
             {
                 return Constants.jogadores;
             }
 
             Bundle params = new Bundle();
-            params.putString("fields", "picture,first_name,last_name");
+            params.putString("q", Constants.FRIENDS_USES_APP);
 
-            Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
+            Request request = new Request(session, Constants.SLASH + Constants.FQL, params, HttpMethod.GET);
             resp = request.executeAndWait();
 
             GraphObject graph = resp.getGraphObject();
@@ -156,20 +152,23 @@ public class PlayerListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                            /** ID */
-                            Long id = Long.valueOf(player.getString("id"));
+                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            {
+                                /** ID */
+                                Long id = Long.valueOf(player.getString(Constants.UID));
 
-                            /** Primeiro Nome */
-                            String firstName = player.getString("first_name");
+                                /** Primeiro Nome */
+                                String firstName = player.getString(Constants.FIRST_NAME);
 
-                            /** Primeiro Nome */
-                            String lastName = player.getString("last_name");
+                                /** Primeiro Nome */
+                                String lastName = player.getString(Constants.LAST_NAME);
 
-                            /** Foto */
-                            String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+                                /** Foto */
+                                String url = player.getString(Constants.PIC_SQUARE);
 
-                            Jogador j = new Jogador(id, firstName, lastName, url);
-                            players.add(j);
+                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                players.add(j);
+                            }
                         }
                         catch (JSONException e)
                         {
@@ -183,7 +182,10 @@ public class PlayerListActivity extends SherlockListActivity
                 return null;
             }
 
-            Constants.jogadores = players;
+            if (!players.isEmpty())
+            {
+                Constants.jogadores = players;
+            }
 
             return players;
         }
@@ -195,7 +197,7 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 dialog.dismiss();
             }
-            if (null != jogadores && !jogadores.isEmpty())
+            if (!jogadores.isEmpty())
             {
                 setListAdapter(new JogadorListAdapter(PlayerListActivity.this, jogadores));
             }
