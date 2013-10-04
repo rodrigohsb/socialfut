@@ -125,8 +125,6 @@ public class PlayerListActivity extends SherlockListActivity
         @Override
         protected List<Jogador> doInBackground(Void... v)
         {
-            List<Jogador> players = new ArrayList<Jogador>();
-
             if (Constants.jogadores != null)
             {
                 return Constants.jogadores;
@@ -140,47 +138,7 @@ public class PlayerListActivity extends SherlockListActivity
 
             GraphObject graph = resp.getGraphObject();
 
-            try
-            {
-                JSONArray friendsFromFacebook = graph.getInnerJSONObject().getJSONArray("data");
-
-                if (friendsFromFacebook.length() > 0)
-                {
-                    for (int i = 0; i < friendsFromFacebook.length(); i++)
-                    {
-                        try
-                        {
-                            JSONObject player = friendsFromFacebook.getJSONObject(i);
-
-                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
-                            {
-                                /** ID */
-                                Long id = Long.valueOf(player.getString(Constants.UID));
-
-                                /** Primeiro Nome */
-                                String firstName = player.getString(Constants.FIRST_NAME);
-
-                                /** Primeiro Nome */
-                                String lastName = player.getString(Constants.LAST_NAME);
-
-                                /** Foto */
-                                String url = player.getString(Constants.PIC_SQUARE);
-
-                                Jogador j = new Jogador(id, firstName, lastName, url);
-                                players.add(j);
-                            }
-                        }
-                        catch (JSONException e)
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-            catch (JSONException e)
-            {
-                return null;
-            }
+            List<Jogador> players = this.getFriends(graph);
 
             if (!players.isEmpty())
             {
@@ -220,6 +178,63 @@ public class PlayerListActivity extends SherlockListActivity
 
             }
             super.onPostExecute(jogadores);
+        }
+
+        /**
+         * 
+         * Obtem todos os amigos que tem o aplicativo.
+         * 
+         * @param graph
+         * @return
+         */
+        private List<Jogador> getFriends(GraphObject graph)
+        {
+
+            List<Jogador> players = new ArrayList<Jogador>();
+
+            try
+            {
+                JSONArray friendsFromFacebook = graph.getInnerJSONObject().getJSONArray("data");
+
+                if (friendsFromFacebook.length() > 0)
+                {
+                    for (int i = 0; i < friendsFromFacebook.length(); i++)
+                    {
+                        try
+                        {
+                            JSONObject player = friendsFromFacebook.getJSONObject(i);
+
+                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            {
+                                /** ID */
+                                Long id = Long.valueOf(player.getString(Constants.UID));
+
+                                /** Primeiro Nome */
+                                String firstName = player.getString(Constants.FIRST_NAME);
+
+                                /** Primeiro Nome */
+                                String lastName = player.getString(Constants.LAST_NAME);
+
+                                /** Foto */
+                                String url = player.getString(Constants.PIC_SQUARE);
+
+                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                players.add(j);
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                return players;
+            }
+            catch (JSONException e)
+            {
+                return null;
+            }
+
         }
     }
 }
