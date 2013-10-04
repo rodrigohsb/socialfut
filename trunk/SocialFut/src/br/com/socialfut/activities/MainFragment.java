@@ -104,15 +104,23 @@ public class MainFragment extends SherlockFragment
         loginButton.setFragment(this);
         loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
+        /** Lista de Jogadores */
         view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (v.getId() == R.id.playerList)
-                {
-                    startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
-                }
+                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+            }
+        });
+
+        /** Historico */
+        view.findViewById(R.id.myHistory).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(getSherlockActivity(), HistoryActivity.class));
             }
         });
 
