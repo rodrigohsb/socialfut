@@ -150,7 +150,7 @@ public class ChatListActivity extends SherlockListActivity
             }
 
             Bundle params = new Bundle();
-            params.putString("fields", "picture,first_name,last_name,installed");
+            params.putString("fields", "picture,first_name,last_name");
 
             // Request request = new Request(session, "me/friends, params,HttpMethod.GET);
             Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
@@ -169,9 +169,6 @@ public class ChatListActivity extends SherlockListActivity
                         try
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
-
-                            // Amigos que tem o aplicativo.
-                            // player.getString("installed");
 
                             /** ID */
                             Long id = Long.valueOf(player.getString("id"));
