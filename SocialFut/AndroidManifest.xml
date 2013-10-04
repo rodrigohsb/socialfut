@@ -77,11 +77,15 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".activities.HistoryActivity"
+            android:parentActivityName=".activities.MainFragment"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activities.ChatListActivity"
             android:parentActivityName=".activities.MainFragment"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name=".activities.AddNewPlayerActivity"
             android:parentActivityName=".activities.MainFragment"
