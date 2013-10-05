@@ -22,7 +22,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * 
@@ -54,7 +53,7 @@ public class HistoryListAdapter extends BaseAdapter
 
         options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
-                .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
+                .cacheOnDisc(false).build();
     }
 
     @Override
