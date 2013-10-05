@@ -1,8 +1,8 @@
 package br.com.socialfut.activities;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.HistoryListAdapter;
+import br.com.socialfut.database.HistoryDB;
 import br.com.socialfut.persistence.History;
 import br.com.socialfut.util.ActionBar;
 
@@ -30,6 +31,11 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class HistoryActivity extends SherlockActivity
 {
+
+    private HistoryDB historyDB;
+
+    private Context ctx;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -37,19 +43,14 @@ public class HistoryActivity extends SherlockActivity
 
         ActionBar.updateActionBar(getSupportActionBar());
 
+        ctx = this;
+
+        historyDB = new HistoryDB(this);
+
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
-        List<History> histories = new ArrayList<History>();
-
-        for (int i = 0; i < 20; i++)
-        {
-            History h = new History(
-                    "Title " + i,
-                    "http://2.bp.blogspot.com/_0AzeTeHDPbU/SibXejBzezI/AAAAAAAAAB4/IWpNY3ZU6Os/s320/campo-de-futebol-infantil.jpg",
-                    null, null, null, null);
-            histories.add(h);
-        }
+        List<History> histories = historyDB.getHistory();
 
         gridView.setAdapter(new HistoryListAdapter(this, histories));
 
@@ -59,7 +60,12 @@ public class HistoryActivity extends SherlockActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id)
             {
-                gridView.getAdapter().getItem(position);
+                History history = (History) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(ctx, HistoryDetailsActivity.class);
+                intent.putExtra("history", history);
+                startActivity(intent);
+                finish();
+
                 Toast.makeText(HistoryActivity.this, "Opa!", Toast.LENGTH_SHORT).show();
             }
         });
