@@ -15,7 +15,7 @@ import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.persistence.Chat.Chats;
 import br.com.socialfut.util.Constants;
 
-public class Repositorio extends SQLiteOpenHelper
+public class ChatDB extends SQLiteOpenHelper
 {
     private static final String SCRIPT_DATABASE_DELETE = "DROP TABLE IF EXISTS chat";
 
@@ -33,7 +33,7 @@ public class Repositorio extends SQLiteOpenHelper
 
     protected SQLiteDatabase db;
 
-    public Repositorio(Context context)
+    public ChatDB(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         db = getWritableDatabase();
