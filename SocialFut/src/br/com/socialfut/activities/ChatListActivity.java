@@ -7,7 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatListAdapter;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -119,9 +122,9 @@ public class ChatListActivity extends SherlockListActivity
 
         private Response resp;
 
-        private int MAX = 10;
-
         private final ProgressDialog dialog = new ProgressDialog(ChatListActivity.this);
+
+        private AlertDialog alertDialog;
 
         public FacebookFriends(Session sessao)
         {
@@ -141,22 +144,72 @@ public class ChatListActivity extends SherlockListActivity
         protected List<Jogador> doInBackground(Void... v)
         {
 
-            List<Jogador> players = new ArrayList<Jogador>();
-
-            // Somente usa o "Cache" se tiver houve algum registro.
             if (Constants.jogadores != null)
             {
                 return Constants.jogadores;
             }
 
             Bundle params = new Bundle();
-            params.putString("fields", "picture,first_name,last_name");
+            params.putString("q", Constants.FRIENDS_USES_APP);
 
-            // Request request = new Request(session, "me/friends, params,HttpMethod.GET);
-            Request request = new Request(session, "me/friends?limit=" + MAX, params, HttpMethod.GET);
+            Request request = new Request(session, Constants.SLASH + Constants.FQL, params, HttpMethod.GET);
             resp = request.executeAndWait();
 
             GraphObject graph = resp.getGraphObject();
+
+            List<Jogador> players = this.getFriends(graph);
+
+            if (!players.isEmpty())
+            {
+                Constants.jogadores = players;
+            }
+
+            return players;
+        }
+
+        @Override
+        protected void onPostExecute(List<Jogador> jogadores)
+        {
+            if (dialog.isShowing())
+            {
+                dialog.dismiss();
+            }
+            if (!jogadores.isEmpty())
+            {
+                setListAdapter(new ChatListAdapter(ChatListActivity.this, jogadores));
+            }
+            else
+            {
+                android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        alertDialog.dismiss();
+                        startActivity(new Intent(ChatListActivity.this, DrawerLayoutActivity.class));
+                        finish();
+                    }
+                };
+
+                alertDialog = new AlertUtils(ChatListActivity.this).getAlertDialog(Constants.WARNING,
+                        Constants.NO_FRIEND, positiveButton, null);
+
+                alertDialog.show();
+
+            }
+            super.onPostExecute(jogadores);
+        }
+
+        /**
+         * 
+         * Obtem todos os amigos que tem o aplicativo.
+         * 
+         * @param graph
+         * @return
+         */
+        private List<Jogador> getFriends(GraphObject graph)
+        {
+
+            List<Jogador> players = new ArrayList<Jogador>();
 
             try
             {
@@ -170,20 +223,23 @@ public class ChatListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                            /** ID */
-                            Long id = Long.valueOf(player.getString("id"));
+                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            {
+                                /** ID */
+                                Long id = Long.valueOf(player.getString(Constants.UID));
 
-                            /** Primeiro Nome */
-                            String firstName = player.getString("first_name");
+                                /** Primeiro Nome */
+                                String firstName = player.getString(Constants.FIRST_NAME);
 
-                            /** Primeiro Nome */
-                            String lastName = player.getString("last_name");
+                                /** Primeiro Nome */
+                                String lastName = player.getString(Constants.LAST_NAME);
 
-                            /** Foto */
-                            String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
+                                /** Foto */
+                                String url = player.getString(Constants.PIC_SQUARE);
 
-                            Jogador j = new Jogador(id, firstName, lastName, url);
-                            players.add(j);
+                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                players.add(j);
+                            }
                         }
                         catch (JSONException e)
                         {
@@ -191,26 +247,14 @@ public class ChatListActivity extends SherlockListActivity
                         }
                     }
                 }
+                return players;
             }
             catch (JSONException e)
             {
                 return null;
             }
 
-            Constants.jogadores = players;
-
-            return players;
         }
 
-        @Override
-        protected void onPostExecute(List<Jogador> jogadores)
-        {
-            if (dialog.isShowing())
-            {
-                dialog.dismiss();
-            }
-            setListAdapter(new ChatListAdapter(ChatListActivity.this, jogadores));
-            super.onPostExecute(jogadores);
-        }
     }
 }

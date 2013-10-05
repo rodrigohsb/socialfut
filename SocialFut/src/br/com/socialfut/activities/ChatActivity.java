@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.database.Repositorio;
+import br.com.socialfut.database.ChatDB;
 import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
@@ -32,7 +32,7 @@ public class ChatActivity extends SherlockActivity
 
     private Long facebookId;
 
-    private Repositorio repo;
+    private ChatDB repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,7 +40,7 @@ public class ChatActivity extends SherlockActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
 
-        repo = new Repositorio(this);
+        repo = new ChatDB(this);
 
         Bundle bundle = getIntent().getExtras();
 
