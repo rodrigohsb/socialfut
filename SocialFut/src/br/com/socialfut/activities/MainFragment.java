@@ -133,17 +133,17 @@ public class MainFragment extends SherlockFragment
                 startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
             }
         });
-        
+
         /** Nova Partida */
         view.findViewById(R.id.creatGame).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-//                startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
+                startActivity(new Intent(getSherlockActivity(), NewGameActivity.class));
             }
         });
-        
+
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
