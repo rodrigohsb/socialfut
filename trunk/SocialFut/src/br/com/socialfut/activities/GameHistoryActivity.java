@@ -12,7 +12,6 @@ import br.com.socialfut.R;
 import br.com.socialfut.adapter.ExpandableListAdapter;
 import br.com.socialfut.database.GameDB;
 import br.com.socialfut.persistence.Game;
-import br.com.socialfut.persistence.Rate;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.Group;
@@ -46,15 +45,11 @@ public class GameHistoryActivity extends SherlockActivity
         SimpleDateFormat dateFormat2 = new SimpleDateFormat(Constants.HOUR_PATTERN_FOR_USER);
 
         GameDB gameDB = new GameDB(this);
-        // RateDB rateDB = new RateDB(this);
 
         for (int i = 1; i < 16; i++)
         {
-            Game g = new Game("Titulo " + i, "Rua " + i, new Date(), new Date(), new Date());
-            Rate r = new Rate(g.getId(), 0, 0);
-
+            Game g = new Game(i, "Titulo " + i, "Rua " + i, new Date(), new Date(), new Date(), 0.0, 0);
             gameDB.saveGame(g);
-            // rateDB.saveRate(r);
         }
 
         List<Game> games = gameDB.getAllGames();
@@ -68,9 +63,7 @@ public class GameHistoryActivity extends SherlockActivity
             group.children.add("Horário: " + dateFormat2.format(game.getStartDate()) + " - "
                     + dateFormat2.format(game.getStartDate()));
 
-            // double rate = rateDB.getRateByGameId(game);
-
-            group.children.add("Qualificação recebida: " + 4.5);
+            group.children.add("Qualificação recebida: " + game.getRate());
             groups.append(i++, group);
         }
 
