@@ -17,20 +17,18 @@ import br.com.socialfut.persistence.Chat.Chats;
  * @since 03/10/2013
  * 
  */
-public class History implements Serializable
+public class Game implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    public static String[] colunas = new String[] { Histories._ID, Histories.TITLE, Histories.PICTURE,
-            Histories.ADDRESS, Histories.CREATED_DATE, Histories.START_DATE, Histories.FINISH_DATE };
+    public static String[] colunas = new String[] { Games._ID, Games.TITLE, Games.ADDRESS, Games.CREATED_DATE,
+            Games.START_DATE, Games.FINISH_DATE };
 
     public static final String AUTHORITY = "br.com.socialfut.android.provider.histories";
 
     private long id;
 
     private String title;
-
-    private String picture;
 
     private String address;
 
@@ -40,16 +38,15 @@ public class History implements Serializable
 
     private Date finishDate;
 
-    public History()
+    public Game()
     {
         super();
     }
 
-    public History(String title, String picture, String address, Date createdDate, Date startDate, Date finishDate)
+    public Game(String title, String address, Date createdDate, Date startDate, Date finishDate)
     {
         super();
         this.title = title;
-        this.picture = picture;
         this.address = address;
         this.createdDate = createdDate;
         this.startDate = startDate;
@@ -84,16 +81,6 @@ public class History implements Serializable
     public void setCreatedDate(Date createdDate)
     {
         this.createdDate = createdDate;
-    }
-
-    public String getPicture()
-    {
-        return picture;
-    }
-
-    public void setPicture(String picture)
-    {
-        this.picture = picture;
     }
 
     public String getAddress()
@@ -132,20 +119,20 @@ public class History implements Serializable
         return super.toString();
     }
 
-    public static final class Histories implements BaseColumns
+    public static final class Games implements BaseColumns
     {
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/histories");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/games");
 
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.histories";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.games";
 
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.histories";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.games";
 
         public static final String DEFAULT_SORT_ORDER = "id ACS";
 
         public static final String TITLE = "title";
 
-        public static final String PICTURE = "picture";
+        // public static final String PICTURE = "picture";
 
         public static final String ADDRESS = "address";
 
