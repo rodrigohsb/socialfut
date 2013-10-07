@@ -22,7 +22,9 @@ public class ActionBar
         actionBar.setTitle("SocialFut");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
+        // actionBar.setBackgroundDrawable(new
+        // ColorDrawable(Color.parseColor("#008000")));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00b300")));
     }
 
     public static void updateCustomActionBar(com.actionbarsherlock.app.ActionBar actionBar, String subTitle)
@@ -30,6 +32,8 @@ public class ActionBar
         actionBar.setSubtitle(subTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
+        // actionBar.setBackgroundDrawable(new
+        // ColorDrawable(Color.parseColor("#008000")));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00b300")));
     }
 }
