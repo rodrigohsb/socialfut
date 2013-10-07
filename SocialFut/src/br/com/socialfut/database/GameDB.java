@@ -3,6 +3,7 @@ package br.com.socialfut.database;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -23,7 +24,8 @@ public class GameDB extends SQLiteOpenHelper
 
     private static final String SCRIPT_DATABASE_CREATE = "create table " + TABLE
             + " (_id integer primary key autoincrement," + " title string not null," + " address string not null,"
-            + " created_date date not null," + " start_date date not null," + " finish_date date not null);";
+            + " created_date date not null," + " start_date date not null," + " finish_date date not null,"
+            + " value double not null," + " qntRates int not null);";
 
     private static final String DATABASE_NAME = "socialFut";
 
@@ -52,12 +54,6 @@ public class GameDB extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    /**
-     * 
-     * Obtem o historico das partidas.
-     * 
-     * @return
-     */
     public List<Game> getAllGames()
     {
         Cursor c = getCursor();
@@ -99,23 +95,13 @@ public class GameDB extends SQLiteOpenHelper
 
     }
 
-    /**
-     * 
-     * Obtem o historico das partidas.
-     * 
-     * @return
-     */
-    public List<Game> getAllOldGames()
+    public List<Game> getOldGames()
     {
-        
-        //TODO Ver como fazer para buscar filtrando pela data.
-//        Cursor c = db.query(TABLE, Game.colunas, "finish_date < " + dateFormat.format(new Date()), null, null, null, null);
 
-        Cursor c = db.query(TABLE, Game.colunas, null, null, null, null, null);
-        
+        Cursor c = this.getCursor();
+
         if (c == null)
         {
-            // Nenhuma partida futura
             return new ArrayList<Game>();
         }
 
@@ -123,26 +109,19 @@ public class GameDB extends SQLiteOpenHelper
 
         if (c.moveToFirst())
         {
-            int idxId = c.getColumnIndex(Games._ID);
-            int idxTitle = c.getColumnIndex(Games.TITLE);
-            int idxAddress = c.getColumnIndex(Games.ADDRESS);
-            int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
-            int idxStart = c.getColumnIndex(Games.START_DATE);
             int idxFinish = c.getColumnIndex(Games.FINISH_DATE);
+            Date today = new Date();
+
             do
             {
                 try
                 {
-                    Game h = new Game();
-
-                    h.setId(c.getLong(idxId));
-                    h.setTitle(c.getString(idxTitle));
-                    h.setAddress(c.getString(idxAddress));
-                    h.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
-                    h.setStartDate(dateFormat.parse(c.getString(idxStart)));
-                    h.setFinishDate(dateFormat.parse(c.getString(idxFinish)));
-
-                    games.add(h);
+                    Date dateGame = dateFormat.parse(c.getString(idxFinish));
+                    if (dateGame.before(today))
+                    {
+                        Game h = this.fillGame(c, dateGame);
+                        games.add(h);
+                    }
                 }
                 catch (ParseException e)
                 {
@@ -156,16 +135,12 @@ public class GameDB extends SQLiteOpenHelper
 
     }
 
-    public List<Game> getAllNewGames()
+    public List<Game> getNewGames()
     {
-        //TODO Ver como fazer para buscar filtrando pela data.
-//        Cursor c = db.query(TABLE, Game.colunas, "finish_date > " + dateFormat.format(new Date()), null, null, null, null);
-        
-        Cursor c = db.query(TABLE, Game.colunas, null, null, null, null, null);
+        Cursor c = this.getCursor();
 
         if (c == null)
         {
-            // Nenhuma partida futura
             return new ArrayList<Game>();
         }
 
@@ -173,26 +148,20 @@ public class GameDB extends SQLiteOpenHelper
 
         if (c.moveToFirst())
         {
-            int idxId = c.getColumnIndex(Games._ID);
-            int idxTitle = c.getColumnIndex(Games.TITLE);
-            int idxAddress = c.getColumnIndex(Games.ADDRESS);
-            int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
-            int idxStart = c.getColumnIndex(Games.START_DATE);
             int idxFinish = c.getColumnIndex(Games.FINISH_DATE);
+            Date today = new Date();
+
             do
             {
                 try
                 {
-                    Game h = new Game();
+                    Date dateGame = dateFormat.parse(c.getString(idxFinish));
 
-                    h.setId(c.getLong(idxId));
-                    h.setTitle(c.getString(idxTitle));
-                    h.setAddress(c.getString(idxAddress));
-                    h.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
-                    h.setStartDate(dateFormat.parse(c.getString(idxStart)));
-                    h.setFinishDate(dateFormat.parse(c.getString(idxFinish)));
-
-                    games.add(h);
+                    if (dateGame.after(today))
+                    {
+                        Game h = this.fillGame(c, dateGame);
+                        games.add(h);
+                    }
                 }
                 catch (ParseException e)
                 {
@@ -206,12 +175,26 @@ public class GameDB extends SQLiteOpenHelper
 
     }
 
-    /**
-     * 
-     * Salva o historico das partidas.
-     * 
-     * @param game
-     */
+    private Game fillGame(Cursor c, Date date) throws ParseException
+    {
+        int idxId = c.getColumnIndex(Games._ID);
+        int idxTitle = c.getColumnIndex(Games.TITLE);
+        int idxAddress = c.getColumnIndex(Games.ADDRESS);
+        int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
+        int idxStart = c.getColumnIndex(Games.START_DATE);
+
+        Game h = new Game();
+
+        h.setId(c.getLong(idxId));
+        h.setTitle(c.getString(idxTitle));
+        h.setAddress(c.getString(idxAddress));
+        h.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
+        h.setStartDate(dateFormat.parse(c.getString(idxStart)));
+        h.setFinishDate(date);
+
+        return h;
+    }
+
     public void saveGame(Game game)
     {
         ContentValues values = new ContentValues();
@@ -224,13 +207,6 @@ public class GameDB extends SQLiteOpenHelper
         db.insert(TABLE, null, values);
     }
 
-    /**
-     * 
-     * Obtem o historico por usuario.
-     * 
-     * @param userId
-     * @return
-     */
     public Cursor getCursor()
     {
         try
