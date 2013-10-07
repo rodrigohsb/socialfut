@@ -120,10 +120,30 @@ public class MainFragment extends SherlockFragment
             @Override
             public void onClick(View v)
             {
-                startActivity(new Intent(getSherlockActivity(), HistoryActivity.class));
+                startActivity(new Intent(getSherlockActivity(), MyHistoryActivity.class));
             }
         });
 
+        /** Historico */
+        view.findViewById(R.id.future).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
+            }
+        });
+        
+        /** Nova Partida */
+        view.findViewById(R.id.creatGame).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+//                startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
+            }
+        });
+        
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
