@@ -37,18 +37,17 @@ public class MyFutureActivity extends SherlockActivity
         super.onCreate(savedInstanceState);
 
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Próximos jogos");
-
+        
         ctx = this;
 
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
         gameDB = new GameDB(this);
-        List<Game> games = gameDB.getAllOldGames();
+        List<Game> games = gameDB.getNewGames();
 
         if (games.isEmpty())
         {
-            // Nenhuma partida foi disputada ainda.
             this.alert();
         }
         else
@@ -104,13 +103,13 @@ public class MyFutureActivity extends SherlockActivity
             public void onClick(DialogInterface dialog, int id)
             {
                 alertDialog.dismiss();
-                startActivity(new Intent(MyFutureActivity.this, MainFragment.class));
+                startActivity(new Intent(MyFutureActivity.this, DrawerLayoutActivity.class));
                 finish();
             }
         };
 
-        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
-                Constants.NO_NEW_GAMES, positiveButton, null);
+        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING, Constants.NO_NEW_GAMES,
+                positiveButton, null);
 
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
