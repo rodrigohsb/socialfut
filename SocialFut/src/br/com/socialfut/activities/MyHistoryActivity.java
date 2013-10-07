@@ -53,19 +53,12 @@ public class MyHistoryActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
-        // for (int i = 1; i < 16; i++)
-        // {
-        // Game g = new Game("Titulo " + i, "Rua " + i, new Date(), new Date(),
-        // new Date());
-        // gameDB.saveGame(g);
-        // }
-
         gameDB = new GameDB(this);
-        List<Game> games = gameDB.getAllOldGames();
+
+        List<Game> games = gameDB.getOldGames();
 
         if (games.isEmpty())
         {
-            // Nenhuma partida foi disputada ainda.
             this.alert();
         }
         else
@@ -122,7 +115,7 @@ public class MyHistoryActivity extends SherlockActivity
             public void onClick(DialogInterface dialog, int id)
             {
                 alertDialog.dismiss();
-                startActivity(new Intent(MyHistoryActivity.this, MainFragment.class));
+                startActivity(new Intent(MyHistoryActivity.this, DrawerLayoutActivity.class));
                 finish();
             }
         };
