@@ -174,6 +174,8 @@ public class PlayerListActivity extends SherlockListActivity
                 alertDialog = new AlertUtils(PlayerListActivity.this).getAlertDialog(Constants.WARNING,
                         Constants.NO_FRIEND, positiveButton, null);
 
+                alertDialog.setCancelable(false);
+                alertDialog.setCanceledOnTouchOutside(false);
                 alertDialog.show();
 
             }
