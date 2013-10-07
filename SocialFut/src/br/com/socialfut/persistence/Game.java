@@ -22,7 +22,7 @@ public class Game implements Serializable
     private static final long serialVersionUID = 1L;
 
     public static String[] colunas = new String[] { Games._ID, Games.TITLE, Games.ADDRESS, Games.CREATED_DATE,
-            Games.START_DATE, Games.FINISH_DATE };
+            Games.START_DATE, Games.FINISH_DATE, Games.VALUE, Games.QNT_RATES };
 
     public static final String AUTHORITY = "br.com.socialfut.android.provider.histories";
 
@@ -38,19 +38,30 @@ public class Game implements Serializable
 
     private Date finishDate;
 
+    private double value;
+
+    private int qntRates;
+
+    private float rate;
+
     public Game()
     {
         super();
     }
 
-    public Game(String title, String address, Date createdDate, Date startDate, Date finishDate)
+    public Game(long id, String title, String address, Date createdDate, Date startDate, Date finishDate, double value,
+            int qntRates)
     {
         super();
+        this.id = id;
         this.title = title;
         this.address = address;
         this.createdDate = createdDate;
         this.startDate = startDate;
         this.finishDate = finishDate;
+        this.value = value;
+        this.qntRates = qntRates;
+        this.rate = (float) (value / qntRates);
     }
 
     public long getId()
@@ -113,6 +124,36 @@ public class Game implements Serializable
         this.finishDate = finishDate;
     }
 
+    public double getValue()
+    {
+        return value;
+    }
+
+    public void setValue(double value)
+    {
+        this.value = value;
+    }
+
+    public int getQntRates()
+    {
+        return qntRates;
+    }
+
+    public void setQntRates(int qntRates)
+    {
+        this.qntRates = qntRates;
+    }
+
+    public float getRate()
+    {
+        return rate;
+    }
+
+    public void setRate(float rate)
+    {
+        this.rate = rate;
+    }
+
     @Override
     public String toString()
     {
@@ -141,6 +182,10 @@ public class Game implements Serializable
         public static final String START_DATE = "start_date";
 
         public static final String FINISH_DATE = "finish_date";
+
+        public static final String VALUE = "value";
+
+        public static final String QNT_RATES = "qntRates";
 
         public static Uri getUri(long id)
         {
