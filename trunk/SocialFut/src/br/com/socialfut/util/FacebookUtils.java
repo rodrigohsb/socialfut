@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import br.com.socialfut.webservices.WebService;
 
 import com.facebook.Session;
 
@@ -23,6 +24,10 @@ public class FacebookUtils
         {
             getName(sessao, txtName, txtSureName, ctx);
             getPicture(sessao, imgAvatar, ctx);
+        }
+        if (Constants.USER_ID != 0 && Constants.DEVICE_REGISTRATION_ID != null)
+        {
+            WebService.sendRegistration();
         }
     }
 
