@@ -39,23 +39,25 @@ public class Constants
 
     public static final String SLASH = "/";
 
-    public static long USER_ID = 583633830;
-
     public static List<Jogador> jogadores;
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     public static final String HOUR_PATTERN = "HH:mm";
-    
+
     public static final String DATE_PATTERN_FOR_USER = "dd / MM / yyyy";
 
     public static final String HOUR_PATTERN_FOR_USER = "HH:mm";
 
     /** WEB SERVICES [INICIO] */
 
-    public static final String URL_WS = "http://192.168.0.11:8080/SocialFutServer/player/";
+    public static final String URL_WS = "http://192.168.0.11:8080/SocialFutServer/webServices/";
 
     public static final String WS_STATUS = "200";
+
+    public static long USER_ID;
+
+    public static String DEVICE_REGISTRATION_ID;
 
     /** WEB SERVICES [FIM] */
 
@@ -73,5 +75,7 @@ public class Constants
     public static final String PIC_SQUARE = "pic_square";
 
     public static final String IS_APP_USER = "is_app_user";
+
     /** FQL [FIM] */
+
 }
