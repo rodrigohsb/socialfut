@@ -15,8 +15,7 @@ import android.util.Log;
 
 public class WebServiceClient
 {
-
-    public final String[] get(String url)
+    protected static String[] get(String url)
     {
 
         String[] result = new String[2];
@@ -46,12 +45,11 @@ public class WebServiceClient
         return result;
     }
 
-    public final String[] post(String url, String json)
+    protected static String[] post(String url, String json)
     {
         String[] result = new String[2];
         try
         {
-
             HttpPost httpPost = new HttpPost(new URI(url));
             httpPost.setHeader("Content-type", "application/json");
             StringEntity sEntity = new StringEntity(json, "UTF-8");
@@ -80,7 +78,7 @@ public class WebServiceClient
         return result;
     }
 
-    private String toString(InputStream is) throws IOException
+    private static String toString(InputStream is) throws IOException
     {
 
         byte[] bytes = new byte[1024];
