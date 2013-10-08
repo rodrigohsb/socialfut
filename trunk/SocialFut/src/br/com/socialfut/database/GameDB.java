@@ -68,20 +68,25 @@ public class GameDB extends SQLiteOpenHelper
             int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
             int idxStart = c.getColumnIndex(Games.START_DATE);
             int idxFinish = c.getColumnIndex(Games.FINISH_DATE);
+            int idxValue = c.getColumnIndex(Games.VALUE);
+            int idxQntRate = c.getColumnIndex(Games.QNT_RATES);
+
             do
             {
                 try
                 {
-                    Game h = new Game();
+                    Game g = new Game();
 
-                    h.setId(c.getLong(idxId));
-                    h.setTitle(c.getString(idxTitle));
-                    h.setAddress(c.getString(idxAddress));
-                    h.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
-                    h.setStartDate(dateFormat.parse(c.getString(idxStart)));
-                    h.setFinishDate(dateFormat.parse(c.getString(idxFinish)));
+                    g.setId(c.getLong(idxId));
+                    g.setTitle(c.getString(idxTitle));
+                    g.setAddress(c.getString(idxAddress));
+                    g.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
+                    g.setStartDate(dateFormat.parse(c.getString(idxStart)));
+                    g.setFinishDate(dateFormat.parse(c.getString(idxFinish)));
+                    g.setValue(c.getDouble(idxValue));
+                    g.setQntRates(c.getInt(idxQntRate));
 
-                    games.add(h);
+                    games.add(g);
                 }
                 catch (ParseException e)
                 {
@@ -182,17 +187,21 @@ public class GameDB extends SQLiteOpenHelper
         int idxAddress = c.getColumnIndex(Games.ADDRESS);
         int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
         int idxStart = c.getColumnIndex(Games.START_DATE);
+        int idxValue = c.getColumnIndex(Games.VALUE);
+        int idxQntRate = c.getColumnIndex(Games.QNT_RATES);
 
-        Game h = new Game();
+        Game g = new Game();
 
-        h.setId(c.getLong(idxId));
-        h.setTitle(c.getString(idxTitle));
-        h.setAddress(c.getString(idxAddress));
-        h.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
-        h.setStartDate(dateFormat.parse(c.getString(idxStart)));
-        h.setFinishDate(date);
+        g.setId(c.getLong(idxId));
+        g.setTitle(c.getString(idxTitle));
+        g.setAddress(c.getString(idxAddress));
+        g.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
+        g.setStartDate(dateFormat.parse(c.getString(idxStart)));
+        g.setValue(c.getDouble(idxValue));
+        g.setQntRates(c.getInt(idxQntRate));
+        g.setFinishDate(date);
 
-        return h;
+        return g;
     }
 
     public void saveGame(Game game)
@@ -204,6 +213,8 @@ public class GameDB extends SQLiteOpenHelper
         values.put(Games.CREATED_DATE, dateFormat.format(game.getCreatedDate()));
         values.put(Games.START_DATE, dateFormat.format(game.getStartDate()));
         values.put(Games.FINISH_DATE, dateFormat.format(game.getFinishDate()));
+        values.put(Games.VALUE, game.getValue());
+        values.put(Games.QNT_RATES, game.getQntRates());
         db.insert(TABLE, null, values);
     }
 
