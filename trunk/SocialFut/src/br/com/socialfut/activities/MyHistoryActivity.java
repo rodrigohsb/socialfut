@@ -35,8 +35,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class MyHistoryActivity extends SherlockActivity
 {
 
-    private GameDB gameDB;
-
     private Context ctx;
 
     private AlertDialog alertDialog;
@@ -53,9 +51,14 @@ public class MyHistoryActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
-        gameDB = new GameDB(this);
+        // for (int i = 1; i < 16; i++)
+        // {
+        // Game g = new Game(i, "Titulo " + i, "Rua " + i, new Date(), new
+        // Date(), new Date(), 0.5 * i, i);
+        // gameDB.saveGame(g);
+        // }
 
-        List<Game> games = gameDB.getOldGames();
+        List<Game> games = new GameDB(this).getOldGames();
 
         if (games.isEmpty())
         {
