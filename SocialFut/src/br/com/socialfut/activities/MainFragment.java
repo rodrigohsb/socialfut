@@ -1,6 +1,7 @@
 package br.com.socialfut.activities;
 
 import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,10 +21,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import br.com.socialfut.R;
+import br.com.socialfut.database.GameDB;
 import br.com.socialfut.drawer.SherlockActionBarDrawerToggle;
+import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.FacebookUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -65,6 +69,8 @@ public class MainFragment extends SherlockFragment
 
     private TextView sureName;
 
+    private RatingBar ratingUser;
+
     private LoginButton loginButton;
 
     private Context ctx;
@@ -99,6 +105,9 @@ public class MainFragment extends SherlockFragment
         img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
         name = (TextView) scrollView.findViewById(R.id.name_drawer);
         sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
+        ratingUser = (RatingBar) scrollView.findViewById(R.id.ratingUser);
+        float rate = this.getRating();
+        ratingUser.setRating(rate);
 
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
@@ -281,7 +290,73 @@ public class MainFragment extends SherlockFragment
                 name.setText("");
                 sureName.setText("");
             }
+        }
 
+    }
+
+    private float getRating()
+    {
+        GameDB gameDB = new GameDB(ctx);
+
+        List<Game> history = gameDB.getOldGames();
+
+        double value = 0;
+        int qntRates = 0;
+        for (Game g : history)
+        {
+            value += g.getValue();
+            qntRates += g.getQntRates();
+        }
+
+        if (qntRates < 1 || value < 0.5)
+        {
+            return 0.0f;
+        }
+
+        return normalize((float) (value / qntRates));
+    }
+
+    private float normalize(float rate)
+    {
+        if (rate <= 0.5)
+        {
+            return 0.5f;
+        }
+        else if (rate > 0.5 && rate <= 1.0)
+        {
+            return 1.0f;
+        }
+        else if (rate > 1.0 && rate <= 1.5)
+        {
+            return 1.5f;
+        }
+        else if (rate > 1.5 && rate <= 2.0)
+        {
+            return 2.0f;
+        }
+        else if (rate > 2.0 && rate <= 2.5)
+        {
+            return 2.5f;
+        }
+        else if (rate > 2.5 && rate <= 3.0)
+        {
+            return 3.0f;
+        }
+        else if (rate > 3.0 && rate <= 3.5)
+        {
+            return 3.5f;
+        }
+        else if (rate > 3.5 && rate <= 4.0)
+        {
+            return 4.0f;
+        }
+        else if (rate > 4.0 && rate <= 4.5)
+        {
+            return 4.5f;
+        }
+        else
+        {
+            return 5.0f;
         }
     }
 
