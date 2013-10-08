@@ -126,11 +126,11 @@
                 android:background="#ffffff" />
 
             <RatingBar
+                android:id="@+id/ratingUser"
                 style="?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
-                android:rating="3.5"
                 android:textColor="@color/colorFont" />
 
             <TextView
