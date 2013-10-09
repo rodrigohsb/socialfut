@@ -1,10 +1,9 @@
 package br.com.socialfut.util;
 
 import android.content.Context;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import br.com.socialfut.webservices.WebService;
+import br.com.socialfut.webservices.PlayerREST;
 
 import com.facebook.Session;
 
@@ -15,7 +14,7 @@ public class FacebookUtils
 
     private static FacebookPicture facebookPicture;
 
-    private static FacebookPost facebookPost;
+    // private static FacebookPost facebookPost;
 
     public static void getProfile(Session sessao, TextView txtName, TextView txtSureName, ImageView imgAvatar,
             Context ctx)
@@ -27,7 +26,7 @@ public class FacebookUtils
         }
         if (Constants.USER_ID != 0 && Constants.DEVICE_REGISTRATION_ID != null)
         {
-            WebService.sendRegistration();
+            PlayerREST.sendRegistrationPOST();
         }
     }
 
@@ -43,12 +42,12 @@ public class FacebookUtils
         facebookPicture.execute();
     }
 
-    public static void setPostMsg(Session sessao, EditText edtPostMsg)
-    {
-        if (sessao != null && (sessao.getState().isOpened()))
-        {
-            facebookPost = new FacebookPost(sessao, edtPostMsg);
-            facebookPost.execute();
-        }
-    }
+    // public static void setPostMsg(Session sessao, EditText edtPostMsg)
+    // {
+    // if (sessao != null && (sessao.getState().isOpened()))
+    // {
+    // facebookPost = new FacebookPost(sessao, edtPostMsg);
+    // facebookPost.execute();
+    // }
+    // }
 }
