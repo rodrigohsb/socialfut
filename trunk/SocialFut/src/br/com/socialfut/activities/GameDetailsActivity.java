@@ -71,7 +71,8 @@ public class GameDetailsActivity extends SherlockActivity
         addressGameDetails.setText(game.getAddress());
 
         RatingBar ratingGameDetails = (RatingBar) findViewById(R.id.ratingBarGameDetails);
-        ratingGameDetails.setRating(game.getRate());
+        // TODO Obter atraves do WebServices
+        // ratingGameDetails.setRating(game.getRate());
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
