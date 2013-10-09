@@ -24,8 +24,7 @@ public class GameDB extends SQLiteOpenHelper
 
     private static final String SCRIPT_DATABASE_CREATE = "create table " + TABLE
             + " (_id integer primary key autoincrement," + " title string not null," + " address string not null,"
-            + " created_date date not null," + " start_date date not null," + " finish_date date not null,"
-            + " value double not null," + " qntRates int not null);";
+            + " created_date date not null," + " start_date date not null," + " finish_date date not null);";
 
     private static final String DATABASE_NAME = "socialFut";
 
@@ -68,8 +67,6 @@ public class GameDB extends SQLiteOpenHelper
             int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
             int idxStart = c.getColumnIndex(Games.START_DATE);
             int idxFinish = c.getColumnIndex(Games.FINISH_DATE);
-            int idxValue = c.getColumnIndex(Games.VALUE);
-            int idxQntRate = c.getColumnIndex(Games.QNT_RATES);
 
             do
             {
@@ -83,8 +80,6 @@ public class GameDB extends SQLiteOpenHelper
                     g.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
                     g.setStartDate(dateFormat.parse(c.getString(idxStart)));
                     g.setFinishDate(dateFormat.parse(c.getString(idxFinish)));
-                    g.setValue(c.getDouble(idxValue));
-                    g.setQntRates(c.getInt(idxQntRate));
 
                     games.add(g);
                 }
@@ -187,8 +182,6 @@ public class GameDB extends SQLiteOpenHelper
         int idxAddress = c.getColumnIndex(Games.ADDRESS);
         int idxCreated = c.getColumnIndex(Games.CREATED_DATE);
         int idxStart = c.getColumnIndex(Games.START_DATE);
-        int idxValue = c.getColumnIndex(Games.VALUE);
-        int idxQntRate = c.getColumnIndex(Games.QNT_RATES);
 
         Game g = new Game();
 
@@ -197,8 +190,6 @@ public class GameDB extends SQLiteOpenHelper
         g.setAddress(c.getString(idxAddress));
         g.setCreatedDate(dateFormat.parse(c.getString(idxCreated)));
         g.setStartDate(dateFormat.parse(c.getString(idxStart)));
-        g.setValue(c.getDouble(idxValue));
-        g.setQntRates(c.getInt(idxQntRate));
         g.setFinishDate(date);
 
         return g;
@@ -213,8 +204,6 @@ public class GameDB extends SQLiteOpenHelper
         values.put(Games.CREATED_DATE, dateFormat.format(game.getCreatedDate()));
         values.put(Games.START_DATE, dateFormat.format(game.getStartDate()));
         values.put(Games.FINISH_DATE, dateFormat.format(game.getFinishDate()));
-        values.put(Games.VALUE, game.getValue());
-        values.put(Games.QNT_RATES, game.getQntRates());
         db.insert(TABLE, null, values);
     }
 
