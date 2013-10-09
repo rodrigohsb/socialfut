@@ -131,7 +131,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
 
             Bundle params = new Bundle();
-            params.putString("q", Constants.FRIENDS_USES_APP);
+            params.putString(Constants.Q, Constants.FRIENDS_USES_APP);
 
             Request request = new Request(session, Constants.SLASH + Constants.FQL, params, HttpMethod.GET);
             resp = request.executeAndWait();
