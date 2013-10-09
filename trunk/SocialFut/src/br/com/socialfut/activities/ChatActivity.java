@@ -18,6 +18,7 @@ import br.com.socialfut.database.ChatDB;
 import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.GcmREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -54,7 +55,6 @@ public class ChatActivity extends SherlockActivity
 
         if (msg != null)
         {
-            // Passar o id do usuario
             save(facebookId, Constants.USER_ID, msg);
         }
 
@@ -70,7 +70,7 @@ public class ChatActivity extends SherlockActivity
                 if (!messageText.getText().toString().trim().equals(""))
                 {
                     sendMessage(messageText.getText().toString());
-                    // TODO Chamar o servidor via WebServices
+                    GcmREST.sendMessage(messageText.getText().toString(), facebookId);
                 }
             }
         });
