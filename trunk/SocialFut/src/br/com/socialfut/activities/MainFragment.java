@@ -1,7 +1,6 @@
 package br.com.socialfut.activities;
 
 import java.util.Arrays;
-import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,9 +24,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.database.GameDB;
 import br.com.socialfut.drawer.SherlockActionBarDrawerToggle;
-import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.FacebookUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -102,12 +99,18 @@ public class MainFragment extends SherlockFragment
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         scrollView = (ScrollView) view.findViewById(R.id.left_drawer);
+
+        /** Avatar */
         img = (ImageView) scrollView.findViewById(R.id.icon_drawer);
+
+        /** Nome */
         name = (TextView) scrollView.findViewById(R.id.name_drawer);
+
+        /** Sobrenome */
         sureName = (TextView) scrollView.findViewById(R.id.sureName_drawer);
+
+        /** Rate */
         ratingUser = (RatingBar) scrollView.findViewById(R.id.ratingUser);
-        float rate = this.getRating();
-        ratingUser.setRating(rate);
 
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
@@ -133,7 +136,7 @@ public class MainFragment extends SherlockFragment
             }
         });
 
-        /** Historico */
+        /** Partidas Futuras */
         view.findViewById(R.id.future).setOnClickListener(new OnClickListener()
         {
             @Override
@@ -260,6 +263,8 @@ public class MainFragment extends SherlockFragment
         if (state.isOpened())
         {
             FacebookUtils.getProfile(session, name, sureName, img, ctx);
+            // TODO Obter atraves do WebServices
+            // ratingUser.setRating(rate);
             loginButton.setVisibility(View.GONE);
         }
         else if (state.isClosed())
@@ -292,72 +297,6 @@ public class MainFragment extends SherlockFragment
             }
         }
 
-    }
-
-    private float getRating()
-    {
-        GameDB gameDB = new GameDB(ctx);
-
-        List<Game> history = gameDB.getOldGames();
-
-        double value = 0;
-        int qntRates = 0;
-        for (Game g : history)
-        {
-            value += g.getValue();
-            qntRates += g.getQntRates();
-        }
-
-        if (qntRates < 1 || value < 0.5)
-        {
-            return 0.0f;
-        }
-
-        return normalize((float) (value / qntRates));
-    }
-
-    private float normalize(float rate)
-    {
-        if (rate <= 0.5)
-        {
-            return 0.5f;
-        }
-        else if (rate > 0.5 && rate <= 1.0)
-        {
-            return 1.0f;
-        }
-        else if (rate > 1.0 && rate <= 1.5)
-        {
-            return 1.5f;
-        }
-        else if (rate > 1.5 && rate <= 2.0)
-        {
-            return 2.0f;
-        }
-        else if (rate > 2.0 && rate <= 2.5)
-        {
-            return 2.5f;
-        }
-        else if (rate > 2.5 && rate <= 3.0)
-        {
-            return 3.0f;
-        }
-        else if (rate > 3.0 && rate <= 3.5)
-        {
-            return 3.5f;
-        }
-        else if (rate > 3.5 && rate <= 4.0)
-        {
-            return 4.0f;
-        }
-        else if (rate > 4.0 && rate <= 4.5)
-        {
-            return 4.5f;
-        }
-        else
-        {
-            return 5.0f;
-        }
     }
 
     private Session.StatusCallback callback = new Session.StatusCallback()
