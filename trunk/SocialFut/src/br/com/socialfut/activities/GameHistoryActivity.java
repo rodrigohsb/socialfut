@@ -48,7 +48,7 @@ public class GameHistoryActivity extends SherlockActivity
 
         for (int i = 1; i < 16; i++)
         {
-            Game g = new Game(i, "Titulo " + i, "Rua " + i, new Date(), new Date(), new Date(), 0.0, 0);
+            Game g = new Game("Titulo " + i, "Rua " + i, new Date(), new Date(), new Date());
             gameDB.saveGame(g);
         }
 
@@ -63,7 +63,8 @@ public class GameHistoryActivity extends SherlockActivity
             group.children.add("Horário: " + dateFormat2.format(game.getStartDate()) + " - "
                     + dateFormat2.format(game.getStartDate()));
 
-            group.children.add("Qualificação recebida: " + game.getRate());
+            // TODO Obter atraves do WebServices
+            // group.children.add("Qualificação recebida: " + game.getRate());
             groups.append(i++, group);
         }
 
