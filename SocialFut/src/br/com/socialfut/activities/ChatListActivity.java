@@ -34,7 +34,7 @@ import com.facebook.model.GraphObject;
 /**
  * 
  * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propósito da classe.
+ * TODO Explicar detalhadamente proposito da classe.
  * 
  * @author rodrigo.bacellar
  * @since 25/09/2013
@@ -150,7 +150,7 @@ public class ChatListActivity extends SherlockListActivity
             }
 
             Bundle params = new Bundle();
-            params.putString("q", Constants.FRIENDS_USES_APP);
+            params.putString(Constants.Q, Constants.FRIENDS_USES_APP);
 
             Request request = new Request(session, Constants.SLASH + Constants.FQL, params, HttpMethod.GET);
             resp = request.executeAndWait();
