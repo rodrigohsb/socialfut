@@ -7,19 +7,13 @@ import br.com.socialfut.persistence.Jogador;
 public class Constants
 {
 
-    public static final String NOME = "nome";
-
-    public static final String ERRO = "erro";
+    /** CONSTANTES BASICAS [INICIO] */
 
     public static final String OK = "OK";
-
-    public static final String CANCEL = "Cancelar";
 
     public static final String YES = "Sim";
 
     public static final String NO = "Nao";
-
-    public static final String SUCESS = "Sucesso";
 
     public static final String CLOSE_APP = "Deseja sair?";
 
@@ -37,8 +31,6 @@ public class Constants
 
     public static final String SEMICOLON = ";";
 
-    public static final String SLASH = "/";
-
     public static List<Jogador> jogadores;
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -49,9 +41,17 @@ public class Constants
 
     public static final String HOUR_PATTERN_FOR_USER = "HH:mm";
 
+    /** CONSTANTES BASICAS [FIM] */
+
     /** WEB SERVICES [INICIO] */
 
-    public static final String URL_WS = "http://192.168.0.11:8080/SocialFutServer/webServices/";
+    public static final String BASE_URL = "http://localhost:8080/SocialFutServer/";
+
+    public static final String URL_GAME_WS = BASE_URL + "game/";
+
+    public static final String URL_PLAYER_WS = BASE_URL + "player/";
+
+    public static final String URL_GCM_WS = BASE_URL + "gcm/";
 
     public static final String WS_STATUS = "200";
 
@@ -63,6 +63,10 @@ public class Constants
 
     /** FQL [INICIO] */
     public static final String FRIENDS_USES_APP = "select uid,first_name,last_name,pic_square,is_app_user from user where uid in (select uid2 from friend where uid1 = me())";
+
+    public static final String Q = "q";
+    
+    public static final String SLASH = "/";
 
     public static final String FQL = "fql";
 
