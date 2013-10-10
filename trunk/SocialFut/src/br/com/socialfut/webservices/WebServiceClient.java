@@ -15,7 +15,7 @@ import android.util.Log;
 
 public class WebServiceClient
 {
-    protected static String[] get(String url)
+    public static String[] get(String url)
     {
 
         String[] result = new String[2];
