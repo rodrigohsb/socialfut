@@ -18,7 +18,7 @@ import br.com.socialfut.database.ChatDB;
 import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
-import br.com.socialfut.webservices.GcmREST;
+import br.com.socialfut.webservices.ChatREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -70,7 +70,6 @@ public class ChatActivity extends SherlockActivity
                 if (!messageText.getText().toString().trim().equals(""))
                 {
                     sendMessage(messageText.getText().toString());
-                    GcmREST.sendMessage(messageText.getText().toString(), facebookId);
                 }
             }
         });
@@ -82,9 +81,10 @@ public class ChatActivity extends SherlockActivity
 
     private void sendMessage(String message)
     {
-        messageText.setText("");
         save(Constants.USER_ID, facebookId, message);
         showMessage(message, false);
+        messageText.setText("");
+        new ChatREST().execute(new Chat(Constants.USER_ID, facebookId, message));
     }
 
     private void showMessage(String message, boolean leftSide)
