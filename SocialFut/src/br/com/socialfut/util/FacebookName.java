@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import br.com.socialfut.webservices.PlayerREST;
 
@@ -30,12 +31,15 @@ public class FacebookName extends AsyncTask<Void, String, Void>
 
     private Response resp;
 
-    public FacebookName(Session sessao, TextView name, TextView sureName, Context ctx)
+    private RatingBar rating;
+
+    public FacebookName(Session sessao, TextView name, TextView sureName, RatingBar rating, Context ctx)
     {
         super();
         this.session = sessao;
         this.mTextName = name;
         this.mTextSureName = sureName;
+        this.rating = rating;
         this.ctx = ctx;
     }
 
@@ -72,7 +76,6 @@ public class FacebookName extends AsyncTask<Void, String, Void>
             editor.putString("full_name", firstName + " " + sureName).commit();
             editor.putLong("id", Constants.USER_ID).commit();
         }
-
         return null;
     }
 
@@ -83,7 +86,7 @@ public class FacebookName extends AsyncTask<Void, String, Void>
         mTextName.setText(firstName);
         mTextSureName.setText(sureName);
 
-        new PlayerREST().execute();
+        PlayerREST playerRest = new PlayerREST(rating);
+        playerRest.execute(rating);
     }
-
 }
