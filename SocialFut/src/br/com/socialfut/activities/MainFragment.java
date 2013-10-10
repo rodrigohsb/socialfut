@@ -262,9 +262,7 @@ public class MainFragment extends SherlockFragment
     {
         if (state.isOpened())
         {
-            FacebookUtils.getProfile(session, name, sureName, img, ctx);
-            // TODO Obter atraves do WebServices
-            // ratingUser.setRating(rate);
+            FacebookUtils.getProfile(session, name, sureName, img, ratingUser, ctx);
             loginButton.setVisibility(View.GONE);
         }
         else if (state.isClosed())
