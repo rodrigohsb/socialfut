@@ -38,7 +38,7 @@ public class WebServiceClient
         }
         catch (Exception e)
         {
-            Log.e("NGVL", "Falha ao acessar Web service", e);
+            Log.e("NGVL", "Falha ao acessar Web service:" + httpget.getURI(), e);
             result[0] = "0";
             result[1] = "Falha de rede!";
         }
