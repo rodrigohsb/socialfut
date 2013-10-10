@@ -29,16 +29,16 @@ public class WebServiceClient
 
             if (entity != null)
             {
-                result[0] = String.valueOf(response.getStatusLine().getStatusCode());
                 InputStream instream = entity.getContent();
                 result[1] = toString(instream);
                 instream.close();
-                Log.i("get", "Result from post JsonPost : " + result[0] + " : " + result[1]);
+                Log.i("get", "Result from post JsonPost : " + result[1]);
             }
         }
         catch (Exception e)
         {
-            Log.e("NGVL", "Falha ao acessar Web service:" + httpget.getURI(), e);
+            System.out.println(httpget.getURI());
+            e.printStackTrace();
             result[0] = "0";
             result[1] = "Falha de rede!";
         }
@@ -55,8 +55,7 @@ public class WebServiceClient
             StringEntity sEntity = new StringEntity(json, "UTF-8");
             httpPost.setEntity(sEntity);
 
-            HttpResponse response;
-            response = HttpClient.getHttpClientInstace().execute(httpPost);
+            HttpResponse response = HttpClient.getHttpClientInstace().execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (entity != null)
