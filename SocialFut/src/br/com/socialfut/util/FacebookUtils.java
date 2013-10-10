@@ -26,7 +26,7 @@ public class FacebookUtils
         }
         if (Constants.USER_ID != 0 && Constants.DEVICE_REGISTRATION_ID != null)
         {
-            PlayerREST.sendRegistrationPOST();
+            new PlayerREST().execute();
         }
     }
 
