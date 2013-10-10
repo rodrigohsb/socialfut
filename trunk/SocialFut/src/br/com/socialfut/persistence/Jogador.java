@@ -23,6 +23,13 @@ public class Jogador implements Serializable
     {
     }
 
+    public Jogador(String position, float rating)
+    {
+        super();
+        this.position = position;
+        this.rating = rating;
+    }
+
     public Jogador(long id, String nome, String sobreNome, String picture)
     {
         super();
@@ -32,12 +39,15 @@ public class Jogador implements Serializable
         this.picture = picture;
     }
 
-    public Jogador(String nome, String sobreNome, String posicao, float rating)
+    public Jogador(long id, String nome, String sobreNome, String position, float rating, String picture)
     {
+        super();
+        this.id = id;
         this.nome = nome;
         this.sobreNome = sobreNome;
-        this.position = posicao;
+        this.position = position;
         this.rating = rating;
+        this.picture = picture;
     }
 
     public long getId()
