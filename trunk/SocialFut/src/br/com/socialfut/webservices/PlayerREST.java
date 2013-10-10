@@ -3,9 +3,10 @@ package br.com.socialfut.webservices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import br.com.socialfut.util.Constants;
 
-public class PlayerREST
+public class PlayerREST extends AsyncTask<Void, Void, String[]>
 {
 
     public static void sendRegistrationPOST()
@@ -33,7 +34,7 @@ public class PlayerREST
         }
     }
 
-    public static void sendRegistrationGET()
+    public static String[] sendRegistrationGET()
     {
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "insert" + "/" + Constants.USER_ID + "/"
                 + Constants.DEVICE_REGISTRATION_ID);
@@ -45,6 +46,13 @@ public class PlayerREST
         {
             System.err.println(resposta[1]);
         }
+        return resposta;
+    }
+
+    @Override
+    protected String[] doInBackground(Void... params)
+    {
+        return sendRegistrationGET();
     }
 
     // public Jogador getPlayerDetails(Jogador j) throws Exception
