@@ -2,8 +2,8 @@ package br.com.socialfut.util;
 
 import android.content.Context;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import br.com.socialfut.webservices.PlayerREST;
 
 import com.facebook.Session;
 
@@ -17,18 +17,18 @@ public class FacebookUtils
     // private static FacebookPost facebookPost;
 
     public static void getProfile(Session sessao, TextView txtName, TextView txtSureName, ImageView imgAvatar,
-            Context ctx)
+            RatingBar rating, Context ctx)
     {
         if (sessao != null && (sessao.getState().isOpened()))
         {
-            getName(sessao, txtName, txtSureName, ctx);
+            getName(sessao, txtName, txtSureName, rating, ctx);
             getPicture(sessao, imgAvatar, ctx);
         }
     }
 
-    public static void getName(Session sessao, TextView txtName, TextView txtSureName, Context ctx)
+    public static void getName(Session sessao, TextView txtName, TextView txtSureName, RatingBar rating, Context ctx)
     {
-        facebookName = new FacebookName(sessao, txtName, txtSureName, ctx);
+        facebookName = new FacebookName(sessao, txtName, txtSureName, rating, ctx);
         facebookName.execute();
     }
 
