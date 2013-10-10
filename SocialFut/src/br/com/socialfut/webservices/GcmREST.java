@@ -1,36 +1,32 @@
 package br.com.socialfut.webservices;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.os.AsyncTask;
+import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.Constants;
 
-public class GcmREST
+public class GcmREST extends AsyncTask<Chat, Void, String[]>
 {
 
-    public static void sendMessage(String msg, long friendId)
+    @Override
+    protected String[] doInBackground(Chat... params)
     {
-        JSONObject jsonObject = new JSONObject();
-        String[] resposta = null;
-        try
-        {
-            jsonObject.put("from", Constants.USER_ID);
-            jsonObject.put("to", friendId);
-            String json = jsonObject.toString();
-            resposta = WebServiceClient.post(Constants.URL_GCM_WS + "chat", json);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
+        Chat chat = params[0];
+
+        StringBuilder sb = new StringBuilder(Constants.URL_GCM_WS).append("chat").append(Constants.SLASH)
+                .append(Constants.USER_ID).append(Constants.SLASH).append(chat.getReceiver()).append(Constants.SLASH)
+                .append(chat.getContent());
+
+        String[] resposta = WebServiceClient.get(sb.toString());
+
         if (resposta[0].equals(Constants.WS_STATUS))
         {
-            System.out.println(resposta[0]);
+            System.out.println(resposta[1]);
         }
         else
         {
-            System.err.println(resposta[1]);
+            System.err.println(resposta[0]);
         }
+        return resposta;
     }
 
 }
