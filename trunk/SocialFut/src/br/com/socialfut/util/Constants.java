@@ -45,7 +45,7 @@ public class Constants
 
     /** WEB SERVICES [INICIO] */
 
-    public static final String BASE_URL = "http://localhost:8080/SocialFutServer/";
+    public static final String BASE_URL = "http://192.168.0.11:8080/SocialFutServer/";
 
     public static final String URL_GAME_WS = BASE_URL + "game/";
 
