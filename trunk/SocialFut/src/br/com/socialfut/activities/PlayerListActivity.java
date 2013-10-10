@@ -21,6 +21,7 @@ import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
@@ -138,7 +139,7 @@ public class PlayerListActivity extends SherlockListActivity
 
             GraphObject graph = resp.getGraphObject();
 
-            List<Jogador> players = this.getFriends(graph);
+            List<Jogador> players = this.getPlayers(graph);
 
             if (!players.isEmpty())
             {
@@ -182,6 +183,22 @@ public class PlayerListActivity extends SherlockListActivity
             super.onPostExecute(jogadores);
         }
 
+        private List<Jogador> getPlayers(GraphObject graph)
+        {
+            String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "buscarTodos");
+            JSONObject teste = new JSONObject();
+            JSONArray array = null;
+            try
+            {
+                array = teste.getJSONArray(resposta[1]);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            return this.getPlayers(graph, array);
+        }
+
         /**
          * 
          * Obtem todos os amigos que tem o aplicativo.
@@ -189,8 +206,10 @@ public class PlayerListActivity extends SherlockListActivity
          * @param graph
          * @return
          */
-        private List<Jogador> getFriends(GraphObject graph)
+        private List<Jogador> getPlayers(GraphObject graph, JSONArray webServicesAnswer)
         {
+
+            boolean isEmpty = webServicesAnswer.length() == 0 ? true : false;
 
             List<Jogador> players = new ArrayList<Jogador>();
 
@@ -210,17 +229,25 @@ public class PlayerListActivity extends SherlockListActivity
                             {
                                 /** ID */
                                 Long id = Long.valueOf(player.getString(Constants.UID));
-
                                 /** Primeiro Nome */
                                 String firstName = player.getString(Constants.FIRST_NAME);
-
                                 /** Primeiro Nome */
                                 String lastName = player.getString(Constants.LAST_NAME);
-
                                 /** Foto */
                                 String url = player.getString(Constants.PIC_SQUARE);
 
-                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                if (!isEmpty)
+                                {
+                                    Jogador j1 = this.getRateAndPosition(webServicesAnswer, id);
+                                    if (j1 != null)
+                                    {
+                                        Jogador j = new Jogador(id, firstName, lastName, j1.getPosition(), j1.getRating(), url);
+                                        players.add(j);
+                                        continue;
+                                    }
+                                }
+
+                                Jogador j = new Jogador(id, firstName, lastName, "GOLEIRO", 1.0f, url);
                                 players.add(j);
                             }
                         }
@@ -237,6 +264,41 @@ public class PlayerListActivity extends SherlockListActivity
                 return null;
             }
 
+        }
+
+        /**
+         * 
+         * "Varrer" o Json para buscar a posicao e o rating do jogador.
+         * 
+         * @param webServicesAnswer
+         * @param userId
+         * @return
+         * @throws JSONException
+         */
+        private Jogador getRateAndPosition(JSONArray webServicesAnswer, Long userId) throws JSONException
+        {
+            for (int i = 0; i < webServicesAnswer.length(); i++)
+            {
+
+                JSONObject player = webServicesAnswer.getJSONObject(i);
+
+                /** ID */
+                Long id = Long.valueOf(player.getString("id"));
+
+                if (id == userId)
+                {
+                    /** Primeiro Nome */
+                    float rating = Float.valueOf(player.getString("rating"));
+                    /** Primeiro Nome */
+                    String position = player.getString("position");
+
+                    // TODO deletar do json para nao "varrer" em todos novamente.
+
+                    Jogador j = new Jogador(position, rating);
+                    return j;
+                }
+            }
+            return null;
         }
     }
 }
