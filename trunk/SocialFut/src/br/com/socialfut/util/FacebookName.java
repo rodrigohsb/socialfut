@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
+import br.com.socialfut.webservices.PlayerREST;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -13,7 +14,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 
-public class FacebookName extends AsyncTask<Void, String, Boolean>
+public class FacebookName extends AsyncTask<Void, String, Void>
 {
     private Session session;
 
@@ -39,7 +40,7 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
     }
 
     @Override
-    protected Boolean doInBackground(Void... v)
+    protected Void doInBackground(Void... v)
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         /** Verifica se o nome consta nas preferencias */
@@ -47,11 +48,10 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
 
         if (fullName != null)
         {
-
             String[] names = fullName.split(" ");
             this.firstName = names[0];
             this.sureName = names[1];
-            return true;
+            Constants.USER_ID = sharedPrefs.getLong("id", Constants.USER_ID);
         }
         else
         {
@@ -67,17 +67,23 @@ public class FacebookName extends AsyncTask<Void, String, Boolean>
             firstName = graph.getProperty("first_name").toString();
             sureName = graph.getProperty("last_name").toString();
 
-            editor.putString("full_name", firstName + " " + sureName).commit();
+            Constants.USER_ID = Long.valueOf(graph.getProperty("id").toString());
 
-            return false;
+            editor.putString("full_name", firstName + " " + sureName).commit();
+            editor.putLong("id", Constants.USER_ID).commit();
         }
+
+        return null;
     }
 
     @Override
-    protected void onPostExecute(Boolean response)
+    protected void onPostExecute(Void result)
     {
-        super.onPostExecute(response);
+        super.onPostExecute(result);
         mTextName.setText(firstName);
         mTextSureName.setText(sureName);
+
+        new PlayerREST().execute();
     }
+
 }
