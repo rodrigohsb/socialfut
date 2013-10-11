@@ -84,7 +84,7 @@ public class ChatActivity extends SherlockActivity
         save(Constants.USER_ID, facebookId, message);
         showMessage(message, false);
         messageText.setText("");
-        new ChatREST().execute(new Chat(Constants.USER_ID, facebookId, message));
+        new ChatREST(this).execute(new Chat(Constants.USER_ID, facebookId, message));
     }
 
     private void showMessage(String message, boolean leftSide)
