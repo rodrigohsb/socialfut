@@ -4,10 +4,11 @@ import android.os.AsyncTask;
 import android.widget.RatingBar;
 import br.com.socialfut.util.Constants;
 
-public class PlayerREST extends AsyncTask<RatingBar, Void, String[]>
+public class PlayerREST extends AsyncTask<RatingBar, Void, Void>
 {
-
     private RatingBar rating;
+
+    private float value;
 
     public PlayerREST(RatingBar rating)
     {
@@ -16,25 +17,28 @@ public class PlayerREST extends AsyncTask<RatingBar, Void, String[]>
     }
 
     @Override
-    protected String[] doInBackground(RatingBar... params)
+    protected Void doInBackground(RatingBar... params)
     {
         String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "rateByUser" + "/" + Constants.USER_ID);
-        if (resposta[0].equals(Constants.WS_STATUS))
-        {
-            System.out.println(resposta[0]);
-        }
-        else
-        {
-            System.err.println(resposta[1]);
-        }
-        return resposta;
+        // if (resposta[0].equals(Constants.WS_STATUS))
+        // {
+        // System.out.println(resposta[1]);
+        // }
+        // else
+        // {
+        // System.err.println(resposta[0]);
+        // }
+
+        System.out.println("resposta : " + resposta.toString());
+        value = 1.0f;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String[] result)
+    protected void onPostExecute(Void result)
     {
         super.onPostExecute(result);
-        rating.setRating(Float.valueOf(result[0]));
+        rating.setRating(value);
     }
 
 }
