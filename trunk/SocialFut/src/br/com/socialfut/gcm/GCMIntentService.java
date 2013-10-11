@@ -57,20 +57,27 @@ public class GCMIntentService extends GCMBaseIntentService
     @Override
     protected void onMessage(Context context, Intent intent)
     {
-        String fullMsg = intent.getStringExtra("msg");
-        String[] text = fullMsg.split(Constants.SEMICOLON);
+        try
+        {
+            String fullMsg = intent.getStringExtra("msg");
+            String[] text = fullMsg.split(Constants.SEMICOLON);
 
-        /** Id do Usuario que enviou a mensagem */
-        String facebookId = text[0];
+            /** Id do Usuario que enviou a mensagem */
+            String facebookId = text[0];
 
-        /** Conteudo da mensagem */
-        String msgContent = text[1];
+            /** Conteudo da mensagem */
+            String msgContent = text[1];
 
-        Jogador j = getFacebookData(facebookId);
+            Jogador j = getFacebookData(facebookId);
 
-        Bitmap bitmap = getBitmap(j.getPicture());
+            Bitmap bitmap = getBitmap(j.getPicture());
 
-        enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap);
+            enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap);
+        }
+        catch (Exception e)
+        {
+        }
+
     }
 
     /**
