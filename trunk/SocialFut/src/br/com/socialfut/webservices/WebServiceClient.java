@@ -3,12 +3,14 @@ package br.com.socialfut.webservices;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 
 import android.util.Log;
@@ -38,6 +40,45 @@ public class WebServiceClient
         catch (Exception e)
         {
             System.out.println(httpget.getURI());
+            e.printStackTrace();
+            result[0] = "0";
+            result[1] = "Falha de rede!";
+        }
+        return result;
+    }
+
+    public static String[] put(String url, String msg)
+    {
+
+        String[] result = new String[2];
+        HttpPut httpPut = new HttpPut(url);
+        HttpResponse response;
+
+        try
+        {
+
+            StringEntity mensagem = new StringEntity(msg);
+            httpPut.setEntity(mensagem);
+
+            response = HttpClient.getHttpClientInstace().execute(httpPut);
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null)
+            {
+                InputStream instream = entity.getContent();
+                result[1] = toString(instream);
+                instream.close();
+                Log.i("get", "Result from post JsonPost : " + result[1]);
+            }
+        }
+        catch (UnsupportedEncodingException e1)
+        {
+            e1.printStackTrace();
+        }
+        catch (Exception e)
+        {
+
+            System.out.println(httpPut.getURI());
             e.printStackTrace();
             result[0] = "0";
             result[1] = "Falha de rede!";
