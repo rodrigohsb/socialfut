@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import br.com.socialfut.persistence.Chat;
 import br.com.socialfut.util.Constants;
 
-public class ChatREST extends AsyncTask<Chat, Void, String[]>
+public class ChatREST extends AsyncTask<Chat, Void, Void>
 {
 
     private Context ctx;
@@ -19,7 +19,7 @@ public class ChatREST extends AsyncTask<Chat, Void, String[]>
     }
 
     @Override
-    protected String[] doInBackground(Chat... params)
+    protected Void doInBackground(Chat... params)
     {
         Chat chat = params[0];
 
@@ -28,16 +28,9 @@ public class ChatREST extends AsyncTask<Chat, Void, String[]>
         Constants.USER_ID = sharedPrefs.getLong("id", Constants.USER_ID);
 
         StringBuilder sb = new StringBuilder(Constants.URL_CHAT_WS).append(Constants.USER_ID).append(Constants.SLASH)
-                .append(chat.getReceiver()).append(Constants.SLASH).append(chat.getContent());
+                .append(chat.getReceiver());
 
-        String[] resposta = WebServiceClient.get(sb.toString());
-        return resposta;
-    }
-
-    @Override
-    protected void onPostExecute(String[] result)
-    {
-        // do nothing
-        super.onPostExecute(result);
+        WebServiceClient.put(sb.toString(), chat.getContent());
+        return null;
     }
 }
