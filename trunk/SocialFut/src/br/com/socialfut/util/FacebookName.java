@@ -65,17 +65,22 @@ public class FacebookName extends AsyncTask<Void, String, Void>
             Request request = new Request(session, "me", params, HttpMethod.GET);
             resp = request.executeAndWait();
 
-            /** Salva o nome nas preferencias */
-            SharedPreferences.Editor editor = sharedPrefs.edit();
             GraphObject graph = resp.getGraphObject();
             firstName = graph.getProperty("first_name").toString();
             sureName = graph.getProperty("last_name").toString();
 
             Constants.USER_ID = Long.valueOf(graph.getProperty("id").toString());
 
+            /** Salva o nome nas preferencias */
+            SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putString("full_name", firstName + " " + sureName).commit();
             editor.putLong("id", Constants.USER_ID).commit();
         }
+
+        // Busca o rating do jogador no WebServices
+        PlayerREST playerRest = new PlayerREST(rating);
+        playerRest.execute(rating);
+
         return null;
     }
 
@@ -85,8 +90,5 @@ public class FacebookName extends AsyncTask<Void, String, Void>
         super.onPostExecute(result);
         mTextName.setText(firstName);
         mTextSureName.setText(sureName);
-
-        PlayerREST playerRest = new PlayerREST(rating);
-        playerRest.execute(rating);
     }
 }

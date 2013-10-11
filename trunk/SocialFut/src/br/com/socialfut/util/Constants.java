@@ -51,7 +51,7 @@ public class Constants
 
     public static final String URL_PLAYER_WS = BASE_URL + "player/";
 
-    public static final String URL_GCM_WS = BASE_URL + "gcm/";
+    public static final String URL_CHAT_WS = BASE_URL + "chat/";
 
     public static final String WS_STATUS = "200";
 
@@ -65,7 +65,7 @@ public class Constants
     public static final String FRIENDS_USES_APP = "select uid,first_name,last_name,pic_square,is_app_user from user where uid in (select uid2 from friend where uid1 = me())";
 
     public static final String Q = "q";
-    
+
     public static final String SLASH = "/";
 
     public static final String FQL = "fql";
