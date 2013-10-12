@@ -26,7 +26,7 @@ public class WebServiceClient
 
         try
         {
-            response = HttpClient.getHttpClientInstace().execute(httpget);
+            response = HttpClient.getHttpClientInstance().execute(httpget);
             HttpEntity entity = response.getEntity();
 
             if (entity != null)
@@ -60,7 +60,7 @@ public class WebServiceClient
             StringEntity mensagem = new StringEntity(msg);
             httpPut.setEntity(mensagem);
 
-            response = HttpClient.getHttpClientInstace().execute(httpPut);
+            response = HttpClient.getHttpClientInstance().execute(httpPut);
             HttpEntity entity = response.getEntity();
 
             if (entity != null)
@@ -96,7 +96,7 @@ public class WebServiceClient
             StringEntity sEntity = new StringEntity(json, "UTF-8");
             httpPost.setEntity(sEntity);
 
-            HttpResponse response = HttpClient.getHttpClientInstace().execute(httpPost);
+            HttpResponse response = HttpClient.getHttpClientInstance().execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (entity != null)

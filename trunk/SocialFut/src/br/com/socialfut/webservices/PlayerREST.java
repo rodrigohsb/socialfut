@@ -1,44 +1,157 @@
 package br.com.socialfut.webservices;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.RatingBar;
-import br.com.socialfut.util.Constants;
+import br.com.socialfut.util.Player;
 
-public class PlayerREST extends AsyncTask<RatingBar, Void, Void>
+public class PlayerREST extends AsyncTask<Void, Void, Void>
 {
+
+    private Context ctx;
+
     private RatingBar rating;
 
-    private float value;
+    private String deviceRegId;
 
-    public PlayerREST(RatingBar rating)
+    private Integer position;
+
+    private int type;
+
+    private ProgressDialog dialog;
+
+    private boolean hasToShowDialog;
+
+    public PlayerREST(Context ctx, RatingBar rating, String deviceRegId, Integer position, int type,
+            ProgressDialog dialog, boolean hasToShowDialog)
     {
         super();
+        this.ctx = ctx;
         this.rating = rating;
+        this.deviceRegId = deviceRegId;
+        this.position = position;
+        this.type = type;
+        this.dialog = dialog;
+        this.hasToShowDialog = hasToShowDialog;
     }
 
     @Override
-    protected Void doInBackground(RatingBar... params)
+    protected void onPreExecute()
     {
-        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "rateByUser" + "/" + Constants.USER_ID);
-        // if (resposta[0].equals(Constants.WS_STATUS))
-        // {
-        // System.out.println(resposta[1]);
-        // }
-        // else
-        // {
-        // System.err.println(resposta[0]);
-        // }
+        if (hasToShowDialog)
+        {
+            dialog = new ProgressDialog(ctx);
+            dialog.setMessage("Por favor, aguarde...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+    }
 
-        System.out.println("resposta : " + resposta.toString());
-        value = 1.0f;
+    @Override
+    protected Void doInBackground(Void... arg0)
+    {
+        switch (type)
+        {
+        case 0:
+            getPlayer();
+            break;
+        case 1:
+            insert();
+            break;
+        case 2:
+            updateDevice();
+            break;
+        case 3:
+            updateRating();
+            break;
+        case 4:
+            getRating();
+            break;
+        case 5:
+            getPosition();
+            break;
+        default:
+            break;
+        }
+
         return null;
     }
 
     @Override
     protected void onPostExecute(Void result)
     {
+        if (hasToShowDialog && dialog.isShowing())
+        {
+            dialog.dismiss();
+        }
         super.onPostExecute(result);
-        rating.setRating(value);
     }
 
+    /**
+     * 
+     * Type = 0
+     * 
+     * @return
+     */
+    private Player getPlayer()
+    {
+        return null;
+    }
+
+    /**
+     * 
+     * Type = 1
+     * 
+     * @return
+     */
+
+    private String insert()
+    {
+        return "OK";
+    }
+
+    /**
+     * 
+     * Type = 2
+     * 
+     * @return
+     */
+    private String updateDevice()
+    {
+        return "OK";
+    }
+
+    /**
+     * 
+     * Type = 3
+     * 
+     * @return
+     */
+    private String updateRating()
+    {
+        return "OK";
+    }
+
+    /**
+     * 
+     * Type = 4
+     * 
+     * @return
+     */
+    private String getRating()
+    {
+        return "OK";
+    }
+
+    /**
+     * 
+     * Type = 5
+     * 
+     * @return
+     */
+    private String getPosition()
+    {
+        return "OK";
+    }
 }

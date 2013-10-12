@@ -40,7 +40,7 @@ public class HttpClient
         httpclient = new DefaultHttpClient(httpParameters);
     }
 
-    public static DefaultHttpClient getHttpClientInstace()
+    public static DefaultHttpClient getHttpClientInstance()
     {
         if (instance == null) instance = new HttpClient();
         return instance.httpclient;
