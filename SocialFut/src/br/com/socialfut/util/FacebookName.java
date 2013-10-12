@@ -78,8 +78,8 @@ public class FacebookName extends AsyncTask<Void, String, Void>
         }
 
         // Busca o rating do jogador no WebServices
-        PlayerREST playerRest = new PlayerREST(rating);
-        playerRest.execute(rating);
+        PlayerREST playerRest = new PlayerREST(ctx, rating, null, null, 4, null, false);
+        playerRest.execute();
 
         return null;
     }

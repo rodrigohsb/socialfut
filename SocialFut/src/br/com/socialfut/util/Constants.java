@@ -53,7 +53,7 @@ public class Constants
 
     public static final String URL_CHAT_WS = BASE_URL + "chat/";
 
-    public static final String WS_STATUS = "200";
+    public static final String WS_STATUS_OK = "200";
 
     public static long USER_ID;
 
