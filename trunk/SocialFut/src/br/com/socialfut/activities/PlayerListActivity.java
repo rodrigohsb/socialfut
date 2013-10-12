@@ -185,7 +185,7 @@ public class PlayerListActivity extends SherlockListActivity
 
         private List<Jogador> getPlayers(GraphObject graph)
         {
-            String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "buscarTodos");
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "rates");
             JSONObject teste = new JSONObject();
             JSONArray array = null;
             try
@@ -241,7 +241,8 @@ public class PlayerListActivity extends SherlockListActivity
                                     Jogador j1 = this.getRateAndPosition(webServicesAnswer, id);
                                     if (j1 != null)
                                     {
-                                        Jogador j = new Jogador(id, firstName, lastName, j1.getPosition(), j1.getRating(), url);
+                                        Jogador j = new Jogador(id, firstName, lastName, j1.getPosition(),
+                                                j1.getRating(), url);
                                         players.add(j);
                                         continue;
                                     }
@@ -292,7 +293,8 @@ public class PlayerListActivity extends SherlockListActivity
                     /** Primeiro Nome */
                     String position = player.getString("position");
 
-                    // TODO deletar do json para nao "varrer" em todos novamente.
+                    // TODO deletar do json para nao "varrer" em todos
+                    // novamente.
 
                     Jogador j = new Jogador(position, rating);
                     return j;
