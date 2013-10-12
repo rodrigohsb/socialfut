@@ -2,6 +2,7 @@ package br.com.socialfut.activities;
 
 import java.text.SimpleDateFormat;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -14,6 +15,7 @@ import br.com.socialfut.R;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.GameREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -33,6 +35,8 @@ public class GameDetailsActivity extends SherlockActivity
 
     private ToggleButton toggleButton;
 
+    private Context ctx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -41,6 +45,8 @@ public class GameDetailsActivity extends SherlockActivity
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Detalhes da Partida");
 
         setContentView(R.layout.layout_game_details);
+
+        ctx = this;
 
         Bundle bundle = getIntent().getExtras();
         Game game = (Game) bundle.getSerializable("game");
@@ -70,9 +76,10 @@ public class GameDetailsActivity extends SherlockActivity
         TextView addressGameDetails = (TextView) findViewById(R.id.addressGameDetails);
         addressGameDetails.setText(game.getAddress());
 
-        RatingBar ratingGameDetails = (RatingBar) findViewById(R.id.ratingBarGameDetails);
-        // TODO Obter atraves do WebServices
-        // ratingGameDetails.setRating(game.getRate());
+        RatingBar rating = (RatingBar) findViewById(R.id.ratingBarGameDetails);
+
+        // AsyncTask p/ preenche o rating
+        new GameREST(ctx, rating, game.getId(), 0, false).execute();
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
