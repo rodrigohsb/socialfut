@@ -1,51 +1,38 @@
 package br.com.socialfut.webservices;
 
-import android.app.ProgressDialog;
-import android.content.Context;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
 import android.widget.RatingBar;
-import br.com.socialfut.util.Player;
+import android.widget.TextView;
+import br.com.socialfut.util.Constants;
 
 public class PlayerREST extends AsyncTask<Void, Void, Void>
 {
 
-    private Context ctx;
-
     private RatingBar rating;
 
-    private String deviceRegId;
-
-    private Integer position;
+    private TextView position;
 
     private int type;
 
-    private ProgressDialog dialog;
+    private String deviceRegId;
 
-    private boolean hasToShowDialog;
-
-    public PlayerREST(Context ctx, RatingBar rating, String deviceRegId, Integer position, int type,
-            ProgressDialog dialog, boolean hasToShowDialog)
+    public PlayerREST(TextView position, String deviceRegId, int type)
     {
         super();
-        this.ctx = ctx;
-        this.rating = rating;
-        this.deviceRegId = deviceRegId;
         this.position = position;
         this.type = type;
-        this.dialog = dialog;
-        this.hasToShowDialog = hasToShowDialog;
+        this.deviceRegId = deviceRegId;
     }
 
-    @Override
-    protected void onPreExecute()
+    public PlayerREST(RatingBar rating, TextView position, int type)
     {
-        if (hasToShowDialog)
-        {
-            dialog = new ProgressDialog(ctx);
-            dialog.setMessage("Por favor, aguarde...");
-            dialog.setCancelable(false);
-            dialog.show();
-        }
+        super();
+        this.rating = rating;
+        this.position = position;
+        this.type = type;
     }
 
     @Override
@@ -54,38 +41,17 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
         switch (type)
         {
         case 0:
-            getPlayer();
-            break;
-        case 1:
             insert();
             break;
-        case 2:
+        case 1:
             updateDevice();
             break;
-        case 3:
-            updateRating();
-            break;
-        case 4:
-            getRating();
-            break;
-        case 5:
-            getPosition();
-            break;
-        default:
+        case 2:
+            getRatingAndPosition();
             break;
         }
 
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result)
-    {
-        if (hasToShowDialog && dialog.isShowing())
-        {
-            dialog.dismiss();
-        }
-        super.onPostExecute(result);
     }
 
     /**
@@ -94,9 +60,13 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private Player getPlayer()
+
+    private String insert()
     {
-        return null;
+        WebServiceClient.get(Constants.URL_PLAYER_WS + "insert" + Constants.SLASH + Constants.USER_ID + Constants.SLASH
+                + deviceRegId + Constants.SLASH + position.getText().toString());
+
+        return "OK";
     }
 
     /**
@@ -105,9 +75,11 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-
-    private String insert()
+    private String updateDevice()
     {
+        WebServiceClient.get(Constants.URL_PLAYER_WS + "updateDevice" + Constants.SLASH + Constants.USER_ID
+                + Constants.SLASH + deviceRegId);
+
         return "OK";
     }
 
@@ -117,8 +89,28 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String updateDevice()
+    private String getRatingAndPosition()
     {
+
+        String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRatingAndPosition" + Constants.SLASH
+                + Constants.USER_ID);
+
+        String json = resposta[0];
+
+        try
+        {
+            JSONObject jObject = new JSONObject(json);
+            float rating = Float.valueOf(jObject.getString("rating"));
+            String posicao = jObject.getString("posicao");
+
+            this.position.setText(posicao);
+            this.rating.setRating(rating);
+        }
+        catch (JSONException e)
+        {
+            rating.setRating(0.0f);
+            position.setText("");
+        }
         return "OK";
     }
 
@@ -128,8 +120,23 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String updateRating()
+    private String getRating()
     {
+        String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRating" + Constants.SLASH
+                + Constants.USER_ID);
+
+        String json = resposta[0];
+
+        try
+        {
+            JSONObject jObject = new JSONObject(json);
+            float rating = Float.valueOf(jObject.getString("rating"));
+            this.rating.setRating(rating);
+        }
+        catch (JSONException e)
+        {
+            rating.setRating(0.0f);
+        }
         return "OK";
     }
 
@@ -139,19 +146,24 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String getRating()
+    private String getPosition()
     {
+        String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getPosition" + Constants.SLASH
+                + Constants.USER_ID);
+
+        String json = resposta[0];
+
+        try
+        {
+            JSONObject jObject = new JSONObject(json);
+            String posicao = jObject.getString("posicao");
+            this.position.setText(posicao);
+        }
+        catch (JSONException e)
+        {
+            position.setText("");
+        }
         return "OK";
     }
 
-    /**
-     * 
-     * Type = 5
-     * 
-     * @return
-     */
-    private String getPosition()
-    {
-        return "OK";
-    }
 }
