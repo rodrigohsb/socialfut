@@ -3,52 +3,52 @@ package br.com.socialfut.util;
 public class Player
 {
 
-    private static String name;
+    private String name;
 
-    private static String sureName;
+    private String sureName;
 
-    private static String position;
+    private String position;
 
-    private static float rating;
+    private float rating;
 
-    public static String getName()
+    public String getName()
     {
         return name;
     }
 
-    public static void setName(String name)
+    public void setName(String name)
     {
-        Player.name = name;
+        this.name = name;
     }
 
-    public static String getSureName()
+    public String getSureName()
     {
         return sureName;
     }
 
-    public static void setSureName(String sureName)
+    public void setSureName(String sureName)
     {
-        Player.sureName = sureName;
+        this.sureName = sureName;
     }
 
-    public static String getPosition()
+    public String getPosition()
     {
         return position;
     }
 
-    public static void setPosition(String position)
+    public void setPosition(String position)
     {
-        Player.position = position;
+        this.position = position;
     }
 
-    public static float getRating()
+    public float getRating()
     {
         return rating;
     }
 
-    public static void setRating(float rating)
+    public void setRating(float rating)
     {
-        Player.rating = rating;
+        this.rating = rating;
     }
 
 }
