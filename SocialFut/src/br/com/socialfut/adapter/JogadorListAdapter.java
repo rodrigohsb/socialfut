@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.PlayerREST;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,6 +63,8 @@ public class JogadorListAdapter extends BaseAdapter
         public TextView name;
 
         public RatingBar rating;
+
+        public TextView position;
     }
 
     public int getCount()
@@ -102,8 +108,11 @@ public class JogadorListAdapter extends BaseAdapter
 
         holder.name.setText(jogador.getNome());
         holder.sureName.setText(jogador.getSobreNome());
-        holder.rating.setRating(jogador.getRating());
 
+        /** Qualificacao */
+        new PlayerREST(holder.rating, holder.position, 2).execute();
+
+        /** Monta a imagem */
         imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
 
         return view;
