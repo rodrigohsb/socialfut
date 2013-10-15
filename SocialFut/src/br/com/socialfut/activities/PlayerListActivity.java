@@ -21,7 +21,6 @@ import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
-import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
@@ -99,7 +98,7 @@ public class PlayerListActivity extends SherlockListActivity
         super.onDestroy();
     }
 
-    private class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
+    private class FacebookFriends extends AsyncTask<Void, Void, List<Jogador>>
     {
         private Session session;
 
@@ -183,22 +182,6 @@ public class PlayerListActivity extends SherlockListActivity
             super.onPostExecute(jogadores);
         }
 
-        private List<Jogador> getPlayers(GraphObject graph)
-        {
-            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "rates");
-            JSONObject teste = new JSONObject();
-            JSONArray array = null;
-            try
-            {
-                array = teste.getJSONArray(resposta[1]);
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-            return this.getPlayers(graph, array);
-        }
-
         /**
          * 
          * Obtem todos os amigos que tem o aplicativo.
@@ -206,10 +189,8 @@ public class PlayerListActivity extends SherlockListActivity
          * @param graph
          * @return
          */
-        private List<Jogador> getPlayers(GraphObject graph, JSONArray webServicesAnswer)
+        private List<Jogador> getPlayers(GraphObject graph)
         {
-
-            boolean isEmpty = webServicesAnswer.length() == 0 ? true : false;
 
             List<Jogador> players = new ArrayList<Jogador>();
 
@@ -236,19 +217,7 @@ public class PlayerListActivity extends SherlockListActivity
                                 /** Foto */
                                 String url = player.getString(Constants.PIC_SQUARE);
 
-                                if (!isEmpty)
-                                {
-                                    Jogador j1 = this.getRateAndPosition(webServicesAnswer, id);
-                                    if (j1 != null)
-                                    {
-                                        Jogador j = new Jogador(id, firstName, lastName, j1.getPosition(),
-                                                j1.getRating(), url);
-                                        players.add(j);
-                                        continue;
-                                    }
-                                }
-
-                                Jogador j = new Jogador(id, firstName, lastName, "GOLEIRO", 1.0f, url);
+                                Jogador j = new Jogador(id, firstName, lastName, url);
                                 players.add(j);
                             }
                         }
@@ -265,42 +234,6 @@ public class PlayerListActivity extends SherlockListActivity
                 return null;
             }
 
-        }
-
-        /**
-         * 
-         * "Varrer" o Json para buscar a posicao e o rating do jogador.
-         * 
-         * @param webServicesAnswer
-         * @param userId
-         * @return
-         * @throws JSONException
-         */
-        private Jogador getRateAndPosition(JSONArray webServicesAnswer, Long userId) throws JSONException
-        {
-            for (int i = 0; i < webServicesAnswer.length(); i++)
-            {
-
-                JSONObject player = webServicesAnswer.getJSONObject(i);
-
-                /** ID */
-                Long id = Long.valueOf(player.getString("id"));
-
-                if (id == userId)
-                {
-                    /** Primeiro Nome */
-                    float rating = Float.valueOf(player.getString("rating"));
-                    /** Primeiro Nome */
-                    String position = player.getString("position");
-
-                    // TODO deletar do json para nao "varrer" em todos
-                    // novamente.
-
-                    Jogador j = new Jogador(position, rating);
-                    return j;
-                }
-            }
-            return null;
         }
     }
 }
