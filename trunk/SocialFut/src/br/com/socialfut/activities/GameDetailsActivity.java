@@ -2,6 +2,7 @@ package br.com.socialfut.activities;
 
 import java.text.SimpleDateFormat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.webservices.GameREST;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -37,6 +39,8 @@ public class GameDetailsActivity extends SherlockActivity
 
     private Context ctx;
 
+    private Game game;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,7 +53,7 @@ public class GameDetailsActivity extends SherlockActivity
         ctx = this;
 
         Bundle bundle = getIntent().getExtras();
-        Game game = (Game) bundle.getSerializable("game");
+        game = (Game) bundle.getSerializable("game");
 
         dateFormat = new SimpleDateFormat(Constants.DATE_PATTERN_FOR_USER);
 
@@ -79,7 +83,7 @@ public class GameDetailsActivity extends SherlockActivity
         RatingBar rating = (RatingBar) findViewById(R.id.ratingBarGameDetails);
 
         // AsyncTask p/ preenche o rating
-        new GameREST(ctx, rating, game.getId(), 0, false).execute();
+        new GameREST(ctx, game.getId(), 0, rating, false).execute();
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
@@ -95,16 +99,58 @@ public class GameDetailsActivity extends SherlockActivity
             {
                 if (isChecked)
                 {
-                    Toast.makeText(GameDetailsActivity.this, "Você acabou de confirmar presença !!", Toast.LENGTH_SHORT)
-                            .show();
+                    sendConfirmation();
                 }
                 else
                 {
-                    Toast.makeText(GameDetailsActivity.this, "Você acabou de desistir !!", Toast.LENGTH_SHORT).show();
+                    sendDesconfirmation();
                 }
             }
 
         });
+    }
 
+    private void sendConfirmation()
+    {
+        ProgressDialog dialog = new ProgressDialog(ctx);
+        dialog.setMessage("Confirmando presenca...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "confirmation" + Constants.SLASH
+                + Constants.USER_ID + Constants.SLASH + game.getId());
+
+        dialog.dismiss();
+        
+        if (resposta[0] == "OK")
+        {
+            Toast.makeText(this, "Voce acabou de confirmar presenca !!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Nao foi possivel confirmar presenca !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendDesconfirmation()
+    {
+        ProgressDialog dialog = new ProgressDialog(ctx);
+        dialog.setMessage("Desconfirmando presenca...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "desconfirmation" + Constants.SLASH
+                + Constants.USER_ID + Constants.SLASH + game.getId());
+
+        dialog.dismiss();
+        
+        if (resposta[0] == "OK")
+        {
+            Toast.makeText(this, "Voce acabou de desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Nao foi possivel desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

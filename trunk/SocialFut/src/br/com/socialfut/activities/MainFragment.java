@@ -68,6 +68,8 @@ public class MainFragment extends SherlockFragment
 
     private RatingBar ratingUser;
 
+    private TextView position;
+
     private LoginButton loginButton;
 
     private Context ctx;
@@ -111,6 +113,8 @@ public class MainFragment extends SherlockFragment
 
         /** Rate */
         ratingUser = (RatingBar) scrollView.findViewById(R.id.ratingUser);
+
+        position = (TextView) scrollView.findViewById(R.id.position_drawer);
 
         loginButton = (LoginButton) scrollView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
@@ -262,7 +266,7 @@ public class MainFragment extends SherlockFragment
     {
         if (state.isOpened())
         {
-            FacebookUtils.getProfile(session, name, sureName, img, ratingUser, ctx);
+            FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
             loginButton.setVisibility(View.GONE);
         }
         else if (state.isClosed())
