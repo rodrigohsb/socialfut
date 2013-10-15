@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import br.com.socialfut.webservices.PlayerREST;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -31,15 +29,12 @@ public class FacebookName extends AsyncTask<Void, String, Void>
 
     private Response resp;
 
-    private RatingBar rating;
-
-    public FacebookName(Session sessao, TextView name, TextView sureName, RatingBar rating, Context ctx)
+    public FacebookName(Session sessao, TextView name, TextView sureName, Context ctx)
     {
         super();
         this.session = sessao;
         this.mTextName = name;
         this.mTextSureName = sureName;
-        this.rating = rating;
         this.ctx = ctx;
     }
 
@@ -65,22 +60,17 @@ public class FacebookName extends AsyncTask<Void, String, Void>
             Request request = new Request(session, "me", params, HttpMethod.GET);
             resp = request.executeAndWait();
 
+            /** Salva o nome nas preferencias */
+            SharedPreferences.Editor editor = sharedPrefs.edit();
             GraphObject graph = resp.getGraphObject();
             firstName = graph.getProperty("first_name").toString();
             sureName = graph.getProperty("last_name").toString();
 
             Constants.USER_ID = Long.valueOf(graph.getProperty("id").toString());
 
-            /** Salva o nome nas preferencias */
-            SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putString("full_name", firstName + " " + sureName).commit();
             editor.putLong("id", Constants.USER_ID).commit();
         }
-
-        // Busca o rating do jogador no WebServices
-        PlayerREST playerRest = new PlayerREST(ctx, rating, null, null, 4, null, false);
-        playerRest.execute();
-
         return null;
     }
 
