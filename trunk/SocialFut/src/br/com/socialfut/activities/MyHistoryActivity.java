@@ -23,18 +23,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-/**
- * 
- * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propÃ³sito da classe.
- * 
- * @author rodrigo.bacellar
- * @since 04/10/2013
- * 
- */
 public class MyHistoryActivity extends SherlockActivity
 {
-
     private Context ctx;
 
     private AlertDialog alertDialog;
@@ -44,19 +34,12 @@ public class MyHistoryActivity extends SherlockActivity
     {
         super.onCreate(savedInstanceState);
 
-        ActionBar.updateCustomActionBar(getSupportActionBar(), "Meu Histórico");
+        ActionBar.updateCustomActionBar(getSupportActionBar(), "Meu Historico");
 
         ctx = this;
 
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
-
-        // for (int i = 1; i < 16; i++)
-        // {
-        // Game g = new Game(i, "Titulo " + i, "Rua " + i, new Date(), new
-        // Date(), new Date(), 0.5 * i, i);
-        // gameDB.saveGame(g);
-        // }
 
         List<Game> games = new GameDB(this).getOldGames();
 
@@ -117,8 +100,6 @@ public class MyHistoryActivity extends SherlockActivity
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                alertDialog.dismiss();
-                startActivity(new Intent(MyHistoryActivity.this, DrawerLayoutActivity.class));
                 finish();
             }
         };
@@ -132,3 +113,10 @@ public class MyHistoryActivity extends SherlockActivity
     }
 
 }
+// for (int i = 0; i < 16; i++)
+// {
+// Game g = new Game("Titulo " + i, "Rua XPTO", new Date(), new Date(), new
+// Date());
+// new GameDB(ctx).saveGame(g);
+// }
+

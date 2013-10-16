@@ -25,8 +25,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MyFutureActivity extends SherlockActivity
 {
-    private GameDB gameDB;
-
     private Context ctx;
 
     private AlertDialog alertDialog;
@@ -36,15 +34,14 @@ public class MyFutureActivity extends SherlockActivity
     {
         super.onCreate(savedInstanceState);
 
-        ActionBar.updateCustomActionBar(getSupportActionBar(), "Próximos jogos");
-        
+        ActionBar.updateCustomActionBar(getSupportActionBar(), "Proximos jogos");
+
         ctx = this;
 
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
-        gameDB = new GameDB(this);
-        List<Game> games = gameDB.getNewGames();
+        List<Game> games = new GameDB(this).getNewGames();
 
         if (games.isEmpty())
         {
@@ -102,8 +99,6 @@ public class MyFutureActivity extends SherlockActivity
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                alertDialog.dismiss();
-                startActivity(new Intent(MyFutureActivity.this, DrawerLayoutActivity.class));
                 finish();
             }
         };

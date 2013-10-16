@@ -1,10 +1,12 @@
 package br.com.socialfut.activities;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,12 +14,16 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import br.com.socialfut.R;
+import br.com.socialfut.database.GameDB;
+import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class NewGameActivity extends SherlockActivity
 {
+
+    private Context ctx;
 
     private TextView date;
 
@@ -43,6 +49,8 @@ public class NewGameActivity extends SherlockActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_new_game);
 
+        ctx = this;
+
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Nova Partida");
 
         date = (TextView) findViewById(R.id.dateNewGame);
@@ -54,6 +62,7 @@ public class NewGameActivity extends SherlockActivity
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
+        /** Data */
         findViewById(R.id.btnChangeDateNewGame).setOnClickListener(new OnClickListener()
         {
             @Override
@@ -63,12 +72,24 @@ public class NewGameActivity extends SherlockActivity
             }
         });
 
+        /** Hora */
         findViewById(R.id.btnChangeHourNewGame).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 showDialog(HOUR_DIALOG_ID);
+            }
+        });
+
+        /** Criar */
+        findViewById(R.id.btncreateNewGame).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Game g = new Game("Titulo " + (int) (Math.random() * 5), "Rua XPTO", new Date(), new Date(), new Date());
+                new GameDB(ctx).saveGame(g);
             }
         });
 
