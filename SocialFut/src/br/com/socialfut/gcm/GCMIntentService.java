@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import br.com.socialfut.activities.ChatActivity;
+import br.com.socialfut.activities.GameDetailsActivity;
 import br.com.socialfut.persistence.Jogador;
 import br.com.socialfut.util.ActivityStackUtils;
 import br.com.socialfut.util.Constants;
@@ -68,11 +69,26 @@ public class GCMIntentService extends GCMBaseIntentService
             /** Conteudo da mensagem */
             String msgContent = text[1];
 
+            // TODO Implementar Cache
             Jogador j = getFacebookData(facebookId);
-
             Bitmap bitmap = getBitmap(j.getPicture());
 
-            enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap);
+            if (text.length == 3)
+            {
+                if (msgContent == "confirmation")
+                {
+                    /** Confirmacao */
+                    enviarMensagemParaApp("Confirmou presença!", facebookId, j.getNome() + " " + j.getSobreNome(),
+                            bitmap, GameDetailsActivity.class);
+                }
+                /** Desconfirmacao */
+                enviarMensagemParaApp("Desconfirmou presença!", facebookId, j.getNome() + " " + j.getSobreNome(),
+                        bitmap, GameDetailsActivity.class);
+            }
+
+            /** Chat */
+            enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap,
+                    ChatActivity.class);
         }
         catch (Exception e)
         {
@@ -148,12 +164,12 @@ public class GCMIntentService extends GCMBaseIntentService
         return BitmapFactory.decodeStream(is);
     }
 
-    private void enviarMensagemParaApp(String msg, String facebookId, String from, Bitmap bitmap)
+    private void enviarMensagemParaApp(String msg, String facebookId, String from, Bitmap bitmap, Class<?> cls)
     {
         Log.i(TAG, "Mensagem recebida " + msg);
 
         // Cria a notificacao e informa para abrir a activity de entrada
-        Intent intent = new Intent(this, ChatActivity.class);
+        Intent intent = new Intent(this, cls);
         intent.putExtra("msg", msg);
         intent.putExtra("from", from);
         intent.putExtra("userId", facebookId);
