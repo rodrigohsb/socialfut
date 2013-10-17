@@ -59,6 +59,8 @@ public class Constants
 
     public static String DEVICE_REGISTRATION_ID;
 
+    public static int POSITION_ID;
+
     /** WEB SERVICES [FIM] */
 
     /** FQL [INICIO] */
