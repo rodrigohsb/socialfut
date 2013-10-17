@@ -63,7 +63,22 @@
     <string name="continua_cronometro">Continuar</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    
+
+    <!-- Inicio Posicao -->
+    <string name="country_prompt">Escolha sua posição</string>
+
+    <string-array name="country_arrays">
+        <item>Goleiro</item>
+        <item>Zagueiro</item>
+        <item>Lateral</item>
+        <item>Meio - Campo</item>
+        <item>Atacante</item>
+    </string-array>
+    <!-- Fim Posicao -->
+
+
+    <!-- App no Facebook -->
     <string name="app_id">503867289633260</string>
+    <!-- App no Facebook -->
 
 </resources>
