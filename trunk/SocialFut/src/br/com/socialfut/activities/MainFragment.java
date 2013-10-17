@@ -2,7 +2,11 @@ package br.com.socialfut.activities;
 
 import java.util.Arrays;
 
+import android.app.ActionBar.LayoutParams;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -19,13 +23,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.drawer.SherlockActionBarDrawerToggle;
+import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.FacebookUtils;
+import br.com.socialfut.webservices.PlayerREST;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -166,7 +178,37 @@ public class MainFragment extends SherlockFragment
         mDrawerToggle = new SherlockActionBarDrawerToggle(this.getActivity(), mDrawerLayout, R.drawable.ic_drawer,
                 R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        if (sharedPrefs.getBoolean("my_first_time", true))
+        {
+            sharedPrefs.edit().putBoolean("my_first_time", false).commit();
+            choosePosition();
+        }
+
         return view;
+    }
+
+    private void choosePosition()
+    {
+        View view = getLayoutInflater(new Bundle()).inflate(R.layout.layout_choose_position, null);
+
+        final Spinner spinner1 = (Spinner) view.findViewById(R.id.spinner1);
+        spinner1.setOnItemSelectedListener(new OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                Toast.makeText(parent.getContext(),
+                        "OnItemSelectedListener : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0)
+            {
+            }
+        });
     }
 
     @Override
@@ -266,8 +308,18 @@ public class MainFragment extends SherlockFragment
     {
         if (state.isOpened())
         {
-            FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
             loginButton.setVisibility(View.GONE);
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            if (sharedPrefs.getBoolean("my_first_time", true))
+            {
+                sharedPrefs.edit().putBoolean("my_first_time", false).commit();
+                new PlayerREST(position, Constants.DEVICE_REGISTRATION_ID, 0);
+            }
+            else
+            {
+                FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
+            }
         }
         else if (state.isClosed())
         {
