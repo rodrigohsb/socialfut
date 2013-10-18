@@ -28,8 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import br.com.socialfut.R;
-import br.com.socialfut.adapter.JogadorListAdapter;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.adapter.PlayerListAdapter;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.sort.Sort;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
@@ -61,7 +61,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
 
     private final int DEFAULT_MIN = 4;
 
-    private ArrayAdapter<Jogador> adapter;
+    private ArrayAdapter<Player> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -217,7 +217,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
     public void onClick(View v)
     {
         SparseBooleanArray checked = listView.getCheckedItemPositions();
-        ArrayList<Jogador> selectedItems = new ArrayList<Jogador>();
+        ArrayList<Player> selectedItems = new ArrayList<Player>();
 
         for (int i = 0; i < checked.size(); i++)
         {
@@ -228,7 +228,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
             }
         }
 
-        Map<ConstantsEnum, List<Jogador>> times2 = new HashMap<ConstantsEnum, List<Jogador>>();
+        Map<ConstantsEnum, List<Player>> times2 = new HashMap<ConstantsEnum, List<Player>>();
         times2 = Sort.getOrder(selectedItems);
         Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
         Bundle b = new Bundle();
@@ -238,7 +238,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
 
     }
 
-    private class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
+    private class FacebookFriends extends AsyncTask<Void, String, List<Player>>
     {
         private Session session;
 
@@ -262,10 +262,10 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
         }
 
         @Override
-        protected List<Jogador> doInBackground(Void... v)
+        protected List<Player> doInBackground(Void... v)
         {
 
-            List<Jogador> players = new ArrayList<Jogador>();
+            List<Player> players = new ArrayList<Player>();
 
             Bundle params = new Bundle();
             params.putString("fields", "picture,first_name,last_name");
@@ -297,7 +297,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
                         /** Foto */
                         String url = player.getJSONObject("picture").getJSONObject("data").getString("url");
 
-                        Jogador j = new Jogador(id, firstName, lastName, url);
+                        Player j = new Player(id, firstName, lastName, url);
                         players.add(j);
                     }
                 }
@@ -310,13 +310,13 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
         }
 
         @Override
-        protected void onPostExecute(List<Jogador> jogadores)
+        protected void onPostExecute(List<Player> jogadores)
         {
             if (dialog.isShowing())
             {
                 dialog.dismiss();
             }
-            setListAdapter(new JogadorListAdapter(PlayerListForSort.this, jogadores));
+            setListAdapter(new PlayerListAdapter(PlayerListForSort.this, jogadores));
             super.onPostExecute(jogadores);
         }
     }

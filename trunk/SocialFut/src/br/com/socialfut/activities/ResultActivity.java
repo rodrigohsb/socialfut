@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ConstantsEnum;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -22,7 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 public class ResultActivity extends SherlockActivity
 {
 
-    HashMap<String, List<Jogador>> times;
+    HashMap<String, List<Player>> times;
 
     View root;
 
@@ -55,13 +55,13 @@ public class ResultActivity extends SherlockActivity
     private void fill(Bundle extras)
     {
 
-        Map<ConstantsEnum, List<Jogador>> times2 = (Map<ConstantsEnum, List<Jogador>>) extras
+        Map<ConstantsEnum, List<Player>> times2 = (Map<ConstantsEnum, List<Player>>) extras
                 .getSerializable("selectedPlayers");
 
-        List<Jogador> time1 = times2.get(ConstantsEnum.TIMEA);
-        List<Jogador> time2 = times2.get(ConstantsEnum.TIMEB);
+        List<Player> time1 = times2.get(ConstantsEnum.TIMEA);
+        List<Player> time2 = times2.get(ConstantsEnum.TIMEB);
 
-        Jogador jogador;
+        Player jogador;
 
         for (int i = 0; i < time1.size() && i < time2.size(); i++)
         {
