@@ -29,6 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Qualificação:"
             android:textColor="@color/color_white"
             android:textSize="20sp" />
@@ -167,8 +168,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/color_white"
-            android:textOff="AUSÊNCIA CONFIRMADA"
-            android:textOn="PRESENÇA CONFIRMADA" />
+            android:textOff="CONFIRMAR PRESENÇA"
+            android:textOn="CONFIRMAR AUSÊNCIA" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Jogadores"
+            android:textColor="@color/color_white"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff" />
+
+        <include layout="@layout/layout_endless_list" />
     </LinearLayout>
 
 </ScrollView>
