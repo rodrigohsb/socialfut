@@ -77,16 +77,14 @@ public class HomeActivity extends SherlockFragmentActivity implements OnClickLis
 
     private void close()
     {
-
-        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int id)
             {
                 finish();
             }
         };
-
-        android.content.DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener()
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int id)
             {

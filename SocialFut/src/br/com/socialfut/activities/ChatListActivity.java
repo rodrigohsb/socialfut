@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.ListView;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatListAdapter;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
@@ -63,7 +63,7 @@ public class ChatListActivity extends SherlockListActivity
     {
         super.onListItemClick(l, v, position, id);
 
-        Jogador Jogador = (Jogador) getListAdapter().getItem(position);
+        Player Jogador = (Player) getListAdapter().getItem(position);
 
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("from", Jogador.getNome() + " " + Jogador.getSobreNome());
@@ -116,7 +116,7 @@ public class ChatListActivity extends SherlockListActivity
         super.onDestroy();
     }
 
-    private class FacebookFriends extends AsyncTask<Void, String, List<Jogador>>
+    private class FacebookFriends extends AsyncTask<Void, String, List<Player>>
     {
         private Session session;
 
@@ -141,7 +141,7 @@ public class ChatListActivity extends SherlockListActivity
         }
 
         @Override
-        protected List<Jogador> doInBackground(Void... v)
+        protected List<Player> doInBackground(Void... v)
         {
 
             if (Constants.jogadores != null)
@@ -157,7 +157,7 @@ public class ChatListActivity extends SherlockListActivity
 
             GraphObject graph = resp.getGraphObject();
 
-            List<Jogador> players = this.getFriends(graph);
+            List<Player> players = this.getFriends(graph);
 
             if (!players.isEmpty())
             {
@@ -168,7 +168,7 @@ public class ChatListActivity extends SherlockListActivity
         }
 
         @Override
-        protected void onPostExecute(List<Jogador> jogadores)
+        protected void onPostExecute(List<Player> jogadores)
         {
             if (dialog.isShowing())
             {
@@ -206,10 +206,10 @@ public class ChatListActivity extends SherlockListActivity
          * @param graph
          * @return
          */
-        private List<Jogador> getFriends(GraphObject graph)
+        private List<Player> getFriends(GraphObject graph)
         {
 
-            List<Jogador> players = new ArrayList<Jogador>();
+            List<Player> players = new ArrayList<Player>();
 
             try
             {
@@ -237,7 +237,7 @@ public class ChatListActivity extends SherlockListActivity
                                 /** Foto */
                                 String url = player.getString(Constants.PIC_SQUARE);
 
-                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                Player j = new Player(id, firstName, lastName, url);
                                 players.add(j);
                             }
                         }

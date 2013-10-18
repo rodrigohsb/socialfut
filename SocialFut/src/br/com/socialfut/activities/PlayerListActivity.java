@@ -16,8 +16,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import br.com.socialfut.R;
-import br.com.socialfut.adapter.JogadorListAdapter;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.adapter.PlayerListAdapter;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
@@ -98,7 +98,7 @@ public class PlayerListActivity extends SherlockListActivity
         super.onDestroy();
     }
 
-    private class FacebookFriends extends AsyncTask<Void, Void, List<Jogador>>
+    private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
     {
         private Session session;
 
@@ -123,7 +123,7 @@ public class PlayerListActivity extends SherlockListActivity
         }
 
         @Override
-        protected List<Jogador> doInBackground(Void... v)
+        protected List<Player> doInBackground(Void... v)
         {
             if (Constants.jogadores != null)
             {
@@ -138,7 +138,7 @@ public class PlayerListActivity extends SherlockListActivity
 
             GraphObject graph = resp.getGraphObject();
 
-            List<Jogador> players = this.getPlayers(graph);
+            List<Player> players = this.getPlayers(graph);
 
             if (!players.isEmpty())
             {
@@ -149,7 +149,7 @@ public class PlayerListActivity extends SherlockListActivity
         }
 
         @Override
-        protected void onPostExecute(List<Jogador> jogadores)
+        protected void onPostExecute(List<Player> jogadores)
         {
             if (dialog.isShowing())
             {
@@ -157,7 +157,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new JogadorListAdapter(PlayerListActivity.this, jogadores));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores));
             }
             else
             {
@@ -189,10 +189,10 @@ public class PlayerListActivity extends SherlockListActivity
          * @param graph
          * @return
          */
-        private List<Jogador> getPlayers(GraphObject graph)
+        private List<Player> getPlayers(GraphObject graph)
         {
 
-            List<Jogador> players = new ArrayList<Jogador>();
+            List<Player> players = new ArrayList<Player>();
 
             try
             {
@@ -217,7 +217,7 @@ public class PlayerListActivity extends SherlockListActivity
                                 /** Foto */
                                 String url = player.getString(Constants.PIC_SQUARE);
 
-                                Jogador j = new Jogador(id, firstName, lastName, url);
+                                Player j = new Player(id, firstName, lastName, url);
                                 players.add(j);
                             }
                         }
