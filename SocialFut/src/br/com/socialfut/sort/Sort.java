@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.socialfut.persistence.Jogador;
-import br.com.socialfut.persistence.JogadorComparator;
+import br.com.socialfut.persistence.Player;
+import br.com.socialfut.persistence.PlayerComparator;
 import br.com.socialfut.persistence.PosicaoComparator;
 import br.com.socialfut.util.ConstantsEnum;
 
@@ -17,13 +17,13 @@ public class Sort
 
     private static float totalTimeB = 0;
 
-    public static Map<ConstantsEnum, List<Jogador>> getOrder(List<Jogador> jogadores)
+    public static Map<ConstantsEnum, List<Player>> getOrder(List<Player> jogadores)
     {
-        Map<ConstantsEnum, List<Jogador>> map = new HashMap<ConstantsEnum, List<Jogador>>();
+        Map<ConstantsEnum, List<Player>> map = new HashMap<ConstantsEnum, List<Player>>();
 
-        List<Jogador> timeA = new ArrayList<Jogador>();
+        List<Player> timeA = new ArrayList<Player>();
 
-        List<Jogador> timeB = new ArrayList<Jogador>();
+        List<Player> timeB = new ArrayList<Player>();
 
         /** Ordenar a lista por posicao. */
         applySortPosicao(jogadores);
@@ -31,7 +31,7 @@ public class Sort
         /** Obtem a lista ordenada por posicao e agora ordena pela classificacao.*/
         applySort(jogadores);
 
-        for (Jogador jogador : jogadores)
+        for (Player jogador : jogadores)
         {
             if (timeA.size() == timeB.size())
             {
@@ -70,14 +70,14 @@ public class Sort
         return map;
     }
 
-    public static void applySort(List<Jogador> jogadores)
+    public static void applySort(List<Player> jogadores)
     {
-        JogadorComparator jogadorComparator = new JogadorComparator(JogadorComparator.DESCEDANT);
+        PlayerComparator jogadorComparator = new PlayerComparator(PlayerComparator.DESCEDANT);
 
         Collections.sort(jogadores, jogadorComparator);
     }
 
-    public static void applySortPosicao(List<Jogador> jogadores)
+    public static void applySortPosicao(List<Player> jogadores)
     {
         PosicaoComparator posicaoComparator = new PosicaoComparator();
 
