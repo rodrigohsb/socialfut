@@ -99,7 +99,7 @@ public class GameREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private float updateRating()
+    private void updateRating()
     {
         String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "updateRating" + Constants.SLASH
                 + Constants.USER_ID + Constants.SLASH + gameId + Constants.SLASH + rating.getRating());
@@ -112,6 +112,5 @@ public class GameREST extends AsyncTask<Void, Void, Void>
         {
             Toast.makeText(ctx, "Nao foi possivel alterar o valor!", Toast.LENGTH_SHORT).show();
         }
-        return 0.0f;
     }
 }
