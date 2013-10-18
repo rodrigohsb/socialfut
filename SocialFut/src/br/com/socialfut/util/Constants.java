@@ -2,7 +2,7 @@ package br.com.socialfut.util;
 
 import java.util.List;
 
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.persistence.Player;
 
 public class Constants
 {
@@ -31,7 +31,7 @@ public class Constants
 
     public static final String SEMICOLON = ";";
 
-    public static List<Jogador> jogadores;
+    public static List<Player> jogadores;
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
