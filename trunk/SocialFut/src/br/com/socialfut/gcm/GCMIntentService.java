@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import br.com.socialfut.activities.ChatActivity;
 import br.com.socialfut.activities.GameDetailsActivity;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActivityStackUtils;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.NotificationUtil;
@@ -70,7 +70,7 @@ public class GCMIntentService extends GCMBaseIntentService
             String msgContent = text[1];
 
             // TODO Implementar Cache
-            Jogador j = getFacebookData(facebookId);
+            Player j = getFacebookData(facebookId);
             Bitmap bitmap = getBitmap(j.getPicture());
 
             if (text.length == 3)
@@ -103,10 +103,10 @@ public class GCMIntentService extends GCMBaseIntentService
      * @param msg
      * @return
      */
-    private Jogador getFacebookData(String facebookId)
+    private Player getFacebookData(String facebookId)
     {
 
-        Jogador j = null;
+        Player j = null;
 
         Bundle params = new Bundle();
         params.putString("fields", "first_name,last_name,picture.type(large)");
@@ -129,7 +129,7 @@ public class GCMIntentService extends GCMBaseIntentService
             /** Foto */
             String urlPicture = object.getJSONObject("picture").getJSONObject("data").getString("url");
 
-            j = new Jogador(Long.valueOf(facebookId), firstName, lastName, urlPicture);
+            j = new Player(Long.valueOf(facebookId), firstName, lastName, urlPicture);
 
         }
         catch (Exception e)
