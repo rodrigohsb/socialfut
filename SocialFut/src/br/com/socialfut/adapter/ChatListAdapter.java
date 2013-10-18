@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.persistence.Jogador;
+import br.com.socialfut.persistence.Player;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,7 +38,7 @@ public class ChatListAdapter extends BaseAdapter
 
     private Context context;
 
-    private List<Jogador> lista;
+    private List<Player> lista;
 
     private DisplayImageOptions options;
 
@@ -46,7 +46,7 @@ public class ChatListAdapter extends BaseAdapter
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public ChatListAdapter(Context context, List<Jogador> lista)
+    public ChatListAdapter(Context context, List<Player> lista)
     {
         this.context = context;
         this.lista = lista;
@@ -85,7 +85,7 @@ public class ChatListAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
 
-        Jogador jogador = (Jogador) lista.get(position);
+        Player jogador = (Player) lista.get(position);
 
         View view = convertView;
         final ViewHolder holder;
@@ -113,7 +113,7 @@ public class ChatListAdapter extends BaseAdapter
         return view;
     }
 
-    public void addItems(List<Jogador> newItems)
+    public void addItems(List<Player> newItems)
     {
         if (null == newItems || newItems.size() <= 0)
         {
@@ -122,7 +122,7 @@ public class ChatListAdapter extends BaseAdapter
 
         if (null == lista)
         {
-            lista = new ArrayList<Jogador>();
+            lista = new ArrayList<Player>();
         }
 
         lista.addAll(newItems);

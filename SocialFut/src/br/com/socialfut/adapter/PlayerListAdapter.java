@@ -7,7 +7,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import br.com.socialfut.R;
-import br.com.socialfut.persistence.Jogador;
-import br.com.socialfut.util.Constants;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.webservices.PlayerREST;
-import br.com.socialfut.webservices.WebServiceClient;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,12 +26,12 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
-public class JogadorListAdapter extends BaseAdapter
+public class PlayerListAdapter extends BaseAdapter
 {
 
     private Context context;
 
-    private List<Jogador> lista;
+    private List<Player> lista;
 
     private DisplayImageOptions options;
 
@@ -42,7 +39,7 @@ public class JogadorListAdapter extends BaseAdapter
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public JogadorListAdapter(Context context, List<Jogador> lista)
+    public PlayerListAdapter(Context context, List<Player> lista)
     {
         this.context = context;
         this.lista = lista;
@@ -85,7 +82,7 @@ public class JogadorListAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
 
-        Jogador jogador = (Jogador) lista.get(position);
+        Player jogador = (Player) lista.get(position);
 
         View view = convertView;
         final ViewHolder holder;
@@ -118,7 +115,7 @@ public class JogadorListAdapter extends BaseAdapter
         return view;
     }
 
-    public void addItems(List<Jogador> newItems)
+    public void addItems(List<Player> newItems)
     {
         if (null == newItems || newItems.size() <= 0)
         {
@@ -127,7 +124,7 @@ public class JogadorListAdapter extends BaseAdapter
 
         if (null == lista)
         {
-            lista = new ArrayList<Jogador>();
+            lista = new ArrayList<Player>();
         }
 
         lista.addAll(newItems);
