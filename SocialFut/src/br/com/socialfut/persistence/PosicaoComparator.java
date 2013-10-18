@@ -2,11 +2,11 @@ package br.com.socialfut.persistence;
 
 import java.util.Comparator;
 
-public class PosicaoComparator implements Comparator<Jogador>
+public class PosicaoComparator implements Comparator<Player>
 {
 
     @Override
-    public int compare(Jogador jogador1, Jogador jogador2)
+    public int compare(Player jogador1, Player jogador2)
     {
         String posicao1 = jogador1.getPosition();
 

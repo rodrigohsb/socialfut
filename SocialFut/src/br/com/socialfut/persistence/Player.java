@@ -2,7 +2,7 @@ package br.com.socialfut.persistence;
 
 import java.io.Serializable;
 
-public class Jogador implements Serializable
+public class Player implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
@@ -19,11 +19,11 @@ public class Jogador implements Serializable
 
     private String picture;
 
-    public Jogador()
+    public Player()
     {
     }
 
-    public Jogador(long id, String nome, String sobreNome, String picture)
+    public Player(long id, String nome, String sobreNome, String picture)
     {
         super();
         this.id = id;

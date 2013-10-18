@@ -2,7 +2,7 @@ package br.com.socialfut.persistence;
 
 import java.util.Comparator;
 
-public class JogadorComparator implements Comparator<Jogador>
+public class PlayerComparator implements Comparator<Player>
 {
     public static final String ASCENDANT = "ASC";
 
@@ -10,18 +10,18 @@ public class JogadorComparator implements Comparator<Jogador>
 
     private String order;
 
-    public JogadorComparator(String order)
+    public PlayerComparator(String order)
     {
         this.order = order;
     }
 
-    public JogadorComparator()
+    public PlayerComparator()
     {
 
     }
 
     @Override
-    public int compare(Jogador jogador1, Jogador jogador2)
+    public int compare(Player jogador1, Player jogador2)
     {
         String posicao1 = jogador1.getPosition();
 
