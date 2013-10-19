@@ -65,9 +65,7 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Inicio Posicao -->
-    <string name="country_prompt">Escolha sua posição</string>
-
-    <string-array name="country_arrays">
+    <string-array name="spinner_itens">
         <item>Goleiro</item>
         <item>Zagueiro</item>
         <item>Lateral</item>
