@@ -35,6 +35,13 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
         this.type = type;
     }
 
+    public PlayerREST(String deviceRegId, int type)
+    {
+        super();
+        this.type = type;
+        this.deviceRegId = deviceRegId;
+    }
+
     @Override
     protected Void doInBackground(Void... arg0)
     {
@@ -64,7 +71,7 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
     private String insert()
     {
         WebServiceClient.get(Constants.URL_PLAYER_WS + "insert" + Constants.SLASH + Constants.USER_ID + Constants.SLASH
-                + deviceRegId + Constants.SLASH + position.getText().toString());
+                + deviceRegId + Constants.SLASH + Constants.POSITION_ID);
 
         return "OK";
     }
