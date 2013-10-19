@@ -2,7 +2,9 @@ package br.com.socialfut.activities;
 
 import java.util.Arrays;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -19,18 +21,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.drawer.SherlockActionBarDrawerToggle;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.FacebookUtils;
+import br.com.socialfut.util.Position;
 import br.com.socialfut.webservices.PlayerREST;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -174,9 +175,9 @@ public class MainFragment extends SherlockFragment
         mDrawerToggle.syncState();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        if (sharedPrefs.getBoolean("my_first_time", true))
+        if (sharedPrefs.getBoolean("first_time", true))
         {
-            sharedPrefs.edit().putBoolean("my_first_time", false).commit();
+            sharedPrefs.edit().putBoolean("first_time", false).commit();
             choosePosition();
         }
 
@@ -185,24 +186,27 @@ public class MainFragment extends SherlockFragment
 
     private void choosePosition()
     {
-        View view = getLayoutInflater(new Bundle()).inflate(R.layout.layout_choose_position, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(ctx);
+        dialog.setTitle("Por favor, selecione sua posicao");
 
-        final Spinner spinner1 = (Spinner) view.findViewById(R.id.spinner1);
-        spinner1.setOnItemSelectedListener(new OnItemSelectedListener()
+        LayoutInflater li = (LayoutInflater) getSherlockActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = li.inflate(R.layout.layout_choose_position, null);
+        dialog.setView(dialogView);
+
+        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.spinner1);
+
+        dialog.setPositiveButton("Escolher", new DialogInterface.OnClickListener()
         {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onClick(DialogInterface dialog, int whichButton)
             {
-                Toast.makeText(parent.getContext(),
-                        "OnItemSelectedListener : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT)
-                        .show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0)
-            {
+                position.setText(Position.values()[spinner.getSelectedItemPosition()].toString());
+                Constants.POSITION_ID = spinner.getSelectedItemPosition();
             }
         });
+        dialog.show();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctx, R.array.spinner_itens,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
 
     @Override
@@ -305,13 +309,15 @@ public class MainFragment extends SherlockFragment
             loginButton.setVisibility(View.GONE);
 
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            if (sharedPrefs.getBoolean("my_first_time", true))
+            if (sharedPrefs.getBoolean("first_time", true))
             {
-                sharedPrefs.edit().putBoolean("my_first_time", false).commit();
+                sharedPrefs.edit().putBoolean("first_time", false).commit();
+                FacebookUtils.getProfile(session, name, sureName, img, ctx);
                 new PlayerREST(position, Constants.DEVICE_REGISTRATION_ID, 0);
             }
             else
             {
+                new PlayerREST(Constants.DEVICE_REGISTRATION_ID, 1);
                 FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
             }
         }
@@ -427,5 +433,4 @@ public class MainFragment extends SherlockFragment
             mActionBar.setTitle("Perfil");
         }
     }
-
 }
