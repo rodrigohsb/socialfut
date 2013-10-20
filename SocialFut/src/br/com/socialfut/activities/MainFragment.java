@@ -81,6 +81,8 @@ public class MainFragment extends SherlockFragment
 
     private Context ctx;
 
+    private boolean alreadyGetProfile = false;
+
     public static Fragment newInstance()
     {
         return new MainFragment();
@@ -127,16 +129,6 @@ public class MainFragment extends SherlockFragment
         loginButton.setFragment(this);
         loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
-        /** Lista de Jogadores */
-        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
-            }
-        });
-
         /** Historico */
         view.findViewById(R.id.myHistory).setOnClickListener(new OnClickListener()
         {
@@ -167,6 +159,16 @@ public class MainFragment extends SherlockFragment
             }
         });
 
+        /** Lista de Jogadores */
+        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+            }
+        });
+
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
@@ -175,9 +177,9 @@ public class MainFragment extends SherlockFragment
         mDrawerToggle.syncState();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
         if (sharedPrefs.getBoolean("first_time", true))
         {
-            sharedPrefs.edit().putBoolean("first_time", false).commit();
             choosePosition();
         }
 
@@ -199,7 +201,7 @@ public class MainFragment extends SherlockFragment
         {
             public void onClick(DialogInterface dialog, int whichButton)
             {
-                position.setText(Position.values()[spinner.getSelectedItemPosition()].toString());
+                position.setText(Position.values()[spinner.getSelectedItemPosition()].toString().replace("_", " "));
                 Constants.POSITION_ID = spinner.getSelectedItemPosition();
             }
         });
@@ -264,7 +266,7 @@ public class MainFragment extends SherlockFragment
     public void onResume()
     {
         Session session = Session.getActiveSession();
-        if (session != null && (session.isOpened() || session.isClosed()))
+        if (session != null && (session.isOpened() || session.isClosed()) && !alreadyGetProfile)
         {
             onSessionStateChange(session, session.getState(), null);
         }
@@ -311,44 +313,25 @@ public class MainFragment extends SherlockFragment
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             if (sharedPrefs.getBoolean("first_time", true))
             {
+                alreadyGetProfile = true;
                 sharedPrefs.edit().putBoolean("first_time", false).commit();
                 FacebookUtils.getProfile(session, name, sureName, img, ctx);
-                new PlayerREST(position, Constants.DEVICE_REGISTRATION_ID, 0);
+                new PlayerREST(position).execute();
             }
             else
             {
-                new PlayerREST(Constants.DEVICE_REGISTRATION_ID, 1);
+                alreadyGetProfile = true;
                 FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
+                new PlayerREST().execute();
             }
         }
         else if (state.isClosed())
         {
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            String nome = sharedPrefs.getString("name", null);
-            String previouslyEncodedImage = sharedPrefs.getString("image", null);
-
-            if (previouslyEncodedImage != null)
-            {
-                byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                img.setImageBitmap(bitmap);
-            }
-            else
-            {
-                Drawable d = getResources().getDrawable(R.drawable.ic_stub);
-                img.setImageDrawable(d);
-            }
-
-            if (null != nome)
-            {
-                name.setText(nome);
-                sureName.setText(nome);
-            }
-            else
-            {
-                name.setText("");
-                sureName.setText("");
-            }
+            getDataFromPreference();
+        }
+        else if (session.getState() == SessionState.OPENING)
+        {
+            alreadyGetProfile = true;
         }
 
     }
@@ -432,5 +415,36 @@ public class MainFragment extends SherlockFragment
         {
             mActionBar.setTitle("Perfil");
         }
+    }
+
+    private void getDataFromPreference()
+    {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String nome = sharedPrefs.getString("name", null);
+        String previouslyEncodedImage = sharedPrefs.getString("image", null);
+
+        if (previouslyEncodedImage != null)
+        {
+            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            img.setImageBitmap(bitmap);
+        }
+        else
+        {
+            Drawable d = getResources().getDrawable(R.drawable.ic_stub);
+            img.setImageDrawable(d);
+        }
+
+        if (null != nome)
+        {
+            name.setText(nome);
+            sureName.setText(nome);
+        }
+        else
+        {
+            name.setText("");
+            sureName.setText("");
+        }
+
     }
 }
