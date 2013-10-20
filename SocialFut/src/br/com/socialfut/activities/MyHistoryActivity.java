@@ -41,6 +41,13 @@ public class MyHistoryActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
+        // for (int i = 0; i < 16; i++)
+        // {
+        // Game g = new Game("Titulo " + i, "Rua XPTO", new Date(), new Date(),
+        // new Date());
+        // new GameDB(ctx).saveGame(g);
+        // }
+
         List<Game> games = new GameDB(this).getOldGames();
 
         if (games.isEmpty())
@@ -113,10 +120,3 @@ public class MyHistoryActivity extends SherlockActivity
     }
 
 }
-// for (int i = 0; i < 16; i++)
-// {
-// Game g = new Game("Titulo " + i, "Rua XPTO", new Date(), new Date(), new
-// Date());
-// new GameDB(ctx).saveGame(g);
-// }
-

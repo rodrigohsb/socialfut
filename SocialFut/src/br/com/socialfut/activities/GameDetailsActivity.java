@@ -97,7 +97,7 @@ public class GameDetailsActivity extends SherlockActivity
 
         RatingBar rating = (RatingBar) findViewById(R.id.ratingBarGameDetails);
 
-        new GameREST(ctx, game.getId(), 0, rating, false).execute();
+        new GameREST(ctx, game.getId(),rating, false).execute();
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
