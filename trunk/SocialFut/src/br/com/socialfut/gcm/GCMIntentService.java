@@ -77,12 +77,19 @@ public class GCMIntentService extends GCMBaseIntentService
                 if (msgContent == "confirmation")
                 {
                     /** Confirmacao */
-                    enviarMensagemParaApp("Confirmou presença!", facebookId, j.getNome() + " " + j.getSobreNome(),
+                    enviarMensagemParaApp("Confirmou presenca!", facebookId, j.getNome() + " " + j.getSobreNome(),
                             bitmap, GameDetailsActivity.class);
                 }
-                /** Desconfirmacao */
-                enviarMensagemParaApp("Desconfirmou presença!", facebookId, j.getNome() + " " + j.getSobreNome(),
-                        bitmap, GameDetailsActivity.class);
+                else if (msgContent == "confirmation")
+                {
+                    /** Desconfirmacao */
+                    enviarMensagemParaApp("Desconfirmou presenca!", facebookId, j.getNome() + " " + j.getSobreNome(),
+                            bitmap, GameDetailsActivity.class);
+                }
+                else
+                    /** Desconfirmacao */
+                    enviarMensagemParaApp("Convidou voce para futebol!", facebookId,
+                            j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
             }
 
             /** Chat */
