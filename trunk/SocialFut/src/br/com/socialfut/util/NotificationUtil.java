@@ -52,7 +52,7 @@ public class NotificationUtil
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Notification.Builder builder = new Notification.Builder(context).setContentTitle(from).setContentText(message)
-                .setContentIntent(intent).setLargeIcon(bitmap).setSmallIcon(R.drawable.notification_ball)
+                .setContentIntent(intent).setLargeIcon(bitmap).setSmallIcon(R.drawable.nofiticationball)
                 .setSound(alarmSound).setVibrate(new long[] { 100, 250, 100, 500 });
 
         Notification notification = builder.build();
