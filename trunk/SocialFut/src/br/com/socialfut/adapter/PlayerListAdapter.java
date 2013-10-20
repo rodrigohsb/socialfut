@@ -88,7 +88,6 @@ public class PlayerListAdapter extends BaseAdapter
         final ViewHolder holder;
         if (convertView == null)
         {
-
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_item_message, parent, false);
             holder = new ViewHolder();
@@ -107,7 +106,7 @@ public class PlayerListAdapter extends BaseAdapter
         holder.sureName.setText(jogador.getSobreNome());
 
         /** Qualificacao */
-        new PlayerREST(holder.rating, holder.position, 2).execute();
+        new PlayerREST(holder.rating, holder.position).execute();
 
         /** Monta a imagem */
         imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
