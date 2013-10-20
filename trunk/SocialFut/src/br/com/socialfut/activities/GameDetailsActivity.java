@@ -156,7 +156,7 @@ public class GameDetailsActivity extends SherlockActivity
 
         dialog.dismiss();
 
-        if (resposta[0] == "OK")
+        if (resposta[1] == "OK")
         {
             Toast.makeText(this, "Voce acabou de confirmar presenca !!", Toast.LENGTH_SHORT).show();
         }
@@ -178,7 +178,7 @@ public class GameDetailsActivity extends SherlockActivity
 
         dialog.dismiss();
 
-        if (resposta[0] == "OK")
+        if (resposta[1] == "OK")
         {
             Toast.makeText(this, "Voce acabou de desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
         }

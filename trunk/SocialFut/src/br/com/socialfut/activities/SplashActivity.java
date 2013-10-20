@@ -74,22 +74,7 @@ public class SplashActivity extends SherlockActivity implements Runnable
             {
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
-                String regId = GCMRegistrar.getRegistrationId(ctx);
-                if (regId.equals(""))
-                {
-                    GCMRegistrar.register(ctx, Constants.PROJECT_NUMBER);
-
-                    regId = GCMRegistrar.getRegistrationId(ctx);
-
-                    if (!regId.equals(""))
-                    {
-                        Constants.DEVICE_REGISTRATION_ID = regId;
-                    }
-                }
-                else
-                {
-                    Constants.DEVICE_REGISTRATION_ID = regId;
-                }
+                GCMRegistrar.register(ctx, Constants.PROJECT_NUMBER);
             }
             else
             {
