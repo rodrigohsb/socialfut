@@ -1,5 +1,7 @@
 package br.com.socialfut.webservices;
 
+import java.util.Date;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -21,21 +23,32 @@ public class GameREST extends AsyncTask<Void, Void, Void>
 
     private boolean hasToShowDialog;
 
-    public GameREST(Context ctx, long gameId, int type, boolean hasToShowDialog)
+    private String title;
+
+    private String address;
+
+    private Date startDate;
+
+    private Date finishDate;
+
+    public GameREST(Context ctx, String title, String address, Date startDate, Date finishDate, boolean hasToShowDialog)
     {
         super();
         this.ctx = ctx;
-        this.gameId = gameId;
-        this.type = type;
+        this.type = 0;
         this.hasToShowDialog = hasToShowDialog;
+        this.title = title;
+        this.address = address;
+        this.startDate = startDate;
+        this.finishDate = finishDate;
     }
 
-    public GameREST(Context ctx, long gameId, int type, RatingBar rating, boolean hasToShowDialog)
+    public GameREST(Context ctx, long gameId, RatingBar rating, boolean hasToShowDialog)
     {
         super();
         this.ctx = ctx;
         this.gameId = gameId;
-        this.type = type;
+        this.type = 3;
         this.rating = rating;
         this.hasToShowDialog = hasToShowDialog;
     }
@@ -58,28 +71,67 @@ public class GameREST extends AsyncTask<Void, Void, Void>
         switch (type)
         {
         case 0:
-            getRatingByGame();
+            createGame();
             break;
         case 1:
+            getOldGames();
+            break;
+        case 2:
+            getNewGames();
+            break;
+        case 3:
+            getRatingByGame();
+            break;
+        case 4:
             updateRating();
             break;
         }
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Void result)
+    /**
+     * 
+     * type = 0
+     * 
+     * @param
+     * @return
+     */
+    private void createGame()
     {
-        if (hasToShowDialog)
-        {
-            dialog.dismiss();
-        }
-        super.onPostExecute(result);
+        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "createGame" + Constants.SLASH + title
+                + Constants.SLASH + address + Constants.SLASH + startDate + Constants.SLASH + finishDate);
     }
 
     /**
      * 
-     * type = 0
+     * type = 1
+     * 
+     * @param
+     * @return
+     */
+    private void getOldGames()
+    {
+        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "ratingByGame" + Constants.SLASH
+                + Constants.USER_ID + Constants.SLASH + gameId);
+    }
+
+    /**
+     * 
+     * type = 2
+     * 
+     * @param
+     * @return
+     */
+    private void getNewGames()
+    {
+
+        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "ratingByGame" + Constants.SLASH
+                + Constants.USER_ID + Constants.SLASH + gameId);
+    }
+
+    /**
+     * 
+     * type = 3
      * 
      * @param
      * @return
@@ -95,7 +147,7 @@ public class GameREST extends AsyncTask<Void, Void, Void>
 
     /**
      * 
-     * type = 1
+     * type = 4
      * 
      * @return
      */
@@ -112,5 +164,15 @@ public class GameREST extends AsyncTask<Void, Void, Void>
         {
             Toast.makeText(ctx, "Nao foi possivel alterar o valor!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onPostExecute(Void result)
+    {
+        if (hasToShowDialog)
+        {
+            dialog.dismiss();
+        }
+        super.onPostExecute(result);
     }
 }
