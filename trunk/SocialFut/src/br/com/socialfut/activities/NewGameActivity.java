@@ -17,6 +17,7 @@ import br.com.socialfut.R;
 import br.com.socialfut.database.GameDB;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.webservices.GameREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -88,8 +89,7 @@ public class NewGameActivity extends SherlockActivity
             @Override
             public void onClick(View v)
             {
-                Game g = new Game("Titulo " + (int) (Math.random() * 5), "Rua XPTO", new Date(), new Date(), new Date());
-                new GameDB(ctx).saveGame(g);
+//                new GameREST(ctx, title, address, startDate, finishDate, true);
             }
         });
 
