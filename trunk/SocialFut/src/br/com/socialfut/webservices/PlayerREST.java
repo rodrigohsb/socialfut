@@ -6,9 +6,11 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.util.Position;
 
-public class PlayerREST extends AsyncTask<Void, Void, Void>
+public class PlayerREST extends AsyncTask<Void, Void, Player>
 {
 
     private RatingBar rating;
@@ -17,33 +19,29 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
 
     private int type;
 
-    private String deviceRegId;
+    public PlayerREST()
+    {
+        super();
+        this.type = 1;
+    }
 
-    public PlayerREST(TextView position, String deviceRegId, int type)
+    public PlayerREST(TextView position)
     {
         super();
         this.position = position;
-        this.type = type;
-        this.deviceRegId = deviceRegId;
+        this.type = 0;
     }
 
-    public PlayerREST(RatingBar rating, TextView position, int type)
+    public PlayerREST(RatingBar rating, TextView position)
     {
         super();
         this.rating = rating;
         this.position = position;
-        this.type = type;
-    }
-
-    public PlayerREST(String deviceRegId, int type)
-    {
-        super();
-        this.type = type;
-        this.deviceRegId = deviceRegId;
+        this.type = 2;
     }
 
     @Override
-    protected Void doInBackground(Void... arg0)
+    protected Player doInBackground(Void... arg0)
     {
         switch (type)
         {
@@ -54,8 +52,7 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
             updateDevice();
             break;
         case 2:
-            getRatingAndPosition();
-            break;
+            return getRatingAndPosition();
         }
 
         return null;
@@ -68,12 +65,10 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * @return
      */
 
-    private String insert()
+    private void insert()
     {
         WebServiceClient.get(Constants.URL_PLAYER_WS + "insert" + Constants.SLASH + Constants.USER_ID + Constants.SLASH
-                + deviceRegId + Constants.SLASH + Constants.POSITION_ID);
-
-        return "OK";
+                + Constants.DEVICE_REGISTRATION_ID + Constants.SLASH + Constants.POSITION_ID);
     }
 
     /**
@@ -82,12 +77,10 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String updateDevice()
+    private void updateDevice()
     {
         WebServiceClient.get(Constants.URL_PLAYER_WS + "updateDevice" + Constants.SLASH + Constants.USER_ID
-                + Constants.SLASH + deviceRegId);
-
-        return "OK";
+                + Constants.SLASH + Constants.DEVICE_REGISTRATION_ID);
     }
 
     /**
@@ -96,29 +89,31 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String getRatingAndPosition()
+    private Player getRatingAndPosition()
     {
 
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRatingAndPosition" + Constants.SLASH
                 + Constants.USER_ID);
 
-        String json = resposta[0];
+        String json = resposta[1];
+
+        Player p = new Player();
 
         try
         {
             JSONObject jObject = new JSONObject(json);
-            float rating = Float.valueOf(jObject.getString("rating"));
-            String posicao = jObject.getString("posicao");
+            float rate = Float.valueOf(jObject.getString("rating"));
+            String posicao = Position.values()[jObject.getInt("position")].toString().replace("_", " ");
 
-            this.position.setText(posicao);
-            this.rating.setRating(rating);
+            p.setRating(rate);
+            p.setPosition(posicao);
         }
         catch (JSONException e)
         {
-            rating.setRating(0.0f);
-            position.setText("");
+            p.setRating(0.0f);
+            p.setPosition("");
         }
-        return "OK";
+        return p;
     }
 
     /**
@@ -127,24 +122,25 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String getRating()
+    private Player getRating()
     {
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRating" + Constants.SLASH
                 + Constants.USER_ID);
 
         String json = resposta[0];
+        Player p = new Player();
 
         try
         {
             JSONObject jObject = new JSONObject(json);
             float rating = Float.valueOf(jObject.getString("rating"));
-            this.rating.setRating(rating);
+            p.setRating(rating);
         }
         catch (JSONException e)
         {
-            rating.setRating(0.0f);
+            p.setRating(0);
         }
-        return "OK";
+        return p;
     }
 
     /**
@@ -153,24 +149,42 @@ public class PlayerREST extends AsyncTask<Void, Void, Void>
      * 
      * @return
      */
-    private String getPosition()
+    private Player getPosition()
     {
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getPosition" + Constants.SLASH
                 + Constants.USER_ID);
 
         String json = resposta[0];
 
+        Player p = new Player();
+
         try
         {
             JSONObject jObject = new JSONObject(json);
             String posicao = jObject.getString("posicao");
-            this.position.setText(posicao);
+            p.setPosition(posicao);
         }
         catch (JSONException e)
         {
-            position.setText("");
+            p.setPosition("");
         }
-        return "OK";
+        return p;
     }
 
+    @Override
+    protected void onPostExecute(Player player)
+    {
+        if (player != null)
+        {
+            if (rating != null && player.getRating() != 0)
+            {
+                rating.setRating(player.getRating());
+            }
+            if (position != null && player.getPosition() != "")
+            {
+                position.setText(player.getPosition());
+            }
+        }
+        super.onPostExecute(player);
+    }
 }
