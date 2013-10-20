@@ -26,6 +26,7 @@ public class WebServiceClient
 
         try
         {
+            System.out.println(httpget.getURI());
             response = HttpClient.getHttpClientInstance().execute(httpget);
             HttpEntity entity = response.getEntity();
 
@@ -34,12 +35,11 @@ public class WebServiceClient
                 InputStream instream = entity.getContent();
                 result[1] = toString(instream);
                 instream.close();
-                Log.i("get", "Result from post JsonPost : " + result[1]);
+                Log.i("get", "Result from GET : " + result[1]);
             }
         }
         catch (Exception e)
         {
-            System.out.println(httpget.getURI());
             e.printStackTrace();
             result[0] = "0";
             result[1] = "Falha de rede!";
@@ -60,6 +60,8 @@ public class WebServiceClient
             StringEntity mensagem = new StringEntity(msg);
             httpPut.setEntity(mensagem);
 
+            System.out.println(httpPut.getURI());
+
             response = HttpClient.getHttpClientInstance().execute(httpPut);
             HttpEntity entity = response.getEntity();
 
@@ -68,7 +70,7 @@ public class WebServiceClient
                 InputStream instream = entity.getContent();
                 result[1] = toString(instream);
                 instream.close();
-                Log.i("get", "Result from post JsonPost : " + result[1]);
+                Log.i("get", "Result from PUT : " + result[1]);
             }
         }
         catch (UnsupportedEncodingException e1)
@@ -77,15 +79,13 @@ public class WebServiceClient
         }
         catch (Exception e)
         {
-
-            System.out.println(httpPut.getURI());
             e.printStackTrace();
             result[0] = "0";
             result[1] = "Falha de rede!";
         }
         return result;
     }
-    
+
     public static String[] post(String url, String json)
     {
         String[] result = new String[2];
@@ -96,6 +96,8 @@ public class WebServiceClient
             StringEntity sEntity = new StringEntity(json, "UTF-8");
             httpPost.setEntity(sEntity);
 
+            System.out.println(httpPost.getURI());
+
             HttpResponse response = HttpClient.getHttpClientInstance().execute(httpPost);
             HttpEntity entity = response.getEntity();
 
@@ -105,13 +107,12 @@ public class WebServiceClient
                 InputStream instream = entity.getContent();
                 result[1] = toString(instream);
                 instream.close();
-                Log.d("post", "Result from post JsonPost : " + result[0] + " : " + result[1]);
+                Log.d("post", "Result from POST: " + result[0] + " : " + result[1]);
             }
 
         }
         catch (Exception e)
         {
-            Log.e("NGVL", "Falha ao acessar Web service", e);
             result[0] = "0";
             result[1] = "Falha de rede!";
         }
