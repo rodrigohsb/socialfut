@@ -41,13 +41,12 @@ public class GCMIntentService extends GCMBaseIntentService
     @Override
     protected void onRegistered(Context context, String registrationId)
     {
-        reconfiguraActivity();
+        Constants.DEVICE_REGISTRATION_ID = registrationId;
     }
 
     @Override
     protected void onUnregistered(Context context, String registrationId)
     {
-        reconfiguraActivity();
     }
 
     @Override
