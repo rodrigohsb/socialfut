@@ -17,19 +17,23 @@ public class ActionBar
 
     public static void updateActionBar(com.actionbarsherlock.app.ActionBar actionBar)
     {
+        createActionBar(actionBar);
+    }
+
+    public static void updateCustomActionBar(com.actionbarsherlock.app.ActionBar actionBar, String subTitle)
+    {
+        createActionBar(actionBar);
+        actionBar.setSubtitle(subTitle);
+    }
+
+    private static void createActionBar(com.actionbarsherlock.app.ActionBar actionBar)
+    {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setIcon(android.R.color.transparent);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00b300")));
         // actionBar.setTitle("SocialFut");
         // actionBar.setIcon(R.drawable.icone);
-    }
 
-    public static void updateCustomActionBar(com.actionbarsherlock.app.ActionBar actionBar, String subTitle)
-    {
-        actionBar.setSubtitle(subTitle);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00b300")));
     }
 }
