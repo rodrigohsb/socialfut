@@ -8,16 +8,16 @@
         android:id="@+id/newGameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
         android:text="Nova Partida"
         android:textColor="@color/color_white"
         android:textSize="40sp" />
 
     <LinearLayout
         android:id="@+id/date"
-        android:layout_below="@+id/newGameTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/newGameTitle"
         android:orientation="horizontal" >
 
         <TextView
@@ -45,9 +45,9 @@
 
     <LinearLayout
         android:id="@+id/hour"
-        android:layout_below="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/date"
         android:orientation="horizontal" >
 
         <TextView
@@ -75,11 +75,11 @@
 
     <LinearLayout
         android:id="@+id/address"
-        android:layout_below="@+id/hour"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/hour"
         android:layout_marginTop="10sp"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/addressTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -98,11 +98,11 @@
     </LinearLayout>
 
     <Button
-        android:layout_below="@+id/address"
         android:id="@+id/btncreateNewGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_below="@+id/address"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10sp"
         android:text="Criar partida!"
         android:textColor="@color/color_white"
