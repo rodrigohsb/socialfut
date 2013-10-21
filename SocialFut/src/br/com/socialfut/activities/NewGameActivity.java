@@ -1,7 +1,7 @@
 package br.com.socialfut.activities;
 
+import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -13,11 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import br.com.socialfut.R;
-import br.com.socialfut.database.GameDB;
-import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
-import br.com.socialfut.webservices.GameREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -30,6 +28,8 @@ public class NewGameActivity extends SherlockActivity
 
     private TextView hour;
 
+    private TextView address;
+
     private int hourOfDay;
 
     private int minute;
@@ -39,6 +39,8 @@ public class NewGameActivity extends SherlockActivity
     private int month;
 
     private int day;
+
+    private Calendar c;
 
     static final int DATE_DIALOG_ID = 999;
 
@@ -55,10 +57,10 @@ public class NewGameActivity extends SherlockActivity
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Nova Partida");
 
         date = (TextView) findViewById(R.id.dateNewGame);
-
         hour = (TextView) findViewById(R.id.hourNewGame);
+        address = (TextView) findViewById(R.id.addressTxt);
 
-        final Calendar c = Calendar.getInstance();
+        c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
@@ -89,7 +91,15 @@ public class NewGameActivity extends SherlockActivity
             @Override
             public void onClick(View v)
             {
-//                new GameREST(ctx, title, address, startDate, finishDate, true);
+                if (date.getText().toString() != "" && hour.getText().toString() != "" && address.getText().toString() != "" )
+                {
+                    // TODO Pegar informacoes e passar ao WebServices p/ criar jogo.
+                    c.set(year, month + 1, day, hourOfDay, minute);
+                }
+                else
+                {
+                    Toast.makeText(ctx, "Por favor, preencha os dados da partida!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -115,7 +125,9 @@ public class NewGameActivity extends SherlockActivity
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
-            date.setText(new StringBuilder().append(day).append(" / ").append(month + 1).append(" / ").append(year));
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            c.set(year, month, day);
+            date.setText(df.format(c.getTime()));
         }
     };
 
@@ -150,5 +162,4 @@ public class NewGameActivity extends SherlockActivity
             }
         }
     };
-
 }
