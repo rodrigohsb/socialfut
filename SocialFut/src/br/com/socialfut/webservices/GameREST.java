@@ -31,26 +31,35 @@ public class GameREST extends AsyncTask<Void, Void, Void>
 
     private Date finishDate;
 
-    public GameREST(Context ctx, String title, String address, Date startDate, Date finishDate, boolean hasToShowDialog)
+    public GameREST(Context ctx, String title, String address, Date startDate, Date finishDate)
     {
         super();
         this.ctx = ctx;
         this.type = 0;
-        this.hasToShowDialog = hasToShowDialog;
+        this.hasToShowDialog = true;
         this.title = title;
         this.address = address;
         this.startDate = startDate;
         this.finishDate = finishDate;
     }
 
-    public GameREST(Context ctx, long gameId, RatingBar rating, boolean hasToShowDialog)
+    public GameREST(Context ctx, long gameId)
+    {
+        super();
+        this.ctx = ctx;
+        this.gameId = gameId;
+        this.type = 1;
+        this.hasToShowDialog = true;
+    }
+
+    public GameREST(Context ctx, long gameId, RatingBar rating)
     {
         super();
         this.ctx = ctx;
         this.gameId = gameId;
         this.type = 3;
         this.rating = rating;
-        this.hasToShowDialog = hasToShowDialog;
+        this.hasToShowDialog = false;
     }
 
     @Override
@@ -142,7 +151,7 @@ public class GameREST extends AsyncTask<Void, Void, Void>
         String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "ratingByGame" + Constants.SLASH
                 + Constants.USER_ID + Constants.SLASH + gameId);
 
-        rating.setRating(3.5f);
+        rating.setRating(Float.valueOf(resposta[1]));
     }
 
     /**
