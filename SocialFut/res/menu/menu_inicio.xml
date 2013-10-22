@@ -7,11 +7,6 @@
         android:showAsAction="always"
         android:title="@string/chat"/>
     <item
-        android:id="@+id/dice"
-        android:icon="@drawable/dice"
-        android:showAsAction="always"
-        android:title="@string/sortear"/>
-    <item
         android:id="@+id/cronometro"
         android:icon="@drawable/stopwatch"
         android:showAsAction="ifRoom"
