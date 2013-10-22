@@ -316,7 +316,7 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
             {
                 dialog.dismiss();
             }
-            setListAdapter(new PlayerListAdapter(PlayerListForSort.this, jogadores));
+            setListAdapter(new PlayerListAdapter(PlayerListForSort.this, jogadores, false));
             super.onPostExecute(jogadores);
         }
     }

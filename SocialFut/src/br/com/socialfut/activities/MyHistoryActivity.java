@@ -1,11 +1,15 @@
 package br.com.socialfut.activities;
 
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,21 +17,27 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.GamesListAdapter;
-import br.com.socialfut.database.GameDB;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class MyHistoryActivity extends SherlockActivity
 {
     private Context ctx;
 
     private AlertDialog alertDialog;
+
+    private GridView gridView;
+
+    private ProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -39,25 +49,9 @@ public class MyHistoryActivity extends SherlockActivity
         ctx = this;
 
         setContentView(R.layout.grid1);
-        final GridView gridView = (GridView) findViewById(R.id.gridview);
+        gridView = (GridView) findViewById(R.id.gridview);
 
-        // for (int i = 0; i < 16; i++)
-        // {
-        // Game g = new Game("Titulo " + i, "Rua XPTO", new Date(), new Date(),
-        // new Date());
-        // new GameDB(ctx).saveGame(g);
-        // }
-
-        List<Game> games = new GameDB(this).getOldGames();
-
-        if (games.isEmpty())
-        {
-            this.alert();
-        }
-        else
-        {
-            gridView.setAdapter(new GamesListAdapter(this, games));
-        }
+        new GameREST().execute();
 
         gridView.setOnItemClickListener(new OnItemClickListener()
         {
@@ -119,4 +113,51 @@ public class MyHistoryActivity extends SherlockActivity
         alertDialog.show();
     }
 
+    private class GameREST extends AsyncTask<Void, Void, List<Game>>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            dialog = new ProgressDialog(ctx);
+            dialog.setMessage("Por favor, aguarde...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected List<Game> doInBackground(Void... params)
+        {
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "oldGames" + Constants.SLASH
+                    + Constants.USER_ID);
+            return this.getGames(resposta[1]);
+        }
+
+        @Override
+        protected void onPostExecute(List<Game> games)
+        {
+            super.onPostExecute(games);
+            dialog.dismiss();
+            if (games.isEmpty())
+            {
+                alert();
+            }
+            else
+            {
+                gridView.setAdapter(new GamesListAdapter(ctx, games));
+            }
+        }
+
+        private List<Game> getGames(String text)
+        {
+            Gson g = new Gson();
+            Type collectionType = new TypeToken<Collection<Game>>()
+            {
+            }.getType();
+            Collection<Game> games = g.fromJson(text, collectionType);
+
+            return (List<Game>) games;
+        }
+    }
 }

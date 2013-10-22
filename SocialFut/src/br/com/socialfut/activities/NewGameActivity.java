@@ -2,6 +2,7 @@ package br.com.socialfut.activities;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -16,6 +17,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.util.ActionBar;
+import br.com.socialfut.webservices.GameREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -91,10 +93,11 @@ public class NewGameActivity extends SherlockActivity
             @Override
             public void onClick(View v)
             {
-                if (date.getText().toString() != "" && hour.getText().toString() != "" && address.getText().toString() != "" )
+                if (date.getText().toString() != "" && hour.getText().toString() != ""
+                        && address.getText().toString() != "")
                 {
-                    // TODO Pegar informacoes e passar ao WebServices p/ criar jogo.
                     c.set(year, month + 1, day, hourOfDay, minute);
+                    new GameREST(ctx, "", address.getText().toString(), new Date(), new Date()).execute();
                 }
                 else
                 {

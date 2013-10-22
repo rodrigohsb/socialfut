@@ -1,7 +1,7 @@
 package br.com.socialfut.activities;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.util.SparseArray;
 import android.widget.ExpandableListView;
 import br.com.socialfut.R;
 import br.com.socialfut.adapter.ExpandableListAdapter;
-import br.com.socialfut.database.GameDB;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.Constants;
@@ -44,15 +43,16 @@ public class GameHistoryActivity extends SherlockActivity
         SparseArray<Group> groups = new SparseArray<Group>();
         SimpleDateFormat dateFormat2 = new SimpleDateFormat(Constants.HOUR_PATTERN_FOR_USER);
 
-        GameDB gameDB = new GameDB(this);
+        // GameDB gameDB = new GameDB(this);
+        //
+        // for (int i = 1; i < 16; i++)
+        // {
+        // Game g = new Game("Titulo " + i, "Rua " + i, new Date(), new Date(),
+        // new Date());
+        // gameDB.saveGame(g);
+        // }
 
-        for (int i = 1; i < 16; i++)
-        {
-            Game g = new Game("Titulo " + i, "Rua " + i, new Date(), new Date(), new Date());
-            gameDB.saveGame(g);
-        }
-
-        List<Game> games = gameDB.getAllGames();
+        List<Game> games = new ArrayList<Game>();
 
         int i = 0;
         for (Game game : games)
