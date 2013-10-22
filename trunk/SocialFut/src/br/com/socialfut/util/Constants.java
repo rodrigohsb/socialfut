@@ -27,10 +27,6 @@ public class Constants
 
     public static final String PROJECT_NUMBER = "281054247643";
 
-    public static final String GCM_INTENT_SERVICE = "br.com.socialfut.gcm.GCMIntentService";
-
-    public static final String SEMICOLON = ";";
-
     public static List<Player> jogadores;
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -45,7 +41,7 @@ public class Constants
 
     /** WEB SERVICES [INICIO] */
 
-    public static final String BASE_URL = "http://192.168.0.100:8080/SocialFutServer/";
+    public static final String BASE_URL = "http://192.168.0.11:8080/SocialFutServer/";
 
     public static final String URL_GAME_WS = BASE_URL + "game/";
 
@@ -61,10 +57,22 @@ public class Constants
 
     public static int POSITION_ID;
 
+    public static final String CONFIRMATION = "confirmation";
+
+    public static final String DESCONFIRMATION = "desconfirmation";
+
+    public static final String INVITATION = "invitation";
+
+    public static final String GCM_INTENT_SERVICE = "br.com.socialfut.gcm.GCMIntentService";
+
+    public static final String SEMICOLON = ";";
+
     /** WEB SERVICES [FIM] */
 
     /** FQL [INICIO] */
     public static final String FRIENDS_USES_APP = "select uid,first_name,last_name,pic_square,is_app_user from user where uid in (select uid2 from friend where uid1 = me())";
+
+    public static final String FRIENDS_BY_ID = "select uid,first_name,last_name,pic_square from user where uid in ({0})";
 
     public static final String Q = "q";
 
