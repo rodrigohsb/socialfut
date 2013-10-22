@@ -16,10 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 import br.com.socialfut.activities.ChatActivity;
 import br.com.socialfut.activities.GameDetailsActivity;
+import br.com.socialfut.persistence.Game;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActivityStackUtils;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.NotificationUtil;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -27,6 +29,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 import com.google.android.gcm.GCMBaseIntentService;
+import com.google.gson.Gson;
 
 public class GCMIntentService extends GCMBaseIntentService
 {
@@ -60,6 +63,8 @@ public class GCMIntentService extends GCMBaseIntentService
         try
         {
             String fullMsg = intent.getStringExtra("msg");
+
+            Log.i(TAG, "Mensagem recebida " + fullMsg);
             String[] text = fullMsg.split(Constants.SEMICOLON);
 
             /** Id do Usuario que enviou a mensagem */
@@ -74,22 +79,25 @@ public class GCMIntentService extends GCMBaseIntentService
 
             if (text.length == 3)
             {
-                if (msgContent == "confirmation")
+                if (msgContent.equalsIgnoreCase(Constants.CONFIRMATION))
                 {
+
                     /** Confirmacao */
-                    enviarMensagemParaApp("Confirmou presenca!", facebookId, j.getNome() + " " + j.getSobreNome(),
-                            bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Confirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " "
+                            + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
-                else if (msgContent == "confirmation")
+                else if (msgContent.equalsIgnoreCase(Constants.DESCONFIRMATION))
                 {
                     /** Desconfirmacao */
-                    enviarMensagemParaApp("Desconfirmou presenca!", facebookId, j.getNome() + " " + j.getSobreNome(),
+                    enviarMensagemParaApp("Desconfirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " "
+                            + j.getSobreNome(), bitmap, GameDetailsActivity.class);
+                }
+                else if (msgContent.equalsIgnoreCase(Constants.INVITATION))
+                {
+                    /** Convite */
+                    enviarMensagemParaApp("Voce foi convidado!", facebookId, j.getNome() + " " + j.getSobreNome(),
                             bitmap, GameDetailsActivity.class);
                 }
-                else
-                    /** Desconfirmacao */
-                    enviarMensagemParaApp("Convidou voce para futebol!", facebookId,
-                            j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
             }
 
             /** Chat */
@@ -168,6 +176,21 @@ public class GCMIntentService extends GCMBaseIntentService
             e.printStackTrace();
         }
         return BitmapFactory.decodeStream(is);
+    }
+
+    private void enviarMensagemParaApp(String msg, long gameId, String from, Bitmap bitmap, Class<?> cls)
+    {
+        Log.i(TAG, "Mensagem recebida " + msg);
+
+        // Cria a notificacao e informa para abrir a activity de entrada
+        Intent intent = new Intent(this, cls);
+        String resposta[] = WebServiceClient.get(Constants.URL_GAME_WS + "gameById" + Constants.SLASH + gameId);
+
+        Gson g = new Gson();
+        Game game = g.fromJson(resposta[1], Game.class);
+
+        intent.putExtra("game", game);
+        NotificationUtil.generateNotification(this, msg, intent, from, bitmap);
     }
 
     private void enviarMensagemParaApp(String msg, String facebookId, String from, Bitmap bitmap, Class<?> cls)
