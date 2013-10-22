@@ -39,16 +39,25 @@ public class PlayerListAdapter extends BaseAdapter
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public PlayerListAdapter(Context context, List<Player> lista)
+    private boolean hasPositionAndQualification;
+
+    public PlayerListAdapter(Context context, List<Player> lista, boolean hasPositionAndQualification)
     {
         this.context = context;
         this.lista = lista;
 
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        System.out.println(lista.toString());
+
+        if (!imageLoader.isInited())
+        {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
         options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
                 .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
+
+        this.hasPositionAndQualification = hasPositionAndQualification;
     }
 
     private class ViewHolder
@@ -82,7 +91,7 @@ public class PlayerListAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
 
-        Player jogador = (Player) lista.get(position);
+        Player player = (Player) lista.get(position);
 
         View view = convertView;
         final ViewHolder holder;
@@ -102,14 +111,21 @@ public class PlayerListAdapter extends BaseAdapter
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.name.setText(jogador.getNome());
-        holder.sureName.setText(jogador.getSobreNome());
+        holder.name.setText(player.getNome());
+        holder.sureName.setText(player.getSobreNome());
 
-        /** Qualificacao */
-        new PlayerREST(holder.rating, holder.position).execute();
+        if (!hasPositionAndQualification)
+        {
+            /** Qualificacao */
+            new PlayerREST(holder.rating, holder.position).execute();
+        }
+        else
+        {
+            holder.rating.setRating(player.getRating());
+        }
 
         /** Monta a imagem */
-        imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
+        imageLoader.displayImage(player.getPicture(), holder.image, options, animateFirstListener);
 
         return view;
     }
