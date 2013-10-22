@@ -32,6 +32,14 @@ public class Player implements Serializable
         this.picture = picture;
     }
 
+    public Player(long id, String position, float rating)
+    {
+        super();
+        this.id = id;
+        this.position = position;
+        this.rating = rating;
+    }
+
     public long getId()
     {
         return id;

@@ -3,14 +3,12 @@ package br.com.socialfut.persistence;
 import java.io.Serializable;
 import java.util.Date;
 
-import android.content.ContentUris;
-import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
  * 
  * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propósito da classe.
+ * TODO Explicar detalhadamente proposito da classe.
  * 
  * @author rodrigo.bacellar
  * @since 24/09/2013
@@ -23,7 +21,8 @@ public class Chat implements Serializable
 
     public static String[] colunas = new String[] { Chats._ID, Chats.SENDER, Chats.RECEIVER, Chats.CONTENT, Chats.DATE };
 
-    public static final String AUTHORITY = "br.com.socialfut.android.provider.chat";
+    // public static final String AUTHORITY =
+    // "br.com.socialfut.android.provider.chat";
 
     private long id;
 
@@ -108,11 +107,12 @@ public class Chat implements Serializable
     public static final class Chats implements BaseColumns
     {
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/chat");
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.chat";
-
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.chat";
+        // public static final Uri CONTENT_URI = Uri.parse("content://" +
+        // AUTHORITY + "/chat");
+        // public static final String CONTENT_TYPE =
+        // "vnd.android.cursor.dir/vnd.google.chat";
+        // public static final String CONTENT_ITEM_TYPE =
+        // "vnd.android.cursor.item/vnd.google.chat";
 
         public static final String DEFAULT_SORT_ORDER = "id ACS";
 
@@ -124,11 +124,11 @@ public class Chat implements Serializable
 
         public static final String DATE = "created_date";
 
-        public static Uri getUri(long id)
-        {
-            Uri uriChat = ContentUris.withAppendedId(Chats.CONTENT_URI, id);
-            return uriChat;
-        }
+        // public static Uri getUri(long id)
+        // {
+        // Uri uriChat = ContentUris.withAppendedId(Chats.CONTENT_URI, id);
+        // return uriChat;
+        // }
 
     }
 
