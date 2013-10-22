@@ -3,15 +3,10 @@ package br.com.socialfut.persistence;
 import java.io.Serializable;
 import java.util.Date;
 
-import android.content.ContentUris;
-import android.net.Uri;
-import android.provider.BaseColumns;
-import br.com.socialfut.persistence.Chat.Chats;
-
 /**
  * 
  * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propósito da classe.
+ * TODO Explicar detalhadamente proposito da classe.
  * 
  * @author rodrigo.bacellar
  * @since 03/10/2013
@@ -20,11 +15,6 @@ import br.com.socialfut.persistence.Chat.Chats;
 public class Game implements Serializable
 {
     private static final long serialVersionUID = 1L;
-
-    public static String[] colunas = new String[] { Games._ID, Games.TITLE, Games.ADDRESS, Games.CREATED_DATE,
-            Games.START_DATE, Games.FINISH_DATE };
-
-    public static final String AUTHORITY = "br.com.socialfut.android.provider.histories";
 
     private long id;
 
@@ -119,36 +109,4 @@ public class Game implements Serializable
     {
         return super.toString();
     }
-
-    public static final class Games implements BaseColumns
-    {
-
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/games");
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.games";
-
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.games";
-
-        public static final String DEFAULT_SORT_ORDER = "id ACS";
-
-        public static final String TITLE = "title";
-
-        // public static final String PICTURE = "picture";
-
-        public static final String ADDRESS = "address";
-
-        public static final String CREATED_DATE = "created_date";
-
-        public static final String START_DATE = "start_date";
-
-        public static final String FINISH_DATE = "finish_date";
-
-        public static Uri getUri(long id)
-        {
-            Uri uriChat = ContentUris.withAppendedId(Chats.CONTENT_URI, id);
-            return uriChat;
-        }
-
-    }
-
 }
