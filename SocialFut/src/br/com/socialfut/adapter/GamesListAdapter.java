@@ -1,6 +1,6 @@
 package br.com.socialfut.adapter;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Game;
-import br.com.socialfut.util.Constants;
 import br.com.socialfut.util.SquareImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -48,7 +47,7 @@ public class GamesListAdapter extends BaseAdapter
 
     private String[] pictures = new String[] {
             "http://2.bp.blogspot.com/_0AzeTeHDPbU/SibXejBzezI/AAAAAAAAAB4/IWpNY3ZU6Os/s320/campo-de-futebol-infantil.jpg",
-            "http://www.cidadelle.com.br/wp-content/uploads/2012/11/Campo-de-Futebol-821x400.jpg",
+            "http://www.castro.pr.gov.br/site/images/stories/Campo_Futebol_Society.jpg",
             "http://images03.olx.com.br/ui/11/73/87/1309874233_223606687_2-Fotos-de--Grama-sintetica-preco-quadra-de-futebol-campo-de-futebol-society.jpg",
             "http://caxixa.com/2011/wp-content/uploads/2011/01/campos-de-futebol-7.1_640x480.jpg",
             "http://www.greenvisionbrasil.com.br/fmanager/green/categorias/foto12_1.jpg",
@@ -59,7 +58,10 @@ public class GamesListAdapter extends BaseAdapter
         this.context = context;
         this.games = games;
 
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited())
+        {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
         options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
@@ -107,7 +109,7 @@ public class GamesListAdapter extends BaseAdapter
 
         imageLoader.displayImage(pictures[(int) (Math.random() * 5)], holder.image, options, animateFirstListener);
         holder.name.setText(game.getTitle() + "\n"
-                + new SimpleDateFormat(Constants.DATE_PATTERN_FOR_USER).format(game.getCreatedDate()));
+                + DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
         return view;
     }
 
