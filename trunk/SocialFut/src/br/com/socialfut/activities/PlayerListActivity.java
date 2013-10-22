@@ -39,7 +39,7 @@ public class PlayerListActivity extends SherlockListActivity
     {
         super.onCreate(savedInstanceState);
 
-        ActionBar.updateActionBar(getSupportActionBar());
+        ActionBar.updateCustomActionBar(getSupportActionBar(), "Amigos");
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))
@@ -157,7 +157,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores,false));
             }
             else
             {

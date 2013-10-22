@@ -1,8 +1,14 @@
 package br.com.socialfut.activities;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -29,6 +35,11 @@ import br.com.socialfut.webservices.GameREST;
 import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphObject;
 
 /**
  * 
@@ -56,6 +67,8 @@ public class GameDetailsActivity extends SherlockActivity
 
     private PlayerListAdapter adapter;
 
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -70,19 +83,17 @@ public class GameDetailsActivity extends SherlockActivity
         Bundle bundle = getIntent().getExtras();
         game = (Game) bundle.getSerializable("game");
 
-        dateFormat = new SimpleDateFormat(Constants.DATE_PATTERN_FOR_USER);
-
         /** Titulo */
         TextView titleGameDetails = (TextView) findViewById(R.id.titleGameDetails);
         titleGameDetails.setText(game.getTitle());
 
         /** Criada em */
         TextView createdDateGameDetails = (TextView) findViewById(R.id.createdDateGameDetails);
-        createdDateGameDetails.setText(dateFormat.format(game.getCreatedDate()));
+        createdDateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
 
         /** Dia a ser disputada */
         TextView dateGameDetails = (TextView) findViewById(R.id.dateGameDetails);
-        dateGameDetails.setText(dateFormat.format(game.getStartDate()));
+        dateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getStartDate()));
 
         dateFormat = new SimpleDateFormat(Constants.HOUR_PATTERN);
 
@@ -97,7 +108,7 @@ public class GameDetailsActivity extends SherlockActivity
 
         RatingBar rating = (RatingBar) findViewById(R.id.ratingBarGameDetails);
 
-        new GameREST(ctx, game.getId(),rating, false).execute();
+        new GameREST(ctx, game.getId(), rating).execute();
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
@@ -113,11 +124,17 @@ public class GameDetailsActivity extends SherlockActivity
             {
                 if (isChecked)
                 {
+                    /** CONFIRMAR */
+                    new TellToFriends(game.getId(), 0).execute();
+                }
+                else
+                {
+                    /** DESCONFIRMAR */
                     DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            sendConfirmation();
+                            new TellToFriends(game.getId(), 1).execute();
                         }
                     };
                     DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener()
@@ -132,62 +149,110 @@ public class GameDetailsActivity extends SherlockActivity
 
                     dialog.show();
                 }
-                else
-                {
-                    sendDesconfirmation();
-                }
             }
 
         });
 
         mHaveMoreDataToLoad = true;
         endlessListView = (EndlessListView) findViewById(R.id.endless);
+        endlessListView.setOnLoadMoreListener(loadMoreListener);
+        new LoadMore().execute();
     }
 
-    private void sendConfirmation()
+    private class TellToFriends extends AsyncTask<Void, Void, String>
     {
-        ProgressDialog dialog = new ProgressDialog(ctx);
-        dialog.setMessage("Confirmando presenca...");
-        dialog.setCancelable(false);
-        dialog.show();
+        private long gameId;
 
-        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "confirmation" + Constants.SLASH
-                + Constants.USER_ID + Constants.SLASH + game.getId());
+        private int type;
 
-        dialog.dismiss();
-
-        if (resposta[1] == "OK")
+        public TellToFriends(long gameId, int type)
         {
-            Toast.makeText(this, "Voce acabou de confirmar presenca !!", Toast.LENGTH_SHORT).show();
+            super();
+            this.gameId = gameId;
+            this.type = type;
         }
-        else
+
+        @Override
+        protected void onPreExecute()
         {
-            Toast.makeText(this, "Nao foi possivel confirmar presenca !!", Toast.LENGTH_SHORT).show();
+            super.onPreExecute();
+            dialog = new ProgressDialog(ctx);
+            if (type == 0)
+            {
+                dialog.setMessage("Confirmando presença...");
+            }
+            else
+            {
+                dialog.setMessage("Desconfirmando presença...");
+            }
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params)
+        {
+            switch (type)
+            {
+            case 0:
+                return confirmation();
+            case 1:
+                return desconfirmation();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result)
+        {
+            super.onPostExecute(result);
+            dialog.dismiss();
+
+            if (result != null)
+            {
+
+                if (type == 0)
+                {
+                    if (result.equalsIgnoreCase("OK"))
+                    {
+                        Toast.makeText(ctx, "Voce acabou de confirmar presenca !!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(ctx, "Nao foi possivel confirmar presenca !!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    if (result.equalsIgnoreCase("OK"))
+                    {
+                        Toast.makeText(ctx, "Voce acabou de desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(ctx, "Nao foi possivel desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+        }
+
+        private String confirmation()
+        {
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + Constants.CONFIRMATION + Constants.SLASH
+                    + Constants.USER_ID + Constants.SLASH + gameId);
+            return resposta[1];
+        }
+
+        private String desconfirmation()
+        {
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + Constants.DESCONFIRMATION
+                    + Constants.SLASH + Constants.USER_ID + Constants.SLASH + gameId);
+            return resposta[1];
         }
     }
 
-    private void sendDesconfirmation()
-    {
-        ProgressDialog dialog = new ProgressDialog(ctx);
-        dialog.setMessage("Desconfirmando presenca...");
-        dialog.setCancelable(false);
-        dialog.show();
-
-        String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "desconfirmation" + Constants.SLASH
-                + Constants.USER_ID + Constants.SLASH + game.getId());
-
-        dialog.dismiss();
-
-        if (resposta[1] == "OK")
-        {
-            Toast.makeText(this, "Voce acabou de desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this, "Nao foi possivel desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
+    /** Player List */
     private void loadMoreData()
     {
         new LoadMore().execute((Void) null);
@@ -221,13 +286,7 @@ public class GameDetailsActivity extends SherlockActivity
             String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "playersByGame" + Constants.SLASH
                     + game.getId());
 
-            List<Player> jogadores = new ArrayList<Player>();
-            mHaveMoreDataToLoad = false;
-            adapter = new PlayerListAdapter(ctx, jogadores);
-            endlessListView.setAdapter(adapter);
-            endlessListView.setOnLoadMoreListener(loadMoreListener);
-
-            return jogadores;
+            return this.getPlayers(resposta[1]);
         }
 
         @Override
@@ -235,9 +294,119 @@ public class GameDetailsActivity extends SherlockActivity
         {
             super.onPostExecute(result);
 
+            adapter = new PlayerListAdapter(ctx, result, true);
+            endlessListView.setAdapter(adapter);
+
             adapter.addItems(result);
             endlessListView.loadMoreCompleat();
-            mHaveMoreDataToLoad = false;
+            mHaveMoreDataToLoad = true;
+        }
+
+        private List<Player> getPlayers(String text)
+        {
+
+            List<Player> players = new ArrayList<Player>();
+
+            try
+            {
+                JSONArray allPlayers = new JSONArray(text);
+                if (allPlayers.length() > 0)
+                {
+                    for (int i = 0; i < allPlayers.length(); i++)
+                    {
+                        try
+                        {
+                            JSONObject player = allPlayers.getJSONObject(i);
+
+                            /** ID */
+                            Long id = player.getLong("id");
+
+                            /** Position */
+                            String position = player.getString("position");
+
+                            /** Rating */
+                            Float rating = Float.valueOf(player.getString("rating"));
+
+                            Player j = new Player(id, position, rating);
+                            players.add(j);
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            catch (JSONException e)
+            {
+            }
+            return this.getFacebookProfile(players);
+        }
+
+        private List<Player> getFacebookProfile(List<Player> players)
+        {
+            Bundle params = new Bundle();
+
+            StringBuilder ids = new StringBuilder();
+            int count = 1;
+            for (Player p : players)
+            {
+                if (count < players.size())
+                {
+                    ids.append(p.getId() + ",");
+                }
+                else
+                {
+                    ids.append(p.getId());
+                }
+                count++;
+            }
+
+            params.putString(Constants.Q, MessageFormat.format(Constants.FRIENDS_BY_ID, ids));
+            Request request = new Request(Session.getActiveSession(), Constants.SLASH + Constants.FQL, params,
+                    HttpMethod.GET);
+            Response resp = request.executeAndWait();
+
+            GraphObject graph = resp.getGraphObject();
+
+            try
+            {
+                JSONArray friendsFromFacebook = graph.getInnerJSONObject().getJSONArray("data");
+
+                if (friendsFromFacebook.length() > 0)
+                {
+                    for (int i = 0; i < friendsFromFacebook.length(); i++)
+                    {
+                        try
+                        {
+                            JSONObject player = friendsFromFacebook.getJSONObject(i);
+
+                            /** ID */
+                            Long id = Long.valueOf(player.getString(Constants.UID));
+
+                            for (Player p : players)
+                            {
+                                if (p.getId() == id)
+                                {
+                                    p.setNome(player.getString(Constants.FIRST_NAME));
+                                    p.setSobreNome(player.getString(Constants.LAST_NAME));
+                                    p.setPicture(player.getString(Constants.PIC_SQUARE));
+                                    break;
+                                }
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                return players;
+            }
+            catch (JSONException e)
+            {
+            }
+            return players;
         }
     }
 }

@@ -51,7 +51,7 @@ public class PlayerListEndlessActivity extends SherlockActivity
 
         ActionBar.updateActionBar(getSupportActionBar());
 
-        adapter = new PlayerListAdapter(context, jogadores);
+        adapter = new PlayerListAdapter(context, jogadores,false);
 
         mCount = 0;
         mHaveMoreDataToLoad = true;
