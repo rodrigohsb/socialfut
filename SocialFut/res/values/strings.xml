@@ -9,8 +9,6 @@
     <string name="nomeJogadores">Jogadores</string>
     <string name="time1">Time 1</string>
     <string name="time2">Time 2</string>
-    <string name="title">Futebol de Quinta</string>
-    <string name="newPlayer">Cadastrar Jogador</string>
     <string name="namePlayer">Nome</string>
     <string name="surenamePlayer">Sobrenome</string>
     <string name="position">Posição</string>
@@ -25,8 +23,6 @@
     <string name="desc">descricao</string>
     <string name="chonometer">Cronômetro</string>
     <string name="details_player">Detalhes do Jogador</string>
-    <string name="ask_for_friend">Solicitar amizade</string>
-    <string name="add_more_player">Deseja cadastrar mais jogadores?</string>
 
     <!-- Inicio da Legenda de pontuacao -->
 
@@ -74,6 +70,18 @@
     </string-array>
     <!-- Fim Posicao -->
 
+
+    <!-- Inicio Posicao -->
+    <string-array name="time_options">
+        <item>2 min</item>
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>20 min</item>
+        <item>25 min</item>
+        <item>30 min</item>
+    </string-array>
+    <!-- Fim Posicao -->
 
     <!-- App no Facebook -->
     <string name="app_id">503867289633260</string>
