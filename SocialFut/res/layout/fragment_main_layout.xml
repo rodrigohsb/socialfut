@@ -2,57 +2,45 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/fundo_teste"
-            android:gravity="center"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/myHistory"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:layout_marginBottom="10dp"
+                android:text="Meu Histórico"
+                android:textColor="@color/colorFont" />
 
-                <Button
-                    android:id="@+id/myHistory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Meu Histórico"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/colorFont" />
+            <Button
+                android:id="@+id/future"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Próximas Partidas"
+                android:textColor="@color/colorFont" />
 
-                <Button
-                    android:id="@+id/future"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Próximas Partidas"
-                    android:textColor="@color/colorFont" />
-
-                <Button
-                    android:id="@+id/creatGame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Nova Partida"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/colorFont" />
-
-                <Button
-                    android:id="@+id/playerList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/players"
-                    android:textColor="@color/colorFont" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/creatGame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Nova Partida"
+                android:textColor="@color/colorFont" />
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/left_drawer"
@@ -64,7 +52,7 @@
         <LinearLayout
             android:id="@+id/drawer_linearLayout_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <ImageView
