@@ -2,22 +2,26 @@ package br.com.socialfut.activities;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.util.ActionBar;
-import br.com.socialfut.webservices.GameREST;
+import br.com.socialfut.util.AlertUtils;
+import br.com.socialfut.util.Constants;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -28,13 +32,21 @@ public class NewGameActivity extends SherlockActivity
 
     private TextView date;
 
-    private TextView hour;
+    private TextView startHour;
+
+    private TextView finishHour;
 
     private TextView address;
 
-    private int hourOfDay;
+    private TextView title;
 
-    private int minute;
+    private int startHourOfDay;
+
+    private int startMinute;
+
+    private int finishHourOfDay;
+
+    private int finishMinute;
 
     private int year;
 
@@ -44,9 +56,7 @@ public class NewGameActivity extends SherlockActivity
 
     private Calendar c;
 
-    static final int DATE_DIALOG_ID = 999;
-
-    static final int HOUR_DIALOG_ID = 888;
+    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -59,8 +69,10 @@ public class NewGameActivity extends SherlockActivity
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Nova Partida");
 
         date = (TextView) findViewById(R.id.dateNewGame);
-        hour = (TextView) findViewById(R.id.hourNewGame);
+        startHour = (TextView) findViewById(R.id.startHourNewGame);
+        finishHour = (TextView) findViewById(R.id.finishHourNewGame);
         address = (TextView) findViewById(R.id.addressTxt);
+        title = (TextView) findViewById(R.id.titleTxt);
 
         c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
@@ -73,17 +85,27 @@ public class NewGameActivity extends SherlockActivity
             @Override
             public void onClick(View v)
             {
-                showDialog(DATE_DIALOG_ID);
+                new DatePickerDialog(ctx, datePickerListener, year, month, day).show();
             }
         });
 
-        /** Hora */
-        findViewById(R.id.btnChangeHourNewGame).setOnClickListener(new OnClickListener()
+        /** Inicio */
+        findViewById(R.id.btnChangeStartHourNewGame).setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                showDialog(HOUR_DIALOG_ID);
+                new TimePickerDialog(ctx, startHourPickerListener, startHourOfDay, startMinute, true).show();
+            }
+        });
+
+        /** Termino */
+        findViewById(R.id.btnChangeFinishHourNewGame).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                new TimePickerDialog(ctx, finishHourPickerListener, finishHourOfDay, finishMinute, true).show();
             }
         });
 
@@ -93,32 +115,16 @@ public class NewGameActivity extends SherlockActivity
             @Override
             public void onClick(View v)
             {
-                if (date.getText().toString() != "" && hour.getText().toString() != ""
-                        && address.getText().toString() != "")
+                if (validate())
                 {
-                    c.set(year, month + 1, day, hourOfDay, minute);
-                    new GameREST(ctx, "", address.getText().toString(), new Date(), new Date()).execute();
-                }
-                else
-                {
-                    Toast.makeText(ctx, "Por favor, preencha os dados da partida!", Toast.LENGTH_SHORT).show();
+                    c.set(year, month + 1, day, startHourOfDay, startMinute);
+                    Calendar c1 = Calendar.getInstance();
+                    c1.set(year, month + 1, day, finishHourOfDay, finishMinute);
+                    new GameRest(title.getText().toString(), address.getText().toString(), c.getTimeInMillis(), c1
+                            .getTimeInMillis()).execute();
                 }
             }
         });
-
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id)
-    {
-        switch (id)
-        {
-        case DATE_DIALOG_ID:
-            return new DatePickerDialog(this, datePickerListener, year, month, day);
-        case HOUR_DIALOG_ID:
-            return new TimePickerDialog(this, hourPickerListener, hourOfDay, minute, true);
-        }
-        return null;
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener()
@@ -134,35 +140,172 @@ public class NewGameActivity extends SherlockActivity
         }
     };
 
-    private TimePickerDialog.OnTimeSetListener hourPickerListener = new TimePickerDialog.OnTimeSetListener()
+    private TimePickerDialog.OnTimeSetListener startHourPickerListener = new TimePickerDialog.OnTimeSetListener()
     {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute)
         {
 
-            NewGameActivity.this.hourOfDay = hourOfDay;
-            NewGameActivity.this.minute = minute;
+            startHourOfDay = hourOfDay;
+            startMinute = minute;
 
             if (hourOfDay < 10 && minute < 10)
             {
-                hour.setText(new StringBuilder().append("0").append(NewGameActivity.this.hourOfDay).append(" : ")
-                        .append("0").append(NewGameActivity.this.minute));
+                startHour.setText(new StringBuilder().append("0").append(startHourOfDay).append(" : ").append("0")
+                        .append(startMinute));
             }
             else if (minute < 10)
             {
-                hour.setText(new StringBuilder().append(NewGameActivity.this.hourOfDay).append(" : ").append("0")
-                        .append(NewGameActivity.this.minute));
+                startHour.setText(new StringBuilder().append(startHourOfDay).append(" : ").append("0")
+                        .append(startMinute));
             }
             else if (hourOfDay < 10)
             {
-                hour.setText(new StringBuilder().append("0").append(NewGameActivity.this.hourOfDay).append(" : ")
-                        .append(NewGameActivity.this.minute));
+                startHour.setText(new StringBuilder().append("0").append(startHourOfDay).append(" : ")
+                        .append(startMinute));
             }
             else
             {
-                hour.setText(new StringBuilder().append(NewGameActivity.this.hourOfDay).append(" : ")
-                        .append(NewGameActivity.this.minute));
+                startHour.setText(new StringBuilder().append(startHourOfDay).append(" : ").append(startMinute));
             }
         }
     };
+
+    private TimePickerDialog.OnTimeSetListener finishHourPickerListener = new TimePickerDialog.OnTimeSetListener()
+    {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+        {
+
+            finishHourOfDay = hourOfDay;
+            finishMinute = minute;
+
+            if (hourOfDay < 10 && minute < 10)
+            {
+                finishHour.setText(new StringBuilder().append("0").append(finishHourOfDay).append(" : ").append("0")
+                        .append(finishMinute));
+            }
+            else if (minute < 10)
+            {
+                finishHour.setText(new StringBuilder().append(finishHourOfDay).append(" : ").append("0")
+                        .append(finishMinute));
+            }
+            else if (hourOfDay < 10)
+            {
+                finishHour.setText(new StringBuilder().append("0").append(finishHourOfDay).append(" : ")
+                        .append(finishMinute));
+            }
+            else
+            {
+                finishHour.setText(new StringBuilder().append(finishHourOfDay).append(" : ").append(finishMinute));
+            }
+        }
+    };
+
+    private boolean validate()
+    {
+        if (date.getText().toString().trim().equals("") || title.getText().toString().trim().equals("")
+                || address.getText().toString().trim().equals("") || startHour.getText().toString().equals(""))
+        {
+            showWarning("Por favor, preencha os dados da partida!", null, null);
+            return false;
+        }
+        if (finishHourOfDay < startHourOfDay || (finishHourOfDay == startHourOfDay && finishMinute <= startMinute))
+        {
+            /** Termino nao pode ser antes do inicio */
+            showWarning(Constants.END_BEFORE_START, null, null);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showWarning(String text, final Class<?> cls, final Long gameId)
+    {
+        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                if (cls != null)
+                {
+                    Intent it = new Intent(ctx, cls);
+                    if (gameId != null)
+                    {
+                        it.putExtra("gameId", gameId);
+                    }
+                    startActivity(it);
+                    finish();
+                }
+                alertDialog.dismiss();
+            }
+        };
+
+        alertDialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING, text, positiveButton, null);
+
+        alertDialog.show();
+    }
+
+    /**
+     * 
+     * AsyncTask p/ criar partida.
+     * 
+     * @author Rodrigo
+     * 
+     */
+    private class GameRest extends AsyncTask<Void, String[], String[]>
+    {
+
+        private ProgressDialog dialog;
+
+        private String title;
+
+        private String address;
+
+        private long startDate;
+
+        private long finishDate;
+
+        public GameRest(String title, String address, long startDate, long finishDate)
+        {
+            super();
+            this.title = title;
+            this.address = address;
+            this.startDate = startDate;
+            this.finishDate = finishDate;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            dialog = new ProgressDialog(ctx);
+            dialog.setMessage("Por favor, aguarde...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String[] doInBackground(Void... params)
+        {
+            StringBuilder sb = new StringBuilder(Constants.URL_GAME_WS).append("createGame").append(Constants.SLASH)
+                    .append(startDate).append(Constants.SLASH).append(finishDate);
+            String[] resposta = WebServiceClient.put(sb.toString(), title, address);
+            return resposta;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result)
+        {
+            dialog.dismiss();
+            super.onPostExecute(result);
+            if ("NOK".equals(result[1]))
+            {
+                showWarning("Por favor, tente mais tarde!", DrawerLayoutActivity.class, null);
+            }
+            else
+            {
+                showWarning("Partida criada com sucesso! Convide seus amigos!", PlayerListActivity.class,
+                        Long.valueOf(result[1]));
+            }
+        }
+    }
 }

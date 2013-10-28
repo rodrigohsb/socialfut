@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Player;
+import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.ConstantsEnum;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -38,11 +37,8 @@ public class ResultActivity extends SherlockActivity
 
         main = (LinearLayout) findViewById(R.id.layout_main_sorted_players);
 
-        getSupportActionBar().setIcon(R.drawable.icone);
-        getSupportActionBar().setTitle("SocialFut");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#008000")));
-
+        ActionBar.updateCustomActionBar(getSupportActionBar(), "Sorteio");
+        
         Bundle extras = getIntent().getExtras();
 
         if (extras != null)
@@ -55,8 +51,7 @@ public class ResultActivity extends SherlockActivity
     private void fill(Bundle extras)
     {
 
-        Map<ConstantsEnum, List<Player>> times2 = (Map<ConstantsEnum, List<Player>>) extras
-                .getSerializable("selectedPlayers");
+        Map<ConstantsEnum, List<Player>> times2 = (Map<ConstantsEnum, List<Player>>) extras.getSerializable("selectedPlayers");
 
         List<Player> time1 = times2.get(ConstantsEnum.TIMEA);
         List<Player> time2 = times2.get(ConstantsEnum.TIMEB);

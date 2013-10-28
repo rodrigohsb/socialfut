@@ -68,6 +68,10 @@ public class GameDetailsActivity extends SherlockActivity
     private PlayerListAdapter adapter;
 
     private ProgressDialog dialog;
+    
+    private boolean isInviation = false;
+    
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,9 +91,9 @@ public class GameDetailsActivity extends SherlockActivity
         TextView titleGameDetails = (TextView) findViewById(R.id.titleGameDetails);
         titleGameDetails.setText(game.getTitle());
 
-        /** Criada em */
-        TextView createdDateGameDetails = (TextView) findViewById(R.id.createdDateGameDetails);
-        createdDateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
+//        /** Criada em */
+//        TextView createdDateGameDetails = (TextView) findViewById(R.id.createdDateGameDetails);
+//        createdDateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
 
         /** Dia a ser disputada */
         TextView dateGameDetails = (TextView) findViewById(R.id.dateGameDetails);
@@ -112,11 +116,17 @@ public class GameDetailsActivity extends SherlockActivity
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
 
-        if (bundle.getString("old") != null)
+        if (bundle.containsKey("old"))
         {
             toggleButton.setVisibility(View.GONE);
         }
 
+        if (bundle.containsKey("invitation"))
+        {
+            isInviation = true;
+            toggleButton.setChecked(false);
+        }
+        
         toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
             @Override
@@ -134,7 +144,10 @@ public class GameDetailsActivity extends SherlockActivity
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            new TellToFriends(game.getId(), 1).execute();
+                            if(!isInviation)
+                            {
+                                new TellToFriends(game.getId(), 1).execute();
+                            }
                         }
                     };
                     DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener()
@@ -144,7 +157,7 @@ public class GameDetailsActivity extends SherlockActivity
                         }
                     };
 
-                    AlertDialog dialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING, "Tem certeza?",
+                    AlertDialog dialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING, "Tem certeza que não irá jogar?",
                             positiveButton, negativeButton);
 
                     dialog.show();
@@ -408,5 +421,72 @@ public class GameDetailsActivity extends SherlockActivity
             }
             return players;
         }
+    }
+    
+    /**
+     * 
+     * AsyncTask p/ qualificar usuario.
+     * 
+     * @author Rodrigo
+     *
+     */
+    private class GameRest extends AsyncTask<Void, String[], String[]>
+    {
+
+        private ProgressDialog dialog;
+        
+        private RatingBar rating;
+        
+        public GameRest(RatingBar rating)
+        {
+            super();
+            this.rating = rating;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            dialog = new ProgressDialog(ctx);
+            dialog.setMessage("Por favor, aguarde...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String[] doInBackground(Void... params)
+        {
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "updateRating" + Constants.SLASH + Constants.USER_ID + Constants.SLASH + game.getId() + Constants.SLASH + rating.getRating());
+            return resposta;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result)
+        {
+            dialog.dismiss();
+            super.onPostExecute(result);
+            if("OK".equals(result[1]))
+            {
+                showWarning("Qualificacao feita com sucesso!");
+            }
+            else
+            {
+                showWarning("Por favor, tente mais tarde!");
+            }
+        }
+    }
+    
+    private void showWarning(String text)
+    {
+        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                alertDialog.dismiss();
+            }
+        };
+
+        alertDialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING, text, positiveButton, null);
+
+        alertDialog.show();
     }
 }

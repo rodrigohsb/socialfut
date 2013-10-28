@@ -69,19 +69,23 @@ public class SplashActivity extends SherlockActivity implements Runnable
         @Override
         protected Void doInBackground(Void... v)
         {
-            /** Registra o device */
-            if (!GCMRegistrar.isRegistered(ctx))
+            register();
+            return null;
+        }
+
+        private void register()
+        {
+            if (GCMRegistrar.isRegistered(ctx))
+            {
+                String regId = GCMRegistrar.getRegistrationId(ctx);
+                Constants.DEVICE_REGISTRATION_ID = regId;
+            }
+            else
             {
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
                 GCMRegistrar.register(ctx, Constants.PROJECT_NUMBER);
             }
-            else
-            {
-                String regId = GCMRegistrar.getRegistrationId(ctx);
-                Constants.DEVICE_REGISTRATION_ID = regId;
-            }
-            return null;
         }
     }
 }
