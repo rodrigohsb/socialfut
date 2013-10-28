@@ -33,15 +33,13 @@ public class Game implements Serializable
         super();
     }
 
-    public Game(String title, String address, Date createdDate, Date startDate, Date finishDate)
+    public Game(String title, String address, Date startDate, Date finishDate)
     {
         super();
         this.title = title;
         this.address = address;
-        this.createdDate = createdDate;
         this.startDate = startDate;
         this.finishDate = finishDate;
-
     }
 
     public long getId()
