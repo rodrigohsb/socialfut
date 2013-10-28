@@ -6,7 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 /**
  * 
  * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propósito da classe.
+ * TODO Explicar detalhadamente proposito da classe.
  * 
  * @author rodrigo.bacellar
  * @since 20/09/2013
@@ -34,6 +34,5 @@ public class ActionBar
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00b300")));
         // actionBar.setTitle("SocialFut");
         // actionBar.setIcon(R.drawable.icone);
-
     }
 }

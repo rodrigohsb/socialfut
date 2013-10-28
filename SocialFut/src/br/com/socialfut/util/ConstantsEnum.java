@@ -2,8 +2,7 @@ package br.com.socialfut.util;
 
 public enum ConstantsEnum
 {
-    GOLEIRO("Goleiro"), LATERAL("Lateral"), ZAQUEIRO("Zagueiro"), MEIO_CAMPO("Meio_Campo"), ATACANTE("Atacante"), TIMEA(
-            "timea"), TIMEB("timeb");
+    TIMEA("timea"), TIMEB("timeb");
 
     private String name;
 
