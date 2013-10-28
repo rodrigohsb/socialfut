@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -53,8 +54,8 @@ public class PlayerListAdapter extends BaseAdapter
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
+        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.default_profile_picture)
+                .showImageForEmptyUri(R.drawable.default_profile_picture).showImageOnFail(R.drawable.default_profile_picture).cacheInMemory(true)
                 .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
 
         this.hasPositionAndQualification = hasPositionAndQualification;
@@ -71,6 +72,8 @@ public class PlayerListAdapter extends BaseAdapter
         public RatingBar rating;
 
         public TextView position;
+
+        public CheckBox checkBox;
     }
 
     public int getCount()
@@ -104,6 +107,7 @@ public class PlayerListAdapter extends BaseAdapter
             holder.name = (TextView) view.findViewById(R.id.name);
             holder.sureName = (TextView) view.findViewById(R.id.sureName);
             holder.rating = (RatingBar) view.findViewById(R.id.rating);
+            holder.checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
             view.setTag(holder);
         }
         else
@@ -113,6 +117,7 @@ public class PlayerListAdapter extends BaseAdapter
 
         holder.name.setText(player.getNome());
         holder.sureName.setText(player.getSobreNome());
+        holder.checkBox.setChecked(holder.checkBox.isChecked());
 
         if (!hasPositionAndQualification)
         {
