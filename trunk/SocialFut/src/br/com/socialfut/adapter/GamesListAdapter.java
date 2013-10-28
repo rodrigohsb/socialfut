@@ -63,8 +63,8 @@ public class GamesListAdapter extends BaseAdapter
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
+        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.default_place_picture)
+                .showImageForEmptyUri(R.drawable.default_place_picture).showImageOnFail(R.drawable.default_place_picture).cacheInMemory(true)
                 .cacheOnDisc(true).build();
     }
 

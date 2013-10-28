@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Player;
+import br.com.socialfut.webservices.PlayerREST;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,7 +29,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 /**
  * 
  * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente propósito da classe.
+ * TODO Explicar detalhadamente proposito da classe.
  * 
  * @author rodrigo.bacellar
  * @since 25/09/2013
@@ -53,8 +55,8 @@ public class ChatListAdapter extends BaseAdapter
 
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
-        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_stub).showImageOnFail(R.drawable.ic_stub).cacheInMemory(true)
+        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.default_profile_picture)
+                .showImageForEmptyUri(R.drawable.default_profile_picture).showImageOnFail(R.drawable.default_profile_picture).cacheInMemory(true)
                 .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
     }
 
@@ -62,9 +64,11 @@ public class ChatListAdapter extends BaseAdapter
     {
         public ImageView image;
 
-        public TextView sureName;
+        public TextView firstName;
 
-        public TextView name;
+        public TextView lastName;
+
+        public RatingBar rating;
     }
 
     public int getCount()
@@ -96,8 +100,9 @@ public class ChatListAdapter extends BaseAdapter
             view = inflater.inflate(R.layout.layout_list_chat, parent, false);
             holder = new ViewHolder();
             holder.image = (ImageView) view.findViewById(R.id.iconChat);
-            holder.name = (TextView) view.findViewById(R.id.nameChat);
-            holder.sureName = (TextView) view.findViewById(R.id.sureNameChat);
+            holder.firstName = (TextView) view.findViewById(R.id.nameChat);
+            holder.lastName = (TextView) view.findViewById(R.id.sureNameChat);
+            holder.rating = (RatingBar) view.findViewById(R.id.rating);
             view.setTag(holder);
         }
         else
@@ -105,8 +110,11 @@ public class ChatListAdapter extends BaseAdapter
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.name.setText(jogador.getNome());
-        holder.sureName.setText(jogador.getSobreNome());
+        holder.firstName.setText(jogador.getNome());
+        holder.lastName.setText(jogador.getSobreNome());
+
+        /** Qualificacao */
+        new PlayerREST(holder.rating).execute();
 
         imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
 
@@ -128,7 +136,7 @@ public class ChatListAdapter extends BaseAdapter
         lista.addAll(newItems);
         notifyDataSetChanged();
     }
-
+    
     private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener
     {
         static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
