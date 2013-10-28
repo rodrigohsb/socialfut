@@ -173,8 +173,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_white"
-                android:textOff="CONFIRMAR PRESENÇA"
-                android:textOn="CONFIRMAR AUSÊNCIA" />
+                android:textOff="Sua presença não está confirmada!"
+                android:textOn="Você está confirmado!" />
 
             <TextView
                 android:layout_width="wrap_content"

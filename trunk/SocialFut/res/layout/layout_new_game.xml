@@ -4,20 +4,10 @@
     android:background="@drawable/fundo_teste"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/newGameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Nova Partida"
-        android:textColor="@color/color_white"
-        android:textSize="40sp" />
-
     <LinearLayout
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/newGameTitle"
         android:orientation="horizontal" >
 
         <TextView
@@ -40,11 +30,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:background="@drawable/calendar" />
+            android:background="@drawable/calendar_green" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/hour"
+        android:id="@+id/startHour"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/date"
@@ -53,12 +43,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hora: "
+            android:text="Início: "
             android:textColor="@color/color_white"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/hourNewGame"
+            android:id="@+id/startHourNewGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -66,18 +56,72 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/btnChangeHourNewGame"
+            android:id="@+id/btnChangeStartHourNewGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:background="@drawable/calendar" />
+            android:background="@drawable/calendar_green" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/finishHour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startHour"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Término: "
+            android:textColor="@color/color_white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/finishHourNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/color_white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnChangeFinishHourNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/calendar_green" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/finishHour"
+        android:layout_marginTop="10sp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Título:"
+            android:textColor="@color/color_white"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/titleTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPostalAddress" >
+        </EditText>
+    </LinearLayout>
+    
     <LinearLayout
         android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hour"
+        android:layout_below="@+id/title"
         android:layout_marginTop="10sp"
         android:orientation="vertical" >
 

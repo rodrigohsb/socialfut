@@ -8,7 +8,6 @@
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/spinner_itens" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
