@@ -4,11 +4,14 @@
     <item
         android:id="@+id/chat"
         android:icon="@drawable/chat"
-        android:showAsAction="always"
-        android:title="@string/chat"/>
+        android:showAsAction="always"/>
+    <item
+        android:id="@+id/newGame"
+        android:icon="@drawable/ic_compose"
+        android:showAsAction="always"/>
     <item
         android:id="@+id/cronometro"
-        android:icon="@drawable/stopwatch"
+        android:icon="@drawable/cronometro"
         android:showAsAction="ifRoom"
         android:title="@string/chonometer"/>
     <item
