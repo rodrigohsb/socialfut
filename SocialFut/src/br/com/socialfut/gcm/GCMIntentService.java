@@ -3,16 +3,19 @@ package br.com.socialfut.gcm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import br.com.socialfut.activities.ChatActivity;
 import br.com.socialfut.activities.GameDetailsActivity;
@@ -27,7 +30,6 @@ import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.model.GraphObject;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.gson.Gson;
 
@@ -36,6 +38,8 @@ public class GCMIntentService extends GCMBaseIntentService
 
     private static final String TAG = "GCMIntentService";
 
+    private Context ctx;
+    
     public GCMIntentService()
     {
         super(Constants.PROJECT_NUMBER);
@@ -60,6 +64,9 @@ public class GCMIntentService extends GCMBaseIntentService
     @Override
     protected void onMessage(Context context, Intent intent)
     {
+        
+        ctx = this;
+        
         try
         {
             String fullMsg = intent.getStringExtra("msg");
@@ -73,41 +80,59 @@ public class GCMIntentService extends GCMBaseIntentService
             /** Conteudo da mensagem */
             String msgContent = text[1];
 
-            // TODO Implementar Cache
-            Player j = getFacebookData(facebookId);
-            Bitmap bitmap = getBitmap(j.getPicture());
+            Player j = null;
+            
+            Bitmap bitmap = null;
+            
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            
+            if (sharedPrefs.contains(facebookId))
+            {
+                Gson gson = new Gson();
+                String json = sharedPrefs.getString(facebookId, "");
+                j = gson.fromJson(json, Player.class);
+            }
+            else
+            {
+                j = getFacebookData(facebookId);
+
+                Editor prefsEditor = sharedPrefs.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(j);
+                prefsEditor.putString(facebookId, json);
+                prefsEditor.commit();
+            }
+            
+            bitmap = getBitmap(j.getPicture());
 
             if (text.length == 3)
             {
                 if (msgContent.equalsIgnoreCase(Constants.CONFIRMATION))
                 {
-
                     /** Confirmacao */
-                    enviarMensagemParaApp("Confirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " "
-                            + j.getSobreNome(), bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Confirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
                 else if (msgContent.equalsIgnoreCase(Constants.DESCONFIRMATION))
                 {
                     /** Desconfirmacao */
-                    enviarMensagemParaApp("Desconfirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " "
-                            + j.getSobreNome(), bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Desconfirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
                 else if (msgContent.equalsIgnoreCase(Constants.INVITATION))
                 {
                     /** Convite */
-                    enviarMensagemParaApp("Voce foi convidado!", facebookId, j.getNome() + " " + j.getSobreNome(),
-                            bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Parabens, voce foi convidado para uma partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
             }
-
-            /** Chat */
-            enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap,
-                    ChatActivity.class);
+            else
+            {
+                /** Chat */
+                enviarMensagemParaApp(msgContent, facebookId, j.getNome() + " " + j.getSobreNome(), bitmap, ChatActivity.class);
+            }
         }
         catch (Exception e)
         {
+            e.printStackTrace();
         }
-
     }
 
     /**
@@ -116,11 +141,10 @@ public class GCMIntentService extends GCMBaseIntentService
      * 
      * @param msg
      * @return
+     * @throws JSONException
      */
-    private Player getFacebookData(String facebookId)
+    private Player getFacebookData(String facebookId) throws JSONException
     {
-
-        Player j = null;
 
         Bundle params = new Bundle();
         params.putString("fields", "first_name,last_name,picture.type(large)");
@@ -128,53 +152,33 @@ public class GCMIntentService extends GCMBaseIntentService
         Request request = new Request(Session.getActiveSession(), facebookId, params, HttpMethod.GET);
         Response response = request.executeAndWait();
 
-        GraphObject graph = response.getGraphObject();
+        JSONObject object = response.getGraphObject().getInnerJSONObject();
 
-        try
-        {
-            JSONObject object = graph.getInnerJSONObject();
+        /** Primeiro Nome */
+        String firstName = object.getString("first_name");
 
-            /** Primeiro Nome */
-            String firstName = object.getString("first_name");
+        /** Ultimo Nome */
+        String lastName = object.getString("last_name");
 
-            /** Ultimo Nome */
-            String lastName = object.getString("last_name");
+        /** Foto */
+        String urlPicture = object.getJSONObject("picture").getJSONObject("data").getString("url");
 
-            /** Foto */
-            String urlPicture = object.getJSONObject("picture").getJSONObject("data").getString("url");
+        Player j = new Player(Long.valueOf(facebookId), firstName, lastName, urlPicture);
 
-            j = new Player(Long.valueOf(facebookId), firstName, lastName, urlPicture);
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         return j;
     }
 
-    private Bitmap getBitmap(String urlPicture)
+    private Bitmap getBitmap(String urlPicture) throws IOException
     {
         URL myFileUrl;
         InputStream is = null;
-        try
-        {
-            myFileUrl = new URL(urlPicture);
+        myFileUrl = new URL(urlPicture);
 
-            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
-            conn.setInstanceFollowRedirects(false);
-            conn.setDoInput(true);
-            conn.connect();
-            is = conn.getInputStream();
-        }
-        catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+        conn.setInstanceFollowRedirects(false);
+        conn.setDoInput(true);
+        conn.connect();
+        is = conn.getInputStream();
         return BitmapFactory.decodeStream(is);
     }
 
@@ -183,13 +187,14 @@ public class GCMIntentService extends GCMBaseIntentService
         Log.i(TAG, "Mensagem recebida " + msg);
 
         // Cria a notificacao e informa para abrir a activity de entrada
-        Intent intent = new Intent(this, cls);
         String resposta[] = WebServiceClient.get(Constants.URL_GAME_WS + "gameById" + Constants.SLASH + gameId);
 
         Gson g = new Gson();
         Game game = g.fromJson(resposta[1], Game.class);
-
+        
+        Intent intent = new Intent(this, cls);
         intent.putExtra("game", game);
+        
         NotificationUtil.generateNotification(this, msg, intent, from, bitmap);
     }
 
