@@ -14,6 +14,7 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import br.com.socialfut.R;
+import br.com.socialfut.util.Constants;
 
 public class Chronometer extends TextView
 {
@@ -40,7 +41,6 @@ public class Chronometer extends TextView
 
     public interface OnChronometerTickListener
     {
-
         void onChronometerTick(Chronometer chronometer);
     }
 
@@ -62,9 +62,7 @@ public class Chronometer extends TextView
     public Chronometer(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
-
         this.context = context;
-
         init();
     }
 
@@ -120,6 +118,7 @@ public class Chronometer extends TextView
     public void stopForTime()
     {
         mStarted = false;
+        Constants.TIME = 0;
         updateRunning();
         playSound();
     }
@@ -238,14 +237,15 @@ public class Chronometer extends TextView
 
     private boolean hasToStop(long mBase)
     {
-
         long elapsedMillis = mBase - getBase();
 
-        if (elapsedMillis >= maxTime)
-        {
-            return true;
-        }
-        return false;
+        return elapsedMillis >= maxTime;
+
+        // if (elapsedMillis >= maxTime)
+        // {
+        // return true;
+        // }
+        // return false;
     }
 
     private void playSound()
