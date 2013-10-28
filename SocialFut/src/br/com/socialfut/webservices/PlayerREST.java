@@ -32,6 +32,13 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
         this.type = 0;
     }
 
+    public PlayerREST(RatingBar rating)
+    {
+        super();
+        this.rating = rating;
+        this.type = 3;
+    }
+
     public PlayerREST(RatingBar rating, TextView position)
     {
         super();
@@ -53,6 +60,8 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
             break;
         case 2:
             return getRatingAndPosition();
+        case 3:
+            return getRating();
         }
 
         return null;
@@ -127,7 +136,7 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRating" + Constants.SLASH
                 + Constants.USER_ID);
 
-        String json = resposta[0];
+        String json = resposta[1];
         Player p = new Player();
 
         try

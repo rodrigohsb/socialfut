@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -59,6 +60,48 @@ public class WebServiceClient
 
             StringEntity mensagem = new StringEntity(msg);
             httpPut.setEntity(mensagem);
+
+            System.out.println(httpPut.getURI());
+
+            response = HttpClient.getHttpClientInstance().execute(httpPut);
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null)
+            {
+                InputStream instream = entity.getContent();
+                result[1] = toString(instream);
+                instream.close();
+                Log.i("get", "Result from PUT : " + result[1]);
+            }
+        }
+        catch (UnsupportedEncodingException e1)
+        {
+            e1.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            result[0] = "0";
+            result[1] = "Falha de rede!";
+        }
+        return result;
+    }
+
+    public static String[] put(String url, String title, String address)
+    {
+
+        String[] result = new String[2];
+        HttpPut httpPut = new HttpPut(url);
+        HttpResponse response;
+
+        try
+        {
+
+            StringEntity param0 = new StringEntity(title);
+            StringEntity param1 = new StringEntity(address);
+            
+            httpPut.setEntity(param0);
+            httpPut.setEntity(param1);
 
             System.out.println(httpPut.getURI());
 
