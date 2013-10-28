@@ -48,7 +48,7 @@ public class ChatListActivity extends SherlockListActivity
     {
         super.onCreate(savedInstanceState);
 
-        ActionBar.updateActionBar(getSupportActionBar());
+        ActionBar.updateCustomActionBar(getSupportActionBar(), "Chat");
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))

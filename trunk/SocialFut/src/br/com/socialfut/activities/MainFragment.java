@@ -159,15 +159,15 @@ public class MainFragment extends SherlockFragment
             }
         });
 
-        /** Lista de Jogadores */
-        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
-            }
-        });
+//        /** Lista de Jogadores */
+//        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+//            }
+//        });
 
         mActionBar = createActionBarHelper();
         mActionBar.init();
@@ -206,9 +206,9 @@ public class MainFragment extends SherlockFragment
             }
         });
         dialog.show();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctx, R.array.spinner_itens,
-                android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctx, R.array.spinner_itens,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     @Override
@@ -431,7 +431,7 @@ public class MainFragment extends SherlockFragment
         }
         else
         {
-            Drawable d = getResources().getDrawable(R.drawable.ic_stub);
+            Drawable d = getResources().getDrawable(R.drawable.default_profile_picture);
             img.setImageDrawable(d);
         }
 
@@ -445,6 +445,5 @@ public class MainFragment extends SherlockFragment
             name.setText("");
             sureName.setText("");
         }
-
     }
 }
