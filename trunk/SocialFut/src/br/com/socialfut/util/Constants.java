@@ -24,7 +24,7 @@ public class Constants
     public static final String NO_OLD_GAMES = "Nenhuma partida foi disputada.";
 
     public static final String NO_NEW_GAMES = "Nenhuma partida a ser disputada.";
-    
+
     public static final String END_BEFORE_START = "O horário de término precisa ser posterior ao de início.";
 
     public static final String PROJECT_NUMBER = "281054247643";
@@ -38,14 +38,14 @@ public class Constants
     public static final String DATE_PATTERN_FOR_USER = "dd / MM / yyyy";
 
     public static final String HOUR_PATTERN_FOR_USER = "HH:mm";
-    
+
     public static long TIME;
 
     /** CONSTANTES BASICAS [FIM] */
 
     /** WEB SERVICES [INICIO] */
 
-    public static final String BASE_URL = "http://177.192.5.33:8080/SocialFutServer/";
+    public static final String BASE_URL = "http://social-fut.no-ip.biz:8080/SocialFutServer/";
 
     public static final String URL_GAME_WS = BASE_URL + "game/";
 
