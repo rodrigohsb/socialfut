@@ -25,7 +25,7 @@ public class Constants
 
     public static final String NO_NEW_GAMES = "Nenhuma partida a ser disputada.";
 
-    public static final String END_BEFORE_START = "O horário de término precisa ser posterior ao de início.";
+    public static final String END_BEFORE_START = "O horï¿½rio de tï¿½rmino precisa ser posterior ao de inï¿½cio.";
 
     public static final String PROJECT_NUMBER = "281054247643";
 
