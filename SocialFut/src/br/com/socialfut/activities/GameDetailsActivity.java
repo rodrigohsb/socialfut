@@ -24,8 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import br.com.socialfut.R;
-import br.com.socialfut.adapter.PlayerListAdapter;
-import br.com.socialfut.drawer.EndlessListView;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
@@ -61,16 +59,10 @@ public class GameDetailsActivity extends SherlockActivity
 
     private Game game;
 
-    private boolean mHaveMoreDataToLoad;
-
-    private EndlessListView endlessListView;
-
-    private PlayerListAdapter adapter;
-
     private ProgressDialog dialog;
-    
+
     private boolean isInviation = false;
-    
+
     private AlertDialog alertDialog;
 
     @Override
@@ -91,9 +83,9 @@ public class GameDetailsActivity extends SherlockActivity
         TextView titleGameDetails = (TextView) findViewById(R.id.titleGameDetails);
         titleGameDetails.setText(game.getTitle());
 
-//        /** Criada em */
-//        TextView createdDateGameDetails = (TextView) findViewById(R.id.createdDateGameDetails);
-//        createdDateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
+        /** Criada em */
+        TextView createdDateGameDetails = (TextView) findViewById(R.id.createdDateGameDetails);
+        createdDateGameDetails.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(game.getCreatedDate()));
 
         /** Dia a ser disputada */
         TextView dateGameDetails = (TextView) findViewById(R.id.dateGameDetails);
@@ -115,18 +107,16 @@ public class GameDetailsActivity extends SherlockActivity
         new GameREST(ctx, game.getId(), rating).execute();
 
         toggleButton = (ToggleButton) findViewById(R.id.toggleButtonGameDetails);
-
         if (bundle.containsKey("old"))
         {
             toggleButton.setVisibility(View.GONE);
         }
-
         if (bundle.containsKey("invitation"))
         {
             isInviation = true;
             toggleButton.setChecked(false);
         }
-        
+
         toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
             @Override
@@ -144,7 +134,7 @@ public class GameDetailsActivity extends SherlockActivity
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            if(!isInviation)
+                            if (!isInviation)
                             {
                                 new TellToFriends(game.getId(), 1).execute();
                             }
@@ -157,8 +147,8 @@ public class GameDetailsActivity extends SherlockActivity
                         }
                     };
 
-                    AlertDialog dialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING, "Tem certeza que n„o ir· jogar?",
-                            positiveButton, negativeButton);
+                    AlertDialog dialog = new AlertUtils(ctx).getAlertDialog(Constants.WARNING,
+                            "Tem certeza que n√£o ir√° jogar?", positiveButton, negativeButton);
 
                     dialog.show();
                 }
@@ -166,10 +156,8 @@ public class GameDetailsActivity extends SherlockActivity
 
         });
 
-        mHaveMoreDataToLoad = true;
-        endlessListView = (EndlessListView) findViewById(R.id.endless);
-        endlessListView.setOnLoadMoreListener(loadMoreListener);
         new LoadMore().execute();
+
     }
 
     private class TellToFriends extends AsyncTask<Void, Void, String>
@@ -192,11 +180,11 @@ public class GameDetailsActivity extends SherlockActivity
             dialog = new ProgressDialog(ctx);
             if (type == 0)
             {
-                dialog.setMessage("Confirmando presenÁa...");
+                dialog.setMessage("Confirmando presen√ßa...");
             }
             else
             {
-                dialog.setMessage("Desconfirmando presenÁa...");
+                dialog.setMessage("Desconfirmando presen√ßa...");
             }
             dialog.setCancelable(false);
             dialog.show();
@@ -265,34 +253,8 @@ public class GameDetailsActivity extends SherlockActivity
         }
     }
 
-    /** Player List */
-    private void loadMoreData()
-    {
-        new LoadMore().execute((Void) null);
-    }
-
-    private EndlessListView.OnLoadMoreListener loadMoreListener = new EndlessListView.OnLoadMoreListener()
-    {
-
-        @Override
-        public boolean onLoadMore()
-        {
-            if (mHaveMoreDataToLoad)
-            {
-                loadMoreData();
-            }
-            return mHaveMoreDataToLoad;
-        }
-    };
-
     private class LoadMore extends AsyncTask<Void, Void, List<Player>>
     {
-        @Override
-        protected void onPreExecute()
-        {
-            super.onPreExecute();
-        }
-
         @Override
         protected List<Player> doInBackground(Void... params)
         {
@@ -303,16 +265,11 @@ public class GameDetailsActivity extends SherlockActivity
         }
 
         @Override
-        protected void onPostExecute(List<Player> result)
+        protected void onPostExecute(List<Player> players)
         {
-            super.onPostExecute(result);
+            super.onPostExecute(players);
 
-            adapter = new PlayerListAdapter(ctx, result, true);
-            endlessListView.setAdapter(adapter);
-
-            adapter.addItems(result);
-            endlessListView.loadMoreCompleat();
-            mHaveMoreDataToLoad = true;
+            // TODO Mostrar a lista de jogadores
         }
 
         private List<Player> getPlayers(String text)
@@ -422,21 +379,21 @@ public class GameDetailsActivity extends SherlockActivity
             return players;
         }
     }
-    
+
     /**
      * 
      * AsyncTask p/ qualificar usuario.
      * 
      * @author Rodrigo
-     *
+     * 
      */
     private class GameRest extends AsyncTask<Void, String[], String[]>
     {
 
         private ProgressDialog dialog;
-        
+
         private RatingBar rating;
-        
+
         public GameRest(RatingBar rating)
         {
             super();
@@ -455,7 +412,8 @@ public class GameDetailsActivity extends SherlockActivity
         @Override
         protected String[] doInBackground(Void... params)
         {
-            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "updateRating" + Constants.SLASH + Constants.USER_ID + Constants.SLASH + game.getId() + Constants.SLASH + rating.getRating());
+            String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "updateRating" + Constants.SLASH
+                    + Constants.USER_ID + Constants.SLASH + game.getId() + Constants.SLASH + rating.getRating());
             return resposta;
         }
 
@@ -464,7 +422,7 @@ public class GameDetailsActivity extends SherlockActivity
         {
             dialog.dismiss();
             super.onPostExecute(result);
-            if("OK".equals(result[1]))
+            if ("OK".equals(result[1]))
             {
                 showWarning("Qualificacao feita com sucesso!");
             }
@@ -474,7 +432,7 @@ public class GameDetailsActivity extends SherlockActivity
             }
         }
     }
-    
+
     private void showWarning(String text)
     {
         android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
