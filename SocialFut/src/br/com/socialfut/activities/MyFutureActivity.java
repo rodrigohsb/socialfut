@@ -20,6 +20,7 @@ import br.com.socialfut.adapter.GamesListAdapter;
 import br.com.socialfut.persistence.Game;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
+import br.com.socialfut.util.Connection;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.webservices.WebServiceClient;
 
@@ -51,11 +52,30 @@ public class MyFutureActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         gridView = (GridView) findViewById(R.id.gridview);
 
-        new GameREST().execute();
+        if (Connection.isOnline(ctx))
+        {
+            new GameREST().execute();
+        }
+        else
+        {
+            android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    alertDialog.dismiss();
+                    startActivity(new Intent(MyFutureActivity.this, DrawerLayoutActivity.class));
+                    finish();
+                }
+            };
+
+            alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
+                    "Por favor, verifique sua conexão.", positiveButton, null);
+
+            alertDialog.show();
+        }
 
         gridView.setOnItemClickListener(new OnItemClickListener()
         {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id)
             {
@@ -80,7 +100,7 @@ public class MyFutureActivity extends SherlockActivity
         switch (item.getItemId())
         {
         case android.R.id.home:
-            Intent intent = new Intent(this, MainFragment.class);
+            Intent intent = new Intent(this, DrawerLayoutActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             break;
@@ -94,7 +114,7 @@ public class MyFutureActivity extends SherlockActivity
         super.onDestroy();
     }
 
-    private void alert()
+    private void emptyGamesAlert()
     {
         android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
         {
@@ -104,7 +124,7 @@ public class MyFutureActivity extends SherlockActivity
             }
         };
 
-        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING, Constants.NO_NEW_GAMES,
+        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING, Constants.NO_OLD_GAMES,
                 positiveButton, null);
 
         alertDialog.setCancelable(false);
@@ -112,7 +132,25 @@ public class MyFutureActivity extends SherlockActivity
         alertDialog.show();
     }
 
-    private class GameREST extends AsyncTask<Void, Void, List<Game>>
+    private void noConnectionAlert()
+    {
+        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                finish();
+            }
+        };
+
+        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
+                Constants.WEBSERVICES_DOWN, positiveButton, null);
+
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+    }
+
+    private class GameREST extends AsyncTask<Void, Void, String>
     {
 
         @Override
@@ -126,21 +164,28 @@ public class MyFutureActivity extends SherlockActivity
         }
 
         @Override
-        protected List<Game> doInBackground(Void... params)
+        protected String doInBackground(Void... params)
         {
             String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "newGames" + Constants.SLASH
                     + Constants.USER_ID);
-            return this.getGames(resposta[1]);
+            return resposta[1];
         }
 
         @Override
-        protected void onPostExecute(List<Game> games)
+        protected void onPostExecute(String allGames)
         {
-            super.onPostExecute(games);
+            super.onPostExecute(allGames);
             dialog.dismiss();
-            if (games.isEmpty())
+
+            List<Game> games = this.getGames(allGames);
+
+            if (games == null)
             {
-                alert();
+                noConnectionAlert();
+            }
+            else if (games.isEmpty())
+            {
+                emptyGamesAlert();
             }
             else
             {
