@@ -25,7 +25,9 @@ public class Constants
 
     public static final String NO_NEW_GAMES = "Nenhuma partida a ser disputada.";
 
-    public static final String END_BEFORE_START = "O hor�rio de t�rmino precisa ser posterior ao de in�cio.";
+    public static final String WEBSERVICES_DOWN = "Não foi possível recuperar o histórico.";
+
+    public static final String END_BEFORE_START = "O horário de término precisa ser posterior ao de início.";
 
     public static final String PROJECT_NUMBER = "281054247643";
 
