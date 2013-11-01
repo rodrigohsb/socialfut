@@ -34,11 +34,11 @@ public class MyFutureActivity extends SherlockActivity
 {
     private Context ctx;
 
-    private AlertDialog alertDialog;
+    private GridView gridView;
 
     private ProgressDialog dialog;
 
-    private GridView gridView;
+    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
