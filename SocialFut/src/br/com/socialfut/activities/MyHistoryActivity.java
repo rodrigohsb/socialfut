@@ -34,11 +34,11 @@ public class MyHistoryActivity extends SherlockActivity
 {
     private Context ctx;
 
-    private AlertDialog alertDialog;
-
     private GridView gridView;
 
     private ProgressDialog dialog;
+
+    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
