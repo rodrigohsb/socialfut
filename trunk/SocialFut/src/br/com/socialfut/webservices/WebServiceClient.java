@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
 
 import android.util.Log;
@@ -39,11 +39,15 @@ public class WebServiceClient
                 Log.i("get", "Result from GET : " + result[1]);
             }
         }
+        catch (ConnectTimeoutException e)
+        {
+            e.printStackTrace();
+        }
         catch (Exception e)
         {
             e.printStackTrace();
             result[0] = "0";
-            result[1] = "Falha de rede!";
+            result[1] = "NOK";
         }
         return result;
     }
@@ -99,7 +103,7 @@ public class WebServiceClient
 
             StringEntity param0 = new StringEntity(title);
             StringEntity param1 = new StringEntity(address);
-            
+
             httpPut.setEntity(param0);
             httpPut.setEntity(param1);
 
