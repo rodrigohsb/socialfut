@@ -191,6 +191,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <include layout="@layout/layout_endless_list" />
-
 </LinearLayout>
