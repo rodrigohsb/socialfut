@@ -11,6 +11,9 @@
     <!-- Para verificar se alguma activity está executando -->
     <uses-permission android:name="android.permission.GET_TASKS" />
 
+    <!-- Saber se internet do aparelho esta ativa -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- O GCM precisa de internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 
