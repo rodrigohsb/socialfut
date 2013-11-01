@@ -71,6 +71,8 @@ public class MyHistoryActivity extends SherlockActivity
             alertDialog = new AlertUtils(MyHistoryActivity.this).getAlertDialog(Constants.WARNING,
                     "Por favor, verifique sua conexão.", positiveButton, null);
 
+            alertDialog.setCancelable(false);
+            alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
 
