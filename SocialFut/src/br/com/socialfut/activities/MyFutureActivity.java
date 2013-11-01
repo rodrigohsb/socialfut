@@ -71,6 +71,8 @@ public class MyFutureActivity extends SherlockActivity
             alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
                     "Por favor, verifique sua conexão.", positiveButton, null);
 
+            alertDialog.setCancelable(false);
+            alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
 
