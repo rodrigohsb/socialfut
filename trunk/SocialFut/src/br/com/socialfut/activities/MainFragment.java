@@ -136,6 +136,7 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), MyHistoryActivity.class));
+                getSherlockActivity().finish();
             }
         });
 
@@ -146,6 +147,7 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
+                getSherlockActivity().finish();
             }
         });
 
@@ -156,18 +158,9 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), NewGameActivity.class));
+                getSherlockActivity().finish();
             }
         });
-
-//        /** Lista de Jogadores */
-//        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
-//            }
-//        });
 
         mActionBar = createActionBarHelper();
         mActionBar.init();
@@ -206,7 +199,8 @@ public class MainFragment extends SherlockFragment
             }
         });
         dialog.show();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctx, R.array.spinner_itens,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctx, R.array.spinner_itens,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -233,8 +227,8 @@ public class MainFragment extends SherlockFragment
             startActivity(new Intent(getSherlockActivity(), ChatListActivity.class));
             break;
 
-        case R.id.dice:
-            startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+        case R.id.newGame:
+            startActivity(new Intent(getSherlockActivity(), NewGameActivity.class));
             break;
 
         case R.id.cronometro:
