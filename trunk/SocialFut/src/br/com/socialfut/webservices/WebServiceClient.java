@@ -34,6 +34,7 @@ public class WebServiceClient
             if (entity != null)
             {
                 InputStream instream = entity.getContent();
+                result[0] = "OK";
                 result[1] = toString(instream);
                 instream.close();
                 Log.i("get", "Result from GET : " + result[1]);
@@ -42,12 +43,12 @@ public class WebServiceClient
         catch (ConnectTimeoutException e)
         {
             e.printStackTrace();
+            result[0] = "NOK";
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            result[0] = "0";
-            result[1] = "NOK";
+            result[0] = "NOK";
         }
         return result;
     }
