@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import br.com.socialfut.R;
 import br.com.socialfut.adapter.PlayerListAdapter;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
@@ -23,8 +22,6 @@ import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -53,49 +50,6 @@ public class PlayerListActivity extends SherlockListActivity
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
         super.onListItemClick(l, v, position, id);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getSupportMenuInflater().inflate(R.menu.menu_lista_de_jogadores_sortear, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-        case android.R.id.home:
-            Intent intent = new Intent(this, DrawerLayoutActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK)
-        {
-            Session session = Session.getActiveSession();
-            if (session != null && (session.getState().isOpened()))
-            {
-                FacebookFriends faceFriends = new FacebookFriends(session);
-                faceFriends.execute();
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
     }
 
     private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
@@ -233,7 +187,6 @@ public class PlayerListActivity extends SherlockListActivity
             {
                 return null;
             }
-
         }
     }
 }
