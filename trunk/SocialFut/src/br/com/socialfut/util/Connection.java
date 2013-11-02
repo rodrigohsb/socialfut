@@ -17,6 +17,6 @@ public class Connection
     public static boolean isOnline(Context ctx)
     {
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable();
     }
 }
