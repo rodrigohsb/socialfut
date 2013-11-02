@@ -242,14 +242,14 @@ public class GameDetailsActivity extends SherlockActivity
         {
             String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + Constants.CONFIRMATION + Constants.SLASH
                     + Constants.USER_ID + Constants.SLASH + gameId);
-            return resposta[1];
+            return resposta[0];
         }
 
         private String desconfirmation()
         {
             String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + Constants.DESCONFIRMATION
                     + Constants.SLASH + Constants.USER_ID + Constants.SLASH + gameId);
-            return resposta[1];
+            return resposta[0];
         }
     }
 
