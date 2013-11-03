@@ -110,7 +110,7 @@ public class GCMIntentService extends GCMBaseIntentService
                 if (msgContent.equalsIgnoreCase(Constants.CONFIRMATION))
                 {
                     /** Confirmacao */
-                    enviarMensagemParaApp("Confirmou presenca na partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Acabou de confirmar presenca na partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
                 else if (msgContent.equalsIgnoreCase(Constants.DESCONFIRMATION))
                 {
@@ -120,7 +120,7 @@ public class GCMIntentService extends GCMBaseIntentService
                 else if (msgContent.equalsIgnoreCase(Constants.INVITATION))
                 {
                     /** Convite */
-                    enviarMensagemParaApp("Parabens, voce foi convidado para uma partida!", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
+                    enviarMensagemParaApp("Parabens, voce foi convidado para uma partida! \nConfirme já sua presença.", Long.valueOf(text[2]), j.getNome() + " " + j.getSobreNome(), bitmap, GameDetailsActivity.class);
                 }
             }
             else
