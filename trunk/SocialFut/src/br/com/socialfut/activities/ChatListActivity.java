@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import br.com.socialfut.R;
 import br.com.socialfut.adapter.ChatListAdapter;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
@@ -23,7 +22,6 @@ import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -31,15 +29,6 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 
-/**
- * 
- * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente proposito da classe.
- * 
- * @author rodrigo.bacellar
- * @since 25/09/2013
- * 
- */
 public class ChatListActivity extends SherlockListActivity
 {
 
@@ -59,28 +48,6 @@ public class ChatListActivity extends SherlockListActivity
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
-        super.onListItemClick(l, v, position, id);
-
-        Player Jogador = (Player) getListAdapter().getItem(position);
-
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("from", Jogador.getNome() + " " + Jogador.getSobreNome());
-        intent.putExtra("userId", String.valueOf(Jogador.getId()));
-
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getSupportMenuInflater().inflate(R.menu.menu_lista_de_jogadores_sortear, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -93,30 +60,30 @@ public class ChatListActivity extends SherlockListActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    public void onBackPressed()
     {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onBackPressed();
+        startActivity(new Intent(this, DrawerLayoutActivity.class));
+    }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id)
+    {
+        super.onListItemClick(l, v, position, id);
 
-        if (resultCode == RESULT_OK)
-        {
-            Session session = Session.getActiveSession();
-            if (session != null && (session.getState().isOpened()))
-            {
-                FacebookFriends faceFriends = new FacebookFriends(session);
-                faceFriends.execute();
-            }
-        }
+        Player Jogador = (Player) getListAdapter().getItem(position);
+
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("from", Jogador.getNome() + " " + Jogador.getSobreNome());
+        intent.putExtra("userId", String.valueOf(Jogador.getId()));
+
+        startActivity(intent);
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-    }
 
-    private class FacebookFriends extends AsyncTask<Void, String, List<Player>>
+    private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
     {
         private Session session;
 
@@ -143,7 +110,6 @@ public class ChatListActivity extends SherlockListActivity
         @Override
         protected List<Player> doInBackground(Void... v)
         {
-
             if (Constants.jogadores != null)
             {
                 return Constants.jogadores;
@@ -193,6 +159,8 @@ public class ChatListActivity extends SherlockListActivity
                 alertDialog = new AlertUtils(ChatListActivity.this).getAlertDialog(Constants.WARNING,
                         Constants.NO_FRIEND, positiveButton, null);
 
+                alertDialog.setCancelable(false);
+                alertDialog.setCanceledOnTouchOutside(false);
                 alertDialog.show();
 
             }
@@ -223,8 +191,8 @@ public class ChatListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
-                            {
+//                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+//                            {
                                 /** ID */
                                 Long id = Long.valueOf(player.getString(Constants.UID));
 
@@ -239,7 +207,7 @@ public class ChatListActivity extends SherlockListActivity
 
                                 Player j = new Player(id, firstName, lastName, url);
                                 players.add(j);
-                            }
+//                            }
                         }
                         catch (JSONException e)
                         {
@@ -253,8 +221,6 @@ public class ChatListActivity extends SherlockListActivity
             {
                 return null;
             }
-
         }
-
     }
 }

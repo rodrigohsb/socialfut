@@ -21,6 +21,7 @@ import br.com.socialfut.util.Constants;
 import br.com.socialfut.webservices.ChatREST;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 public class ChatActivity extends SherlockActivity
 {
@@ -77,6 +78,20 @@ public class ChatActivity extends SherlockActivity
         /** Busca o historico para mostrar na tela */
         updateHistory(facebookId);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case android.R.id.home:
+            Intent intent = new Intent(this, ChatListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void sendMessage(String message)
@@ -166,7 +181,6 @@ public class ChatActivity extends SherlockActivity
     public void onBackPressed()
     {
         super.onBackPressed();
-        startActivity(new Intent(this, ChatListActivity.class));
         finish();
     }
 }

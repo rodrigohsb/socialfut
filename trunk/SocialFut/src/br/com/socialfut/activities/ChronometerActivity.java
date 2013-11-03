@@ -3,6 +3,7 @@ package br.com.socialfut.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,6 +156,6 @@ public class ChronometerActivity extends SherlockActivity
     public void onBackPressed()
     {
         super.onBackPressed();
-        Constants.TIME = mChronometer.getBase();
+        startActivity(new Intent(this, DrawerLayoutActivity.class));
     }
 }
