@@ -89,7 +89,7 @@ public class ChatListAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
 
-        Player jogador = (Player) lista.get(position);
+        Player player = (Player) lista.get(position);
 
         View view = convertView;
         final ViewHolder holder;
@@ -110,13 +110,13 @@ public class ChatListAdapter extends BaseAdapter
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.firstName.setText(jogador.getNome());
-        holder.lastName.setText(jogador.getSobreNome());
+        holder.firstName.setText(player.getNome());
+        holder.lastName.setText(player.getSobreNome());
 
         /** Qualificacao */
         new PlayerREST(holder.rating).execute();
 
-        imageLoader.displayImage(jogador.getPicture(), holder.image, options, animateFirstListener);
+        imageLoader.displayImage(player.getPicture(), holder.image, options, animateFirstListener);
 
         return view;
     }

@@ -55,8 +55,9 @@ public class PlayerListAdapter extends BaseAdapter
         }
 
         options = new DisplayImageOptions.Builder().showStubImage(R.drawable.default_profile_picture)
-                .showImageForEmptyUri(R.drawable.default_profile_picture).showImageOnFail(R.drawable.default_profile_picture).cacheInMemory(true)
-                .cacheOnDisc(false).displayer(new RoundedBitmapDisplayer(20)).build();
+                .showImageForEmptyUri(R.drawable.default_profile_picture)
+                .showImageOnFail(R.drawable.default_profile_picture).cacheInMemory(true).cacheOnDisc(false)
+                .displayer(new RoundedBitmapDisplayer(20)).build();
 
         this.hasPositionAndQualification = hasPositionAndQualification;
     }
@@ -108,7 +109,18 @@ public class PlayerListAdapter extends BaseAdapter
             holder.sureName = (TextView) view.findViewById(R.id.sureName);
             holder.rating = (RatingBar) view.findViewById(R.id.rating);
             holder.checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
+
             view.setTag(holder);
+
+            holder.checkBox.setOnClickListener(new View.OnClickListener()
+            {
+                public void onClick(View v)
+                {
+                    CheckBox cb = (CheckBox) v;
+                    Player player = (Player) cb.getTag();
+                    player.setSelected(cb.isChecked());
+                }
+            });
         }
         else
         {
@@ -117,7 +129,9 @@ public class PlayerListAdapter extends BaseAdapter
 
         holder.name.setText(player.getNome());
         holder.sureName.setText(player.getSobreNome());
-        holder.checkBox.setChecked(holder.checkBox.isChecked());
+        holder.checkBox.setChecked(player.isSelected());
+
+        holder.checkBox.setChecked(player.isSelected());
 
         if (!hasPositionAndQualification)
         {
