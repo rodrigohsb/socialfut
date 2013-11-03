@@ -210,6 +210,11 @@ public class NewGameActivity extends SherlockActivity
             showWarning("Por favor, preencha os dados da partida!", null, null);
             return false;
         }
+        if (c.before(Calendar.getInstance()))
+        {
+            showWarning("Esse dia ja passou!", null, null);
+            return false;
+        }
         if (finishHourOfDay < startHourOfDay || (finishHourOfDay == startHourOfDay && finishMinute <= startMinute))
         {
             /** Termino nao pode ser antes do inicio */
@@ -218,6 +223,13 @@ public class NewGameActivity extends SherlockActivity
         }
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, DrawerLayoutActivity.class));
     }
 
     private void showWarning(String text, final Class<?> cls, final Long gameId)
@@ -303,7 +315,7 @@ public class NewGameActivity extends SherlockActivity
             }
             else
             {
-                showWarning("Partida criada com sucesso! Convide seus amigos!", PlayerListActivity.class,
+                showWarning("Partida criada! Escale seus amigos!", PlayerListActivity.class,
                         Long.valueOf(result[1]));
             }
         }

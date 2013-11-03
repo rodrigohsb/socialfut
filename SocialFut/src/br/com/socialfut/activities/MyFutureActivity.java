@@ -90,6 +90,13 @@ public class MyFutureActivity extends SherlockActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, DrawerLayoutActivity.class));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getSupportMenuInflater().inflate(R.menu.menu_lista_de_jogadores_sortear, menu);

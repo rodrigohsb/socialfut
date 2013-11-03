@@ -13,8 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
 import br.com.socialfut.adapter.PlayerListAdapter;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
@@ -22,6 +20,7 @@ import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -47,9 +46,24 @@ public class PlayerListActivity extends SherlockListActivity
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        super.onListItemClick(l, v, position, id);
+        switch (item.getItemId())
+        {
+        case android.R.id.home:
+            Intent intent = new Intent(this, DrawerLayoutActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, DrawerLayoutActivity.class));
     }
 
     private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
@@ -111,7 +125,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores,false));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, false));
             }
             else
             {
@@ -160,20 +174,24 @@ public class PlayerListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
-                            {
-                                /** ID */
-                                Long id = Long.valueOf(player.getString(Constants.UID));
-                                /** Primeiro Nome */
-                                String firstName = player.getString(Constants.FIRST_NAME);
-                                /** Primeiro Nome */
-                                String lastName = player.getString(Constants.LAST_NAME);
-                                /** Foto */
-                                String url = player.getString(Constants.PIC_SQUARE);
+                            // if
+                            // (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            // {
+                            /** ID */
+                            Long id = Long.valueOf(player.getString(Constants.UID));
 
-                                Player j = new Player(id, firstName, lastName, url);
-                                players.add(j);
-                            }
+                            /** Primeiro Nome */
+                            String firstName = player.getString(Constants.FIRST_NAME);
+
+                            /** Primeiro Nome */
+                            String lastName = player.getString(Constants.LAST_NAME);
+
+                            /** Foto */
+                            String url = player.getString(Constants.PIC_SQUARE);
+
+                            Player j = new Player(id, firstName, lastName, url);
+                            players.add(j);
+                            // }
                         }
                         catch (JSONException e)
                         {
