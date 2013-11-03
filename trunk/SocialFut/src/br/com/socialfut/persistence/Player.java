@@ -19,6 +19,8 @@ public class Player implements Serializable
 
     private String picture;
 
+    boolean selected = false;
+
     public Player()
     {
     }
@@ -98,6 +100,16 @@ public class Player implements Serializable
     public void setPicture(String picture)
     {
         this.picture = picture;
+    }
+
+    public boolean isSelected()
+    {
+        return selected;
+    }
+
+    public void setSelected(boolean selected)
+    {
+        this.selected = selected;
     }
 
     @Override
