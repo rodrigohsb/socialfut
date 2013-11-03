@@ -57,7 +57,7 @@
                 style="?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorFont" />
+                android:isIndicator="true" />
         </LinearLayout>
     </LinearLayout>
 

@@ -20,7 +20,7 @@
                 android:id="@+id/myHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:text="Meu Histórico"
                 android:textColor="@color/colorFont" />
 
@@ -28,7 +28,7 @@
                 android:id="@+id/future"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:text="Próximas Partidas"
                 android:textColor="@color/colorFont" />
 
@@ -36,8 +36,16 @@
                 android:id="@+id/creatGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:text="Nova Partida"
+                android:textColor="@color/colorFont" />
+
+            <Button
+                android:id="@+id/playerList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="Jogadores"
                 android:textColor="@color/colorFont" />
         </LinearLayout>
     </LinearLayout>
