@@ -53,7 +53,8 @@ public class NotificationUtil
 
         Notification.Builder builder = new Notification.Builder(context).setContentTitle(from).setContentText(message)
                 .setContentIntent(intent).setLargeIcon(bitmap).setSmallIcon(R.drawable.nofiticationball)
-                .setSound(alarmSound).setVibrate(new long[] { 100, 250, 100, 500 });
+                .setSound(alarmSound).setVibrate(new long[] { 100, 250, 100, 500 })
+                .setStyle(new Notification.BigTextStyle().bigText(message));
 
         Notification notification = builder.build();
 
