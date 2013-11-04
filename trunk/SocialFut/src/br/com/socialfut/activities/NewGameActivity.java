@@ -315,7 +315,7 @@ public class NewGameActivity extends SherlockActivity
             }
             else
             {
-                showWarning("Partida criada! Escale seus amigos!", PlayerListActivity.class,
+                showWarning("Partida criada!\n Convoque seus amigos agora mesmo!", PlayerListActivity.class,
                         Long.valueOf(result[1]));
             }
         }
