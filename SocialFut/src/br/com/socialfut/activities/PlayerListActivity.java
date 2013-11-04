@@ -30,12 +30,17 @@ import com.facebook.model.GraphObject;
 public class PlayerListActivity extends SherlockListActivity
 {
 
+    private Long gameId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Amigos");
+
+//        Bundle bundle = getIntent().getExtras();
+//        gameId = bundle.getLong("gameId");
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))
@@ -125,7 +130,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, false));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, 124565, true));
             }
             else
             {

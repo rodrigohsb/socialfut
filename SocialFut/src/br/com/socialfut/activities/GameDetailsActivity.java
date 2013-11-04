@@ -39,15 +39,6 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphObject;
 
-/**
- * 
- * <b>Descricao da Classe:</b><br>
- * TODO Explicar detalhadamente proposito da classe.
- * 
- * @author rodrigo.bacellar
- * @since 04/10/2013
- * 
- */
 public class GameDetailsActivity extends SherlockActivity
 {
 
@@ -180,11 +171,11 @@ public class GameDetailsActivity extends SherlockActivity
             dialog = new ProgressDialog(ctx);
             if (type == 0)
             {
-                dialog.setMessage("Confirmando presenÃ§a...");
+                dialog.setMessage("Confirmando presença...");
             }
             else
             {
-                dialog.setMessage("Desconfirmando presenÃ§a...");
+                dialog.setMessage("Desconfirmando presença...");
             }
             dialog.setCancelable(false);
             dialog.show();
@@ -227,11 +218,11 @@ public class GameDetailsActivity extends SherlockActivity
                 {
                     if (result.equalsIgnoreCase("OK"))
                     {
-                        Toast.makeText(ctx, "Voce acabou de desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ctx, "Voce acabou de desconfirmar presença !!", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        Toast.makeText(ctx, "Nao foi possivel desconfirmar presenca !!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ctx, "Nao foi possivel desconfirmar presença !!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
