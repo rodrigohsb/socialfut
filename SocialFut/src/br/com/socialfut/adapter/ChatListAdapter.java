@@ -95,7 +95,6 @@ public class ChatListAdapter extends BaseAdapter
         final ViewHolder holder;
         if (convertView == null)
         {
-
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_list_chat, parent, false);
             holder = new ViewHolder();
