@@ -5,19 +5,31 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Player;
+import br.com.socialfut.util.Constants;
 import br.com.socialfut.webservices.PlayerREST;
+import br.com.socialfut.webservices.WebServiceClient;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -42,11 +54,17 @@ public class PlayerListAdapter extends BaseAdapter
 
     private boolean hasPositionAndQualification;
 
-    public PlayerListAdapter(Context context, List<Player> lista, boolean hasPositionAndQualification)
+    private ActionMode mActionMode;
+
+    private long gameId;
+
+    private List<Long> ids = new ArrayList<Long>();
+
+    public PlayerListAdapter(Context context, List<Player> lista, long gameId, boolean hasPositionAndQualification)
     {
         this.context = context;
         this.lista = lista;
-
+        this.gameId = gameId;
         System.out.println(lista.toString());
 
         if (!imageLoader.isInited())
@@ -118,7 +136,39 @@ public class PlayerListAdapter extends BaseAdapter
                 {
                     CheckBox cb = (CheckBox) v;
                     Player player = (Player) cb.getTag();
+                    if (cb.isChecked())
+                    {
+                        ids.add(player.getId());
+                    }
+                    else
+                    {
+                        ids.remove(player.getId());
+                    }
                     player.setSelected(cb.isChecked());
+                }
+            });
+
+            holder.checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener()
+            {
+                @SuppressLint("NewApi")
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    if (isChecked)
+                    {
+                        if (mActionMode == null)
+                        {
+                            Activity act = (Activity) context;
+                            mActionMode = act.startActionMode(new ModeCallback());
+                        }
+                    }
+                    else
+                    {
+                        if (mActionMode != null)
+                        {
+                            mActionMode.finish();
+                            mActionMode = null;
+                        }
+                    }
                 }
             });
         }
@@ -131,9 +181,9 @@ public class PlayerListAdapter extends BaseAdapter
         holder.sureName.setText(player.getSobreNome());
         holder.checkBox.setChecked(player.isSelected());
 
-        holder.checkBox.setChecked(player.isSelected());
+        holder.checkBox.setTag(player);
 
-        if (!hasPositionAndQualification)
+        if (hasPositionAndQualification)
         {
             /** Qualificacao */
             new PlayerREST(holder.rating, holder.position).execute();
@@ -165,7 +215,7 @@ public class PlayerListAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
-    private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener
+    public static class AnimateFirstDisplayListener extends SimpleImageLoadingListener
     {
         static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
@@ -181,6 +231,96 @@ public class PlayerListAdapter extends BaseAdapter
                     FadeInBitmapDisplayer.animate(imageView, 500);
                     displayedImages.add(imageUri);
                 }
+            }
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private class ModeCallback implements ActionMode.Callback
+    {
+
+        @SuppressLint("NewApi")
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu)
+        {
+            menu.add("Teste").setIcon(R.drawable.players_group).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+        {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item)
+        {
+            switch (item.getItemId())
+            {
+            case 0:
+                new Invitation(ids).execute();
+            }
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode)
+        {
+            mActionMode = null;
+        }
+    }
+
+    private class Invitation extends AsyncTask<Void, String[], String[]>
+    {
+
+        private ProgressDialog dialog;
+
+        private List<Long> ids = new ArrayList<Long>();
+
+        public Invitation(List<Long> ids)
+        {
+            super();
+            this.ids = ids;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            dialog = new ProgressDialog(context);
+            dialog.setMessage("Por favor, aguarde.\nConvocando jogadores...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String[] doInBackground(Void... params)
+        {
+            StringBuilder sb = new StringBuilder(Constants.URL_GAME_WS + "invite" + Constants.SLASH + gameId
+                    + Constants.SLASH + Constants.USER_ID);
+
+            for (Long id : ids)
+            {
+                sb.append(Constants.SLASH + id);
+            }
+            String[] resposta = WebServiceClient.get(sb.toString());
+            return resposta;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result)
+        {
+            dialog.dismiss();
+            super.onPostExecute(result);
+
+            if ("OK".equals(result[1]))
+            {
+                Toast.makeText(context, "Jogadores Convodados!!", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(context, "Erro!!", Toast.LENGTH_SHORT).show();
             }
         }
     }
