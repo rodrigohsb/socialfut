@@ -3,7 +3,6 @@ package br.com.socialfut.webservices;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 import org.apache.http.HttpEntity;
@@ -11,7 +10,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
 
 import android.util.Log;
@@ -39,11 +37,6 @@ public class WebServiceClient
                 instream.close();
                 Log.i("get", "Result from GET : " + result[1]);
             }
-        }
-        catch (ConnectTimeoutException e)
-        {
-            e.printStackTrace();
-            result[0] = "NOK";
         }
         catch (Exception e)
         {
@@ -74,20 +67,16 @@ public class WebServiceClient
             if (entity != null)
             {
                 InputStream instream = entity.getContent();
+                result[0] = "OK";
                 result[1] = toString(instream);
                 instream.close();
                 Log.i("get", "Result from PUT : " + result[1]);
             }
         }
-        catch (UnsupportedEncodingException e1)
-        {
-            e1.printStackTrace();
-        }
         catch (Exception e)
         {
             e.printStackTrace();
-            result[0] = "0";
-            result[1] = "Falha de rede!";
+            result[0] = "NOK";
         }
         return result;
     }
@@ -116,20 +105,16 @@ public class WebServiceClient
             if (entity != null)
             {
                 InputStream instream = entity.getContent();
+                result[0] = "OK";
                 result[1] = toString(instream);
                 instream.close();
                 Log.i("get", "Result from PUT : " + result[1]);
             }
         }
-        catch (UnsupportedEncodingException e1)
-        {
-            e1.printStackTrace();
-        }
         catch (Exception e)
         {
             e.printStackTrace();
-            result[0] = "0";
-            result[1] = "Falha de rede!";
+            result[0] = "NOK";
         }
         return result;
     }
@@ -151,18 +136,17 @@ public class WebServiceClient
 
             if (entity != null)
             {
-                result[0] = String.valueOf(response.getStatusLine().getStatusCode());
+                result[0] = "OK";
                 InputStream instream = entity.getContent();
                 result[1] = toString(instream);
                 instream.close();
                 Log.d("post", "Result from POST: " + result[0] + " : " + result[1]);
             }
-
         }
         catch (Exception e)
         {
-            result[0] = "0";
-            result[1] = "Falha de rede!";
+            e.printStackTrace();
+            result[0] = "NOK";
         }
         return result;
     }
