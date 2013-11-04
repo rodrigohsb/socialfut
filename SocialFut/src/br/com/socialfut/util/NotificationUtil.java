@@ -13,8 +13,6 @@ import br.com.socialfut.R;
 
 public class NotificationUtil
 {
-    static int ID = R.drawable.icon;
-
     /**
      * Issues a notification to inform the user that server has sent a message.
      * 
@@ -30,7 +28,7 @@ public class NotificationUtil
         PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
         Notification.Builder builder = new Notification.Builder(context).setContentTitle("Fulado de Tal")
-                .setContentText(message).setContentIntent(intent).setSmallIcon(R.drawable.icon);
+                .setContentText(message).setContentIntent(intent).setSmallIcon(R.drawable.nofiticationball);
 
         Notification notification = builder.build();
 
