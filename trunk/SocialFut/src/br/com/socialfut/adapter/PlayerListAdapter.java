@@ -7,8 +7,10 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.ActionMode;
@@ -24,9 +26,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.com.socialfut.R;
 import br.com.socialfut.persistence.Player;
+import br.com.socialfut.util.AlertUtils;
 import br.com.socialfut.util.Constants;
 import br.com.socialfut.webservices.PlayerREST;
 import br.com.socialfut.webservices.WebServiceClient;
@@ -59,6 +61,8 @@ public class PlayerListAdapter extends BaseAdapter
     private long gameId;
 
     private List<Long> ids = new ArrayList<Long>();
+
+    private AlertDialog alertDialog;
 
     public PlayerListAdapter(Context context, List<Player> lista, long gameId, boolean hasPositionAndQualification)
     {
@@ -316,11 +320,37 @@ public class PlayerListAdapter extends BaseAdapter
 
             if ("OK".equals(result[1]))
             {
-                Toast.makeText(context, "Jogadores Convodados!!", Toast.LENGTH_SHORT).show();
+                android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        alertDialog.dismiss();
+                        Activity act = (Activity) context;
+                        act.finish();
+                    }
+                };
+
+                alertDialog = new AlertUtils(context).getAlertDialog(Constants.WARNING, "Jogadores Convodados!!",
+                        positiveButton, null);
+
+                alertDialog.show();
             }
             else
             {
-                Toast.makeText(context, "Erro!!", Toast.LENGTH_SHORT).show();
+                android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        alertDialog.dismiss();
+                        Activity act = (Activity) context;
+                        act.finish();
+                    }
+                };
+
+                alertDialog = new AlertUtils(context).getAlertDialog(Constants.WARNING,
+                        "Problemas ao convocar jogadores.", positiveButton, null);
+
+                alertDialog.show();
             }
         }
     }
