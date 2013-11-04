@@ -2,7 +2,6 @@ package br.com.socialfut.activities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,15 +33,8 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_lista_de_jogadores);
-
         listView = (ListView) findViewById(android.R.id.list);
         ActionBar.updateActionBar(getSupportActionBar());
-    }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
-        super.onListItemClick(l, v, position, id);
     }
 
     @Override
@@ -60,12 +52,12 @@ public class PlayerListForSort extends SherlockListActivity implements OnClickLi
             }
         }
 
-        Map<ConstantsEnum, List<Player>> times = new HashMap<ConstantsEnum, List<Player>>();
-        times = Sort.getOrder(selectedItems);
-        Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+        Map<ConstantsEnum, List<Player>> times = Sort.getOrder(selectedItems);
+        Intent intent = new Intent(this, ResultActivity.class);
         Bundle b = new Bundle();
         b.putSerializable("selectedPlayers", (Serializable) times);
         intent.putExtras(b);
         startActivity(intent);
+        finish();
     }
 }

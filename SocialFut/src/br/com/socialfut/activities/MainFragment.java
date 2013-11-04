@@ -136,7 +136,6 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), MyHistoryActivity.class));
-                getSherlockActivity().finish();
             }
         });
 
@@ -147,7 +146,6 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), MyFutureActivity.class));
-                getSherlockActivity().finish();
             }
         });
 
@@ -158,7 +156,6 @@ public class MainFragment extends SherlockFragment
             public void onClick(View v)
             {
                 startActivity(new Intent(getSherlockActivity(), NewGameActivity.class));
-                getSherlockActivity().finish();
             }
         });
 

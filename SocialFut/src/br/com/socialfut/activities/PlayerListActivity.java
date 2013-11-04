@@ -39,8 +39,8 @@ public class PlayerListActivity extends SherlockListActivity
 
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Amigos");
 
-//        Bundle bundle = getIntent().getExtras();
-//        gameId = bundle.getLong("gameId");
+        Bundle bundle = getIntent().getExtras();
+        gameId = bundle.getLong("gameId");
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))
