@@ -52,7 +52,7 @@ public class FacebookUtils
 
     public static void getRatingAndPosition(RatingBar rating, TextView position, Context ctx)
     {
-        playerRest = new PlayerREST(rating, position);
+        playerRest = new PlayerREST(rating, position,ctx);
         playerRest.execute();
     }
 }
