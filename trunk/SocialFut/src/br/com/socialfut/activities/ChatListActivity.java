@@ -60,14 +60,14 @@ public class ChatListActivity extends SherlockListActivity
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public void onBackPressed()
     {
         super.onBackPressed();
         startActivity(new Intent(this, DrawerLayoutActivity.class));
     }
-    
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
@@ -81,7 +81,6 @@ public class ChatListActivity extends SherlockListActivity
 
         startActivity(intent);
     }
-
 
     private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
     {
@@ -191,8 +190,8 @@ public class ChatListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-//                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
-//                            {
+                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            {
                                 /** ID */
                                 Long id = Long.valueOf(player.getString(Constants.UID));
 
@@ -207,7 +206,7 @@ public class ChatListActivity extends SherlockListActivity
 
                                 Player j = new Player(id, firstName, lastName, url);
                                 players.add(j);
-//                            }
+                            }
                         }
                         catch (JSONException e)
                         {

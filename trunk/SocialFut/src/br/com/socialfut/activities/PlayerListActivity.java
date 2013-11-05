@@ -40,7 +40,11 @@ public class PlayerListActivity extends SherlockListActivity
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Amigos");
 
         Bundle bundle = getIntent().getExtras();
-        gameId = bundle.getLong("gameId");
+
+        if (bundle != null)
+        {
+            gameId = bundle.getLong("gameId");
+        }
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))
@@ -130,7 +134,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, 124565, true));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, 23543, true));
             }
             else
             {
@@ -179,24 +183,23 @@ public class PlayerListActivity extends SherlockListActivity
                         {
                             JSONObject player = friendsFromFacebook.getJSONObject(i);
 
-                            // if
-                            // (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
-                            // {
-                            /** ID */
-                            Long id = Long.valueOf(player.getString(Constants.UID));
+                            if (Boolean.parseBoolean(player.getString(Constants.IS_APP_USER)))
+                            {
+                                /** ID */
+                                Long id = Long.valueOf(player.getString(Constants.UID));
 
-                            /** Primeiro Nome */
-                            String firstName = player.getString(Constants.FIRST_NAME);
+                                /** Primeiro Nome */
+                                String firstName = player.getString(Constants.FIRST_NAME);
 
-                            /** Primeiro Nome */
-                            String lastName = player.getString(Constants.LAST_NAME);
+                                /** Primeiro Nome */
+                                String lastName = player.getString(Constants.LAST_NAME);
 
-                            /** Foto */
-                            String url = player.getString(Constants.PIC_SQUARE);
+                                /** Foto */
+                                String url = player.getString(Constants.PIC_SQUARE);
 
-                            Player j = new Player(id, firstName, lastName, url);
-                            players.add(j);
-                            // }
+                                Player j = new Player(id, firstName, lastName, url);
+                                players.add(j);
+                            }
                         }
                         catch (JSONException e)
                         {
