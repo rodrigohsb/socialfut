@@ -309,7 +309,7 @@ public class NewGameActivity extends SherlockActivity
         {
             dialog.dismiss();
             super.onPostExecute(result);
-            if ("NOK".equals(result[1]))
+            if ("NOK".equals(result[0]))
             {
                 showWarning("Por favor, tente mais tarde!", DrawerLayoutActivity.class, null);
             }

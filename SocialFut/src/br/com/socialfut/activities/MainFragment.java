@@ -159,6 +159,16 @@ public class MainFragment extends SherlockFragment
             }
         });
 
+        /** Jogadores */
+        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
+            }
+        });
+
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
@@ -193,6 +203,8 @@ public class MainFragment extends SherlockFragment
             {
                 position.setText(Position.values()[spinner.getSelectedItemPosition()].toString().replace("_", " "));
                 Constants.POSITION_ID = spinner.getSelectedItemPosition();
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+                sharedPrefs.edit().putBoolean("first_time", false).commit();
             }
         });
         dialog.show();
@@ -307,13 +319,13 @@ public class MainFragment extends SherlockFragment
                 alreadyGetProfile = true;
                 sharedPrefs.edit().putBoolean("first_time", false).commit();
                 FacebookUtils.getProfile(session, name, sureName, img, ctx);
-                new PlayerREST(position).execute();
+                new PlayerREST(position,ctx).execute();
             }
             else
             {
                 alreadyGetProfile = true;
                 FacebookUtils.getProfile(session, name, sureName, img, ratingUser, position, ctx);
-                new PlayerREST().execute();
+                new PlayerREST(ctx).execute();
             }
         }
         else if (state.isClosed())
@@ -414,6 +426,9 @@ public class MainFragment extends SherlockFragment
         String nome = sharedPrefs.getString("name", null);
         String previouslyEncodedImage = sharedPrefs.getString("image", null);
 
+        float rating = sharedPrefs.getFloat("rating", 0.0f);
+        String position = sharedPrefs.getString("position", null);
+
         if (previouslyEncodedImage != null)
         {
             byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
@@ -435,6 +450,15 @@ public class MainFragment extends SherlockFragment
         {
             name.setText("");
             sureName.setText("");
+        }
+
+        if (rating > 0.0)
+        {
+            ratingUser.setRating(rating);
+        }
+        if (position != null)
+        {
+            this.position.setText(position);
         }
     }
 }
