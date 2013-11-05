@@ -3,7 +3,10 @@ package br.com.socialfut.webservices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import br.com.socialfut.persistence.Player;
@@ -19,31 +22,37 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
 
     private int type;
 
-    public PlayerREST()
+    private Context ctx;
+
+    public PlayerREST(Context ctx)
     {
         super();
+        this.ctx = ctx;
         this.type = 1;
     }
 
-    public PlayerREST(TextView position)
+    public PlayerREST(TextView position, Context ctx)
     {
         super();
         this.position = position;
+        this.ctx = ctx;
         this.type = 0;
     }
 
-    public PlayerREST(RatingBar rating)
+    public PlayerREST(RatingBar rating, Context ctx)
     {
         super();
         this.rating = rating;
+        this.ctx = ctx;
         this.type = 3;
     }
 
-    public PlayerREST(RatingBar rating, TextView position)
+    public PlayerREST(RatingBar rating, TextView position, Context ctx)
     {
         super();
         this.rating = rating;
         this.position = position;
+        this.ctx = ctx;
         this.type = 2;
     }
 
@@ -104,24 +113,30 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
         String[] resposta = WebServiceClient.get(Constants.URL_PLAYER_WS + "getRatingAndPosition" + Constants.SLASH
                 + Constants.USER_ID);
 
-        String json = resposta[1];
-
         Player p = new Player();
 
-        try
+        if ("OK".equalsIgnoreCase(resposta[0]))
         {
-            JSONObject jObject = new JSONObject(json);
-            float rate = Float.valueOf(jObject.getString("rating"));
-            String posicao = Position.values()[jObject.getInt("position")].toString().replace("_", " ");
+            String json = resposta[1];
 
-            p.setRating(rate);
-            p.setPosition(posicao);
+            try
+            {
+                JSONObject jObject = new JSONObject(json);
+                float rate = Float.valueOf(jObject.getString("rating"));
+                String posicao = Position.values()[jObject.getInt("position")].toString().replace("_", " ");
+
+                p.setRating(rate);
+                p.setPosition(posicao);
+            }
+            catch (JSONException e)
+            {
+                p.setRating(0.0f);
+                p.setPosition("");
+            }
+            return p;
         }
-        catch (JSONException e)
-        {
-            p.setRating(0.0f);
-            p.setPosition("");
-        }
+        p.setRating(0.0f);
+        p.setPosition("");
         return p;
     }
 
@@ -187,10 +202,18 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
         {
             if (rating != null && player.getRating() != 0)
             {
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putFloat("rating", player.getRating());
+
                 rating.setRating(player.getRating());
             }
             if (position != null && player.getPosition() != "")
             {
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString("position", player.getPosition());
+
                 position.setText(player.getPosition());
             }
         }
