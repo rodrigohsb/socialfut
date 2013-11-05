@@ -190,7 +190,7 @@ public class PlayerListAdapter extends BaseAdapter
         if (hasPositionAndQualification)
         {
             /** Qualificacao */
-            new PlayerREST(holder.rating, holder.position).execute();
+            new PlayerREST(holder.rating, holder.position, context).execute();
         }
         else
         {

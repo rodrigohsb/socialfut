@@ -113,7 +113,7 @@ public class ChatListAdapter extends BaseAdapter
         holder.lastName.setText(player.getSobreNome());
 
         /** Qualificacao */
-        new PlayerREST(holder.rating).execute();
+        new PlayerREST(holder.rating,context).execute();
 
         imageLoader.displayImage(player.getPicture(), holder.image, options, animateFirstListener);
 
