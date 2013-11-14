@@ -159,16 +159,6 @@ public class MainFragment extends SherlockFragment
             }
         });
 
-        /** Jogadores */
-        view.findViewById(R.id.playerList).setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(getSherlockActivity(), PlayerListActivity.class));
-            }
-        });
-
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
@@ -426,9 +416,6 @@ public class MainFragment extends SherlockFragment
         String nome = sharedPrefs.getString("name", null);
         String previouslyEncodedImage = sharedPrefs.getString("image", null);
 
-        float rating = sharedPrefs.getFloat("rating", 0.0f);
-        String position = sharedPrefs.getString("position", null);
-
         if (previouslyEncodedImage != null)
         {
             byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
@@ -450,15 +437,6 @@ public class MainFragment extends SherlockFragment
         {
             name.setText("");
             sureName.setText("");
-        }
-
-        if (rating > 0.0)
-        {
-            ratingUser.setRating(rating);
-        }
-        if (position != null)
-        {
-            this.position.setText(position);
         }
     }
 }
