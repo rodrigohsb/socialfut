@@ -19,6 +19,7 @@ import br.com.socialfut.adapter.ChatListAdapter;
 import br.com.socialfut.persistence.Player;
 import br.com.socialfut.util.ActionBar;
 import br.com.socialfut.util.AlertUtils;
+import br.com.socialfut.util.Connection;
 import br.com.socialfut.util.Constants;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -32,6 +33,8 @@ import com.facebook.model.GraphObject;
 public class ChatListActivity extends SherlockListActivity
 {
 
+    private AlertDialog alertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -39,16 +42,29 @@ public class ChatListActivity extends SherlockListActivity
 
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Chat");
 
-        Session session = Session.getActiveSession();
-        if (session != null && (session.getState().isOpened()))
+        if (Constants.USER_ID == 0)
         {
-            FacebookFriends faceFriends = new FacebookFriends(session);
-            faceFriends.execute();
+            showWarning("Por favor, faça login com o Facebook.");
         }
+        else
+        {
+            Session session = Session.getActiveSession();
+            if (Connection.isOnline(this) && (session != null && (session.getState().isOpened())))
+            {
+                FacebookFriends faceFriends = new FacebookFriends(session);
+                faceFriends.execute();
+            }
+            else
+            {
+                showWarning("Por favor, verifique sua conexão.");
+            }
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
+
     {
         switch (item.getItemId())
         {
@@ -80,6 +96,24 @@ public class ChatListActivity extends SherlockListActivity
         intent.putExtra("userId", String.valueOf(Jogador.getId()));
 
         startActivity(intent);
+    }
+
+    private void showWarning(String text)
+    {
+        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                finish();
+            }
+        };
+
+        alertDialog = new AlertUtils(ChatListActivity.this).getAlertDialog(Constants.WARNING, text, positiveButton,
+                null);
+
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     private class FacebookFriends extends AsyncTask<Void, Void, List<Player>>
