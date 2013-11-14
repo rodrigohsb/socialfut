@@ -114,8 +114,8 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
                 + Constants.USER_ID);
 
         Player p = new Player();
-
-        if ("OK".equalsIgnoreCase(resposta[0]))
+        
+        if(Constants.WS_STATUS_OK.equalsIgnoreCase(resposta[0]))
         {
             String json = resposta[1];
 
@@ -133,10 +133,12 @@ public class PlayerREST extends AsyncTask<Void, Void, Player>
                 p.setRating(0.0f);
                 p.setPosition("");
             }
-            return p;
         }
-        p.setRating(0.0f);
-        p.setPosition("");
+        else
+        {
+            p.setRating(0.0f);
+            p.setPosition("");            
+        }
         return p;
     }
 
