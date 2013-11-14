@@ -70,7 +70,14 @@ public class GameREST extends AsyncTask<Void, Void, Void>
 
         String[] resposta = WebServiceClient.get(Constants.URL_GAME_WS + "ratingByGame" + Constants.SLASH + Constants.USER_ID + Constants.SLASH + gameId);
 
-        rating.setRating(Float.valueOf(resposta[1]));
+        if (Constants.WS_STATUS_OK.equalsIgnoreCase(resposta[0]))
+        {
+            rating.setRating(Float.valueOf(resposta[1]));
+        }
+        else
+        {
+            rating.setRating(0.0f);
+        }
     }
 
     /**
