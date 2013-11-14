@@ -64,11 +64,16 @@ public class PlayerListAdapter extends BaseAdapter
 
     private AlertDialog alertDialog;
 
+    private Activity act;
+
     public PlayerListAdapter(Context context, List<Player> lista, long gameId, boolean hasPositionAndQualification)
     {
         this.context = context;
         this.lista = lista;
         this.gameId = gameId;
+
+        act = (Activity) context;
+
         System.out.println(lista.toString());
 
         if (!imageLoader.isInited())
@@ -161,7 +166,6 @@ public class PlayerListAdapter extends BaseAdapter
                     {
                         if (mActionMode == null)
                         {
-                            Activity act = (Activity) context;
                             mActionMode = act.startActionMode(new ModeCallback());
                         }
                     }
@@ -318,14 +322,13 @@ public class PlayerListAdapter extends BaseAdapter
             dialog.dismiss();
             super.onPostExecute(result);
 
-            if ("OK".equals(result[1]))
+            if (Constants.WS_STATUS_OK.equals(result[0]))
             {
                 android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
                         alertDialog.dismiss();
-                        Activity act = (Activity) context;
                         act.finish();
                     }
                 };
