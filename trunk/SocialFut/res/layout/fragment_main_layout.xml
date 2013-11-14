@@ -40,13 +40,6 @@
                 android:text="Nova Partida"
                 android:textColor="@color/colorFont" />
 
-            <Button
-                android:id="@+id/playerList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="Jogadores"
-                android:textColor="@color/colorFont" />
         </LinearLayout>
     </LinearLayout>
 
