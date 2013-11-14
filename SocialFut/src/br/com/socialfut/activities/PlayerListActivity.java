@@ -39,12 +39,7 @@ public class PlayerListActivity extends SherlockListActivity
 
         ActionBar.updateCustomActionBar(getSupportActionBar(), "Amigos");
 
-        Bundle bundle = getIntent().getExtras();
-
-        if (bundle != null)
-        {
-            gameId = bundle.getLong("gameId");
-        }
+        gameId = getIntent().getExtras().getLong("gameId");
 
         Session session = Session.getActiveSession();
         if (session != null && (session.getState().isOpened()))
@@ -134,7 +129,7 @@ public class PlayerListActivity extends SherlockListActivity
             }
             if (!jogadores.isEmpty())
             {
-                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, 23543, true));
+                setListAdapter(new PlayerListAdapter(PlayerListActivity.this, jogadores, 124565, true));
             }
             else
             {
