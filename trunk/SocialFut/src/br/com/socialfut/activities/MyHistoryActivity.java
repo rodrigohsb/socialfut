@@ -52,30 +52,21 @@ public class MyHistoryActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         gridView = (GridView) findViewById(R.id.gridview);
 
-        if (Connection.isOnline(ctx))
+        if (Constants.USER_ID == 0)
         {
-            new GameREST().execute();
+            showWarning("Por favor, faça login com o Facebook.");
         }
         else
         {
-            android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+            if (Connection.isOnline(ctx))
             {
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    alertDialog.dismiss();
-                    startActivity(new Intent(MyHistoryActivity.this, DrawerLayoutActivity.class));
-                    finish();
-                }
-            };
-
-            alertDialog = new AlertUtils(MyHistoryActivity.this).getAlertDialog(Constants.WARNING,
-                    "Por favor, verifique sua conexÃ£o.", positiveButton, null);
-
-            alertDialog.setCancelable(false);
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
+                new GameREST().execute();
+            }
+            else
+            {
+                showWarning("Por favor, verifique sua conexão.");
+            }
         }
-
         gridView.setOnItemClickListener(new OnItemClickListener()
         {
             @Override
@@ -124,7 +115,7 @@ public class MyHistoryActivity extends SherlockActivity
         super.onDestroy();
     }
 
-    private void emptyGamesAlert()
+    private void showWarning(String text)
     {
         android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
         {
@@ -134,26 +125,8 @@ public class MyHistoryActivity extends SherlockActivity
             }
         };
 
-        alertDialog = new AlertUtils(MyHistoryActivity.this).getAlertDialog(Constants.WARNING, Constants.NO_OLD_GAMES,
-                positiveButton, null);
-
-        alertDialog.setCancelable(false);
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.show();
-    }
-
-    private void noConnectionAlert()
-    {
-        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int id)
-            {
-                finish();
-            }
-        };
-
-        alertDialog = new AlertUtils(MyHistoryActivity.this).getAlertDialog(Constants.WARNING,
-                Constants.WEBSERVICES_DOWN, positiveButton, null);
+        alertDialog = new AlertUtils(MyHistoryActivity.this).getAlertDialog(Constants.WARNING, text, positiveButton,
+                null);
 
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
@@ -191,11 +164,11 @@ public class MyHistoryActivity extends SherlockActivity
 
             if (games == null)
             {
-                noConnectionAlert();
+                showWarning(Constants.WEBSERVICES_DOWN);
             }
             else if (games.isEmpty())
             {
-                emptyGamesAlert();
+                showWarning(Constants.NO_OLD_GAMES);
             }
             else
             {
