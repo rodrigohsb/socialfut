@@ -205,7 +205,7 @@ public class GameDetailsActivity extends SherlockActivity
 
                 if (type == 0)
                 {
-                    if (result.equalsIgnoreCase("OK"))
+                    if (Constants.WS_STATUS_OK.equalsIgnoreCase(result))
                     {
                         Toast.makeText(ctx, "Voce acabou de confirmar presenca !!", Toast.LENGTH_SHORT).show();
                     }
@@ -216,7 +216,7 @@ public class GameDetailsActivity extends SherlockActivity
                 }
                 else
                 {
-                    if (result.equalsIgnoreCase("OK"))
+                    if (Constants.WS_STATUS_OK.equalsIgnoreCase(result))
                     {
                         Toast.makeText(ctx, "Voce acabou de desconfirmar presença !!", Toast.LENGTH_SHORT).show();
                     }
@@ -413,7 +413,7 @@ public class GameDetailsActivity extends SherlockActivity
         {
             dialog.dismiss();
             super.onPostExecute(result);
-            if ("OK".equals(result[1]))
+            if (Constants.WS_STATUS_OK.equals(result[0]))
             {
                 showWarning("Qualificacao feita com sucesso!");
             }
