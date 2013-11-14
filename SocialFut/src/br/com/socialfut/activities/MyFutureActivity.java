@@ -52,30 +52,37 @@ public class MyFutureActivity extends SherlockActivity
         setContentView(R.layout.grid1);
         gridView = (GridView) findViewById(R.id.gridview);
 
-        if (Connection.isOnline(ctx))
+        if (Constants.USER_ID == 0)
         {
-            new GameREST().execute();
+            showWarning("Por favor, fa�a login com o Facebook.");
         }
         else
         {
-            android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
+
+            if (Connection.isOnline(ctx))
             {
-                public void onClick(DialogInterface dialog, int id)
+                new GameREST().execute();
+            }
+            else
+            {
+                android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
                 {
-                    alertDialog.dismiss();
-                    startActivity(new Intent(MyFutureActivity.this, DrawerLayoutActivity.class));
-                    finish();
-                }
-            };
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        alertDialog.dismiss();
+                        startActivity(new Intent(MyFutureActivity.this, DrawerLayoutActivity.class));
+                        finish();
+                    }
+                };
 
-            alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
-                    "Por favor, verifique sua conexão.", positiveButton, null);
+                alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
+                        "Por favor, verifique sua conexão.", positiveButton, null);
 
-            alertDialog.setCancelable(false);
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
+                alertDialog.setCancelable(false);
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+            }
         }
-
         gridView.setOnItemClickListener(new OnItemClickListener()
         {
             @Override
@@ -123,7 +130,7 @@ public class MyFutureActivity extends SherlockActivity
         super.onDestroy();
     }
 
-    private void emptyGamesAlert()
+    private void showWarning(String text)
     {
         android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
         {
@@ -133,32 +140,15 @@ public class MyFutureActivity extends SherlockActivity
             }
         };
 
-        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING, Constants.NO_OLD_GAMES,
-                positiveButton, null);
+        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING, text, positiveButton,
+                null);
 
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
 
-    private void noConnectionAlert()
-    {
-        android.content.DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int id)
-            {
-                finish();
-            }
-        };
-
-        alertDialog = new AlertUtils(MyFutureActivity.this).getAlertDialog(Constants.WARNING,
-                Constants.WEBSERVICES_DOWN, positiveButton, null);
-
-        alertDialog.setCancelable(false);
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.show();
-    }
-
+    
     private class GameREST extends AsyncTask<Void, Void, String>
     {
 
@@ -190,11 +180,11 @@ public class MyFutureActivity extends SherlockActivity
 
             if (games == null)
             {
-                noConnectionAlert();
+                showWarning(Constants.WEBSERVICES_DOWN);
             }
             else if (games.isEmpty())
             {
-                emptyGamesAlert();
+                showWarning(Constants.NO_OLD_GAMES);
             }
             else
             {
